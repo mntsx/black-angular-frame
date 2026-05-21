@@ -1,0 +1,16 @@
+# Compiled output (remove example.pdf from gitignore if you want to track it)
+*.pdf
+
+# Keep the pre-compiled example
+!example.pdf
+
+# Typst cache
+.typst-cache/
+_preview/
+
+# macOS
+.DS_Store
+
+# Editor directories
+.vscode/
+.idea/

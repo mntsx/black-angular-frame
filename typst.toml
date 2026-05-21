@@ -1,0 +1,12 @@
+[package]
+name        = "formal-slides"
+version     = "0.1.0"
+description = "Academic presentation template inspired by the UChicago Beamer theme"
+authors     = ["formal-slides contributors"]
+license     = "MIT"
+keywords    = ["presentation", "slides", "beamer", "academic"]
+entrypoint  = "formal-slides.typ"
+
+[template]
+path   = "example.typ"
+thumbnail = "example.pdf"
