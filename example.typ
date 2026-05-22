@@ -584,6 +584,8 @@ return theta",
   let arrow-weight = 0.9pt
   let node-r = 3.5pt
   let input-sum-y = 180pt
+  let nx-y = 118pt
+  let decoder-bottom-label-width = 94pt
   let pink = rgb("#F9DCDD")
   let peach = rgb("#FFE3B8")
   let bluefill = rgb("#C5E8F5")
@@ -597,7 +599,7 @@ return theta",
     frame-h: 100pt,
     stack-x: enc-x + frame-pad-x,
     nx-x: enc-x - 25pt,
-    nx-y: 118pt,
+    nx-y: nx-y,
     pos-side: "left",
     pos-label-x: -15pt,
     pos-label-y: input-sum-y,
@@ -605,6 +607,7 @@ return theta",
     emb-label: [Input\ Embedding],
     bottom-label: [Inputs],
     bottom-label-x: enc-x + 8pt,
+    bottom-label-width: 74pt,
   )
   let decoder = (
     x: dec-x,
@@ -612,14 +615,15 @@ return theta",
     frame-h: 132pt,
     stack-x: dec-x + frame-pad-x,
     nx-x: dec-x + frame-w + 8pt,
-    nx-y: 115pt,
+    nx-y: nx-y,
     pos-side: "right",
     pos-label-x: 229pt,
     pos-label-y: input-sum-y,
     pos-circle-x: 224pt,
     emb-label: [Output\ Embedding],
     bottom-label: [Outputs (shifted right)],
-    bottom-label-x: dec-x + 7pt,
+    bottom-label-x: dec-x + frame-pad-x + block-w / 2 - decoder-bottom-label-width / 2,
+    bottom-label-width: decoder-bottom-label-width,
   )
 
   let cx(col) = col.stack-x + block-w / 2
@@ -737,7 +741,7 @@ return theta",
     plus(cx(col), plus-y)
     arr-v(cx(col), emb-y + emb-h + 10pt, emb-y + emb-h)
     arr-v(cx(col), emb-y, plus-y + 3.5pt)
-    diagram-text(col.bottom-label-x, 221pt, col.bottom-label, size: 7.2pt, width: 74pt)
+    diagram-text(col.bottom-label-x, 221pt, col.bottom-label, size: 7.2pt, width: col.bottom-label-width)
     diagram-text-vcenter(col.pos-label-x, col.pos-label-y, [Positional Embedding], size: 5.0pt, width: 60pt)
     pos-signal(col.pos-circle-x, plus-y)
     if col.pos-side == "left" {

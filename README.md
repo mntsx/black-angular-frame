@@ -141,6 +141,18 @@ Numbered figure. The counter resets at each `#new-section`. Reference by number 
 
 ---
 
+## Tables
+
+### `#fs-table-cell(body, fill: ..., stroke: ..., pos: ...)`
+
+Cell helper for tables built with `grid`. It applies the template table font, IBM Plex Sans by default.
+
+```typst
+#fs-table-cell(fill: luma(248), stroke: luma(200) + 0.6pt, pos: center)[88.9]
+```
+
+---
+
 ## Theorem-style boxes
 
 All boxes display a colored header with `Kind N.M` (section.number) and an optional name panel.
