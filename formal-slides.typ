@@ -339,6 +339,7 @@
 
 #let _visual-y-margin = 15.75pt
 #let _caption-gap = 2.3pt
+#let _diagram-caption-gap = _caption-gap
 #let _table-caption-gap = 6pt
 #let _table-after-caption-margin = _visual-y-margin
 
@@ -367,10 +368,10 @@
   })
 }
 
-/// Diagram figure with extra room between the diagram and caption.
+/// Diagram figure with template-level caption spacing.
 #let fs-diagram(body, caption: none) = fs-figure(
   caption: caption,
-  caption-gap: 2 * _caption-gap,
+  caption-gap: _diagram-caption-gap,
   body,
 )
 

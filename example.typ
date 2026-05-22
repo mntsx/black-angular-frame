@@ -547,76 +547,279 @@ return theta",
 )
 
 #let transformer-diagram = align(center, {
-  let W = 224pt
-  let H = 142pt
+  let W = 278pt
+  let H = 232pt
   let ink = luma(15)
-  let enc-x = 16pt
-  let dec-x = 124pt
-  let col-w = 78pt
+  let block-w = 54pt
+  let frame-w = 90pt
+  let frame-pad-x = (frame-w - block-w) / 2
+  let enc-x = 30pt
+  let dec-x = 154pt
+  let label-size = 5.7pt
+  let small-size = 4.9pt
+  let arrow-weight = 0.9pt
+  let node-r = 3.5pt
+  let input-sum-y = 180pt
   let pink = rgb("#F9DCDD")
   let peach = rgb("#FFE3B8")
   let bluefill = rgb("#C5E8F5")
   let normfill = rgb("#F3F5C2")
   let greenfill = rgb("#D8F0D9")
   let violet = rgb("#E4E7F8")
-  let block-at(x, y, label, fill, h: 17pt, size: 6.2pt) = place(
+
+  let encoder = (
+    x: enc-x,
+    frame-y: 73pt,
+    frame-h: 100pt,
+    stack-x: enc-x + frame-pad-x,
+    nx-x: enc-x - 25pt,
+    nx-y: 118pt,
+    pos-side: "left",
+    pos-label-x: -15pt,
+    pos-label-y: input-sum-y,
+    pos-circle-x: 49pt,
+    emb-label: [Input\ Embedding],
+    bottom-label: [Inputs],
+    bottom-label-x: enc-x + 8pt,
+  )
+  let decoder = (
+    x: dec-x,
+    frame-y: 41pt,
+    frame-h: 132pt,
+    stack-x: dec-x + frame-pad-x,
+    nx-x: dec-x + frame-w + 8pt,
+    nx-y: 115pt,
+    pos-side: "right",
+    pos-label-x: 229pt,
+    pos-label-y: input-sum-y,
+    pos-circle-x: 224pt,
+    emb-label: [Output\ Embedding],
+    bottom-label: [Outputs (shifted right)],
+    bottom-label-x: dec-x + 7pt,
+  )
+
+  let cx(col) = col.stack-x + block-w / 2
+  let cy(layer) = layer.y + layer.h / 2
+
+  let diagram-text(x, y, body, size: label-size, width: auto, align-pos: center) = place(
     top + left,
     dx: x,
     dy: y,
-    _diagram-block(label, w: 56pt, h: h, fill: fill, stroke: ink, text-size: size, radius: 2.2pt),
+    block(width: width, align(align-pos, text(size: size, fill: ink, body))),
   )
-  let plus(x, y) = place(top + left, dx: x - 5pt, dy: y - 5pt, circle(radius: 5pt, stroke: ink + 0.8pt, fill: white))
+  let diagram-text-vcenter(x, y, body, size: label-size, width: auto, align-pos: center) = place(
+    top + left,
+    dx: x,
+    dy: y - 2.5pt,
+    block(width: width, align(align-pos, text(size: size, fill: ink, body))),
+  )
+  let block-at(x, y, label, fill, h: 16pt, size: label-size) = place(
+    top + left,
+    dx: x,
+    dy: y,
+    _diagram-block(label, w: block-w, h: h, fill: fill, stroke: ink, text-size: size, radius: 2.2pt),
+  )
+  let frame(col) = place(
+    top + left,
+    dx: col.x,
+    dy: col.frame-y,
+    block(
+      width: frame-w,
+      height: col.frame-h,
+      stroke: ink + 1.3pt,
+      radius: 7pt,
+      fill: luma(250),
+    ),
+  )
+  let plus(x, y) = {
+    let r = node-r
+    let d = 2.45pt
+    place(top + left, dx: x - r, dy: y - r, circle(radius: r, stroke: ink + 0.85pt, fill: white))
+    place(top + left, line(start: (x - d, y), end: (x + d, y), stroke: ink + 0.65pt))
+    place(top + left, line(start: (x, y - d), end: (x, y + d), stroke: ink + 0.65pt))
+  }
+  let pos-signal(x, y) = {
+    let r = node-r
+    place(top + left, dx: x - r, dy: y - r, circle(radius: r, stroke: ink + 0.9pt, fill: white))
+    place(top + left, curve(
+      stroke: ink + 0.65pt,
+      fill: none,
+      curve.move((x - 2.2pt, y + 1.1pt)),
+      curve.cubic((x - 1.2pt, y + 1.1pt), (x - 1.1pt, y - 1.1pt), (x, y)),
+      curve.cubic((x + 1.1pt, y + 1.1pt), (x + 1.2pt, y - 1.1pt), (x + 2.2pt, y - 1.1pt)),
+    ))
+  }
+  let poly(points, weight: arrow-weight) = {
+    for i in range(points.len() - 1) {
+      let a = points.at(i)
+      let b = points.at(i + 1)
+      place(top + left, line(start: a, end: b, stroke: ink + weight))
+    }
+  }
+  let arrow-head(x, y, dir: "r") = {
+    let len = 2.4pt
+    let half = 1.5pt
+    if dir == "r" {
+      place(top + left, polygon((x, y), (x - len, y - half), (x - len, y + half), fill: ink))
+    } else if dir == "l" {
+      place(top + left, polygon((x, y), (x + len, y - half), (x + len, y + half), fill: ink))
+    } else if dir == "d" {
+      place(top + left, polygon((x, y), (x - half, y - len), (x + half, y - len), fill: ink))
+    } else {
+      place(top + left, polygon((x, y), (x - half, y + len), (x + half, y + len), fill: ink))
+    }
+  }
+  let arrow-poly(points, dir: "r") = {
+    poly(points)
+    let end = points.at(points.len() - 1)
+    arrow-head(end.at(0), end.at(1), dir: dir)
+  }
+  let arr-v(x, y1, y2, weight: arrow-weight) = {
+    let len = 2.4pt
+    if y2 > y1 {
+      place(top + left, line(start: (x, y1), end: (x, y2 - len), stroke: ink + weight))
+      arrow-head(x, y2, dir: "d")
+    } else {
+      place(top + left, line(start: (x, y1), end: (x, y2 + len), stroke: ink + weight))
+      arrow-head(x, y2, dir: "u")
+    }
+  }
+  let attention-fork(layer, gap: 6pt) = {
+    let xs = (layer.x + 9pt, layer.x + block-w / 2, layer.x + block-w - 9pt)
+    let y = layer.y + layer.h + gap
+    place(top + left, line(start: (xs.first(), y), end: (xs.last(), y), stroke: ink + arrow-weight))
+    for x in xs {
+      arr-v(x, y, layer.y + layer.h)
+    }
+  }
+  let branch-y(start, end, pct: 0.3) = start + pct * (end - start)
+  let residual(col, layer, norm, branch-from, branch-to, side: "left", branch-pct: 0.3) = {
+    let bus = if side == "left" { col.x + 6pt } else { col.x + frame-w - 6pt }
+    let by = branch-y(branch-from, branch-to, pct: branch-pct)
+    let from = (cx(col), by)
+    let mid = (bus, by)
+    let into = if side == "left" {
+      (norm.x, cy(norm))
+    } else {
+      (norm.x + block-w, cy(norm))
+    }
+    arrow-poly((from, mid, (bus, cy(norm)), into), dir: if side == "left" { "r" } else { "l" })
+  }
+  let column-bottom(col) = {
+    let emb-y = 188pt
+    let emb-h = 14pt
+    let plus-y = input-sum-y
+    block-at(col.stack-x, emb-y, col.emb-label, pink, h: emb-h, size: 4.2pt)
+    plus(cx(col), plus-y)
+    arr-v(cx(col), emb-y + emb-h + 10pt, emb-y + emb-h)
+    arr-v(cx(col), emb-y, plus-y + 3.5pt)
+    diagram-text(col.bottom-label-x, 221pt, col.bottom-label, size: 7.2pt, width: 74pt)
+    diagram-text-vcenter(col.pos-label-x, col.pos-label-y, [Positional Embedding], size: 5.0pt, width: 60pt)
+    pos-signal(col.pos-circle-x, plus-y)
+    if col.pos-side == "left" {
+      place(top + left, line(start: (col.pos-circle-x + node-r, plus-y), end: (cx(col) - node-r, plus-y), stroke: ink + arrow-weight))
+    } else {
+      place(top + left, line(start: (cx(col) + node-r, plus-y), end: (col.pos-circle-x - node-r, plus-y), stroke: ink + arrow-weight))
+    }
+  }
+  let sum-to-attention(col, layer, gap: 6pt) = place(
+    top + left,
+    line(
+      start: (cx(col), input-sum-y - 3.5pt),
+      end: (cx(col), layer.y + layer.h + gap),
+      stroke: ink + arrow-weight,
+    ),
+  )
+  let lower-attn-shift = 3pt
+
+  let enc-layers = (
+    (key: "attn", x: encoder.stack-x, y: 138pt + lower-attn-shift, h: 16pt, label: [Multi-Head\ Attention], fill: peach, size: 4.5pt),
+    (key: "norm1", x: encoder.stack-x, y: 123pt + lower-attn-shift, h: 9pt, label: [Add & Norm], fill: normfill, size: 4.8pt),
+    (key: "ff", x: encoder.stack-x, y: 92pt, h: 15pt, label: [Feed\ Forward], fill: bluefill, size: 4.7pt),
+    (key: "norm2", x: encoder.stack-x, y: 77pt, h: 9pt, label: [Add & Norm], fill: normfill, size: 4.8pt),
+  )
+  let dec-layers = (
+    (key: "masked", x: decoder.stack-x, y: 139pt + lower-attn-shift, h: 18pt, label: [Masked\ Multi-Head\ Attention], fill: peach, size: 4.0pt),
+    (key: "norm1", x: decoder.stack-x, y: 125pt + lower-attn-shift, h: 9pt, label: [Add & Norm], fill: normfill, size: 4.8pt),
+    (key: "cross", x: decoder.stack-x, y: 98pt, h: 14pt, label: [Multi-Head\ Attention], fill: peach, size: 4.2pt),
+    (key: "norm2", x: decoder.stack-x, y: 84pt, h: 9pt, label: [Add & Norm], fill: normfill, size: 4.8pt),
+    (key: "ff", x: decoder.stack-x, y: 59pt, h: 14pt, label: [Feed\ Forward], fill: bluefill, size: 4.4pt),
+    (key: "norm3", x: decoder.stack-x, y: 45pt, h: 9pt, label: [Add & Norm], fill: normfill, size: 4.8pt),
+    (key: "linear", x: decoder.stack-x, y: 27pt, h: 9pt, label: [Linear], fill: violet, size: 4.9pt),
+    (key: "softmax", x: decoder.stack-x, y: 15.5pt, h: 9pt, label: [Softmax], fill: greenfill, size: 4.9pt),
+  )
+  let enc(key) = enc-layers.find(layer => layer.key == key)
+  let dec(key) = dec-layers.find(layer => layer.key == key)
+
   box(width: W, height: H, {
-    place(top + left, dx: enc-x - 7pt, dy: 38pt, block(
-      width: col-w,
-      height: 70pt,
-      stroke: ink + 1.3pt,
-      radius: 7pt,
-      fill: luma(250),
-    ))
-    place(top + left, dx: dec-x - 7pt, dy: 22pt, block(
-      width: col-w,
-      height: 91pt,
-      stroke: ink + 1.3pt,
-      radius: 7pt,
-      fill: luma(250),
-    ))
-    place(top + left, dx: enc-x - 21pt, dy: 67pt, text(size: 12pt, fill: ink, [N×]))
-    place(top + left, dx: dec-x + 73pt, dy: 64pt, text(size: 12pt, fill: ink, [N×]))
+    frame(encoder)
+    frame(decoder)
+    diagram-text(encoder.nx-x, encoder.nx-y, [N×], size: 12pt)
+    diagram-text(decoder.nx-x, decoder.nx-y, [N×], size: 12pt)
+    diagram-text(decoder.stack-x - 7pt, 0pt, [Output Probabilities], size: 7.2pt, width: block-w + 14pt)
 
-    block-at(enc-x + 4pt, 118pt, [Input Embedding], pink, h: 16pt, size: 5.8pt)
-    plus(enc-x + 32pt, 111pt)
-    place(top + left, dx: enc-x - 12pt, dy: 103pt, text(size: 6.6pt, fill: ink)[Positional])
-    place(top + left, dx: enc-x - 12pt, dy: 111pt, text(size: 6.6pt, fill: ink)[Encoding])
-    place(top + left, dx: enc-x + 21pt, dy: 134pt, text(size: 6.8pt, fill: ink)[Inputs])
-    _arr-v(enc-x + 32pt, 140pt, 134pt, color: ink, weight: 0.9pt)
-    _arr-v(enc-x + 32pt, 118pt, 50pt, color: ink, weight: 0.9pt)
-    block-at(enc-x + 4pt, 82pt, [Multi-Head\ Attention], peach, h: 18pt, size: 5.3pt)
-    block-at(enc-x + 4pt, 67pt, [Add & Norm], normfill, h: 11pt, size: 5.5pt)
-    block-at(enc-x + 4pt, 50pt, [Feed\ Forward], bluefill, h: 15pt, size: 5.4pt)
-    block-at(enc-x + 4pt, 40pt, [Add & Norm], normfill, h: 10pt, size: 5.3pt)
-    _arr-r(enc-x + 62pt, 73pt, enc-x + 71pt, color: ink, weight: 0.9pt)
-    _arr-r(enc-x + 62pt, 45pt, enc-x + 71pt, color: ink, weight: 0.9pt)
+    column-bottom(encoder)
+    column-bottom(decoder)
 
-    block-at(dec-x + 4pt, 122pt, [Output Embedding], pink, h: 16pt, size: 5.8pt)
-    plus(dec-x + 32pt, 115pt)
-    place(top + left, dx: dec-x + 59pt, dy: 107pt, text(size: 6.6pt, fill: ink)[Positional])
-    place(top + left, dx: dec-x + 59pt, dy: 115pt, text(size: 6.6pt, fill: ink)[Encoding])
-    place(top + left, dx: dec-x + 13pt, dy: 136pt, text(size: 6.8pt, fill: ink)[Outputs])
-    _arr-v(dec-x + 32pt, 141pt, 138pt, color: ink, weight: 0.9pt)
-    _arr-v(dec-x + 32pt, 122pt, 108pt, color: ink, weight: 0.9pt)
-    block-at(dec-x + 4pt, 94pt, [Masked\ Multi-Head\ Attention], peach, h: 18pt, size: 4.8pt)
-    block-at(dec-x + 4pt, 81pt, [Add & Norm], normfill, h: 10pt, size: 5.3pt)
-    block-at(dec-x + 4pt, 65pt, [Multi-Head\ Attention], peach, h: 14pt, size: 5.0pt)
-    block-at(dec-x + 4pt, 52pt, [Add & Norm], normfill, h: 10pt, size: 5.3pt)
-    block-at(dec-x + 4pt, 38pt, [Feed\ Forward], bluefill, h: 12pt, size: 5.1pt)
-    block-at(dec-x + 4pt, 25pt, [Add & Norm], normfill, h: 10pt, size: 5.3pt)
-    block-at(dec-x + 4pt, 12pt, [Linear], violet, h: 10pt, size: 5.2pt)
-    block-at(dec-x + 4pt, 0pt, [Softmax], greenfill, h: 10pt, size: 5.2pt)
-    place(top + left, dx: dec-x + 63pt, dy: 1pt, text(size: 6.8pt, fill: ink)[Output\ Probs.])
-    _arr-r(enc-x + 70pt, 62pt, dec-x + 4pt, color: ink, weight: 0.9pt)
-    _arr-r(dec-x + 62pt, 86pt, dec-x + 71pt, color: ink, weight: 0.9pt)
-    _arr-r(dec-x + 62pt, 57pt, dec-x + 71pt, color: ink, weight: 0.9pt)
+    for layer in enc-layers {
+      block-at(layer.x, layer.y, layer.label, layer.fill, h: layer.h, size: layer.size)
+    }
+    for layer in dec-layers {
+      block-at(layer.x, layer.y, layer.label, layer.fill, h: layer.h, size: layer.size)
+    }
+
+    attention-fork(enc("attn"))
+    attention-fork(dec("masked"))
+    sum-to-attention(encoder, enc("attn"))
+    sum-to-attention(decoder, dec("masked"))
+
+    residual(encoder, enc("attn"), enc("norm1"), input-sum-y - 3.5pt, enc("attn").y + enc("attn").h + 6pt, side: "left", branch-pct: 0.65)
+    residual(encoder, enc("ff"), enc("norm2"), enc("norm1").y, enc("ff").y + enc("ff").h, side: "left", branch-pct: 0.5)
+    residual(decoder, dec("masked"), dec("norm1"), input-sum-y - 3.5pt, dec("masked").y + dec("masked").h + 6pt, side: "right", branch-pct: 0.65)
+    residual(decoder, dec("cross"), dec("norm2"), dec("norm1").y, dec("cross").y + dec("cross").h, side: "right")
+    residual(decoder, dec("ff"), dec("norm3"), dec("norm2").y, dec("ff").y + dec("ff").h, side: "right", branch-pct: 0.5)
+
+    arr-v(cx(encoder), enc("attn").y, enc("norm1").y + enc("norm1").h)
+    arr-v(cx(encoder), enc("norm1").y, enc("ff").y + enc("ff").h)
+    arr-v(cx(encoder), enc("ff").y, enc("norm2").y + enc("norm2").h)
+    arr-v(cx(decoder), dec("masked").y, dec("norm1").y + dec("norm1").h)
+    let cross-input-xs = (
+      dec("cross").x + 9pt,
+      dec("cross").x + block-w / 2,
+      dec("cross").x + block-w - 9pt,
+    )
+    let cross-right-route-y = branch-y(dec("norm1").y, dec("cross").y + dec("cross").h, pct: 0.3) - 4pt
+    arrow-poly((
+      (cx(decoder), dec("norm1").y),
+      (cx(decoder), cross-right-route-y),
+      (cross-input-xs.last(), cross-right-route-y),
+      (cross-input-xs.last(), dec("cross").y + dec("cross").h),
+    ), dir: "u")
+    arr-v(cx(decoder), dec("cross").y, dec("norm2").y + dec("norm2").h)
+    arr-v(cx(decoder), dec("norm2").y, dec("ff").y + dec("ff").h)
+    arr-v(cx(decoder), dec("ff").y, dec("norm3").y + dec("norm3").h)
+    arr-v(cx(decoder), dec("norm3").y, dec("linear").y + dec("linear").h)
+    arr-v(cx(decoder), dec("linear").y, dec("softmax").y + dec("softmax").h)
+    arr-v(cx(decoder), dec("softmax").y, 10pt)
+
+    let enc-out-x = cx(encoder)
+    let enc-out-y = enc("norm2").y
+    let enc-route-y = encoder.frame-y - 5pt
+    let enc-dec-route-x = (encoder.x + frame-w + decoder.x) / 2
+    let cross-in-y = dec("cross").y + dec("cross").h + 5pt
+    poly((
+      (enc-out-x, enc-out-y),
+      (enc-out-x, enc-route-y),
+      (enc-dec-route-x, enc-route-y),
+      (enc-dec-route-x, cross-in-y),
+      (cross-input-xs.at(1), cross-in-y),
+    ))
+    arr-v(cross-input-xs.at(1), cross-in-y, dec("cross").y + dec("cross").h)
+    arrow-poly((
+      (enc-dec-route-x, cross-in-y),
+      (cross-input-xs.at(0), cross-in-y),
+      (cross-input-xs.at(0), dec("cross").y + dec("cross").h),
+    ), dir: "u")
   })
 })
 
@@ -932,7 +1135,6 @@ return theta",
       #fs-diagram(caption: [Transformer encoder-decoder block diagram (Vaswani et al., 2017).])[
         #transformer-diagram
       ]
-      Residual connections (Add) let gradients flow directly; Layer Norm stabilises training at each depth.
     ],
     [
       A closed-loop controller compares the reference signal with the measured output, drives the plant, and routes the response through a feedback transducer.
