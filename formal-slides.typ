@@ -53,6 +53,7 @@
 #let _slide-x-margin = 22.4pt
 #let _single-col-x-margin = 2 * _slide-x-margin
 #let _nav-compact-threshold = 4
+#let _cover-image-gap = 18pt
 
 // ============================================================
 // Shared chrome
@@ -110,6 +111,15 @@
     )
   )
 )
+
+#let _cover-image-row(paths, height: 45pt) = {
+  grid(
+    columns: paths.map(_ => auto),
+    column-gutter: _cover-image-gap,
+    align: horizon,
+    ..paths.map(path => image(path, height: height)),
+  )
+}
 
 #let _register-page(section: none, intro: false) = {
   _fs-pages.update(p => p + ((section: section, intro: intro),))
@@ -229,13 +239,13 @@
         width: w,
         height: 25.5pt,
         fill: secondary,
-        inset: (left: 22.4pt, right: 22.4pt, top: 0pt, bottom: 0pt),
+        inset: (left: _single-col-x-margin, right: _single-col-x-margin, top: 0pt, bottom: 0pt),
         block(
           width: 100%,
           height: 100%,
           align(horizon,
             align(left,
-              text(font: _sans, fill: primary, size: 13pt, slide-title)
+              text(font: _sans, fill: primary, size: 14pt, slide-title)
             )
           ),
         )
@@ -312,16 +322,13 @@
 /// Two-column layout inside a slide.
 /// #two-col([left content], [right content], left-width: 50%)
 #let two-col(left, right, gutter: 22.4pt, left-width: 48%) = {
-  move(
-    dx: -_slide-x-margin,
-    block(
-      width: 100% + 2 * _slide-x-margin,
-      grid(
-        columns: (left-width, 1fr),
-        column-gutter: gutter,
-        grid.cell(align: top + start)[#left],
-        grid.cell(align: top + start)[#right],
-      )
+  block(
+    width: 100%,
+    grid(
+      columns: (left-width, 1fr),
+      column-gutter: gutter,
+      grid.cell(align: top + start)[#left],
+      grid.cell(align: top + start)[#right],
     )
   )
 }
@@ -655,7 +662,7 @@
                   width: 100%, height: 38pt, inset: (x: 12pt, y: 0pt),
                   align(horizon,
                     move(dy: -3pt,
-                      text(font: _sans, size: 14pt, weight: "bold", fill: tc, sec-title)
+                      text(font: _sans, size: 15pt, weight: "bold", fill: tc, sec-title)
                     )
                   )
                 )
@@ -716,6 +723,8 @@
   footer-title:    auto,
   footer-subtitle: auto,
   logo:            none,
+  cover-images:    none,
+  cover-image-height: 45pt,
   body
 ) = {
   assert(title != none, message: "formal-slides: `title` is required")
@@ -723,6 +732,13 @@
   let ft  = if footer-title    == auto { title }    else { footer-title }
   let fst = if footer-subtitle == auto { subtitle } else { footer-subtitle }
   let inst = if institution != none { institution } else { institute }
+  let cover-imgs = if cover-images == none {
+    ()
+  } else if type(cover-images) == array {
+    cover-images
+  } else {
+    (cover-images,)
+  }
   let auth = if authors != none {
     let al = if type(authors) == array { authors } else { (authors,) }
     al.join([,  ])
@@ -745,7 +761,7 @@
   _fs-auth.update(auth)
 
   // Global text defaults
-  set text(font: _serif, size: 12pt, fill: luma(20))
+  set text(font: _serif, size: 11.5pt, fill: luma(20))
   set figure(gap: _caption-gap)
   show figure.where(kind: table): it => block(
     above: _visual-y-margin,
@@ -785,7 +801,7 @@
               inset: (x: 14pt, y: 10pt),
               align(center + horizon, {
                 set text(font: _sans, fill: white)
-                text(size: 18pt, title)
+                text(size: 19pt, title)
                 if subtitle != none {
                   linebreak()
                   v(4pt)
@@ -807,10 +823,12 @@
             if date != none {
               text(font: _sans, size: 10pt, date)
               linebreak()
-              v(8pt)
             }
-            if logo != none {
-              image(logo, height: 52pt)
+            v(26pt)
+            if cover-imgs != () {
+              _cover-image-row(cover-imgs, height: cover-image-height)
+            } else if logo != none {
+              image(logo, height: cover-image-height)
             } else {
               box(
                 stroke: title-color + 1pt, inset: (x: 12pt, y: 14pt),
@@ -828,7 +846,7 @@
       context {
         let entries = _toc-data.final()
         let sec-n   = 0
-        text(font: _sans, size: 13pt, weight: "bold", fill: title-color, [Table of Contents])
+        text(font: _sans, size: 14pt, weight: "bold", fill: title-color, [Table of Contents])
         v(8pt)
         for e in entries {
           if e.kind == "section" {

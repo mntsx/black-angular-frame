@@ -18,6 +18,7 @@ A Typst presentation template with a square, minimal, academic design language: 
   ratio:       16/9,
   title-color: rgb("#1C1C1C"),
   secondary-color: rgb("#D9D9D9"),
+  cover-images: ("assets/typst-logo.png", "assets/github-logo.png"),
 )
 
 #new-section("Introduction")
@@ -58,9 +59,11 @@ For VS Code + Tinymist, the workspace already includes `.vscode/settings.json` w
 | `toc` | Whether to show the table of contents slide | `true` |
 | `footer-title` | Custom left footer text (defaults to `title`) | `auto` |
 | `footer-subtitle` | Custom center footer text (defaults to `subtitle`) | `auto` |
-| `logo` | Path to a logo image shown on the title slide | `none` |
+| `cover-images` | Path or array of paths for title-slide images | `none` |
+| `cover-image-height` | Shared image height on the title slide | `45pt` |
+| `logo` | Backward-compatible single title-slide image | `none` |
 
-When `logo` is `none` the template renders a small `typst` wordmark as a placeholder.
+When `cover-images` and `logo` are both `none`, the template renders a small `typst` wordmark as a placeholder.
 
 ---
 

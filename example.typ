@@ -15,6 +15,7 @@
   title-color: rgb("#1C1C1C"),
   bg-color: white,
   toc: true,
+  cover-images: ("assets/typst-logo.png", "assets/github-logo.png"),
 )
 
 // ============================================================
