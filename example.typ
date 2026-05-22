@@ -323,9 +323,21 @@ return theta",
             paper-cell(text(weight: "bold")[Acc. (%)], pos: center),
             paper-cell(text(weight: "bold")[F#sub[1]], pos: center),
             paper-cell(text(weight: "bold")[AUC], pos: center),
-            paper-cell[Baseline], paper-cell(pos: center)[72.3], paper-cell(pos: center)[0.701], paper-cell(pos: center)[0.743],
-            paper-cell[Model A], paper-cell(pos: center)[81.5], paper-cell(pos: center)[0.803], paper-cell(pos: center)[0.851],
-            paper-cell[*Model B*], paper-cell(pos: center)[*88.9*], paper-cell(pos: center)[*0.876*], paper-cell(pos: center)[*0.903*],
+
+            paper-cell[Baseline],
+            paper-cell(pos: center)[72.3],
+            paper-cell(pos: center)[0.701],
+            paper-cell(pos: center)[0.743],
+
+            paper-cell[Model A],
+            paper-cell(pos: center)[81.5],
+            paper-cell(pos: center)[0.803],
+            paper-cell(pos: center)[0.851],
+
+            paper-cell[*Model B*],
+            paper-cell(pos: center)[*88.9*],
+            paper-cell(pos: center)[*0.876*],
+            paper-cell(pos: center)[*0.903*],
           )
           line(length: 100%, stroke: 0.9pt)
         })
@@ -351,14 +363,17 @@ return theta",
           grid-cell(fill: blue.darken(50%))[#text(weight: "bold", fill: white)[Acc. (%)]],
           grid-cell(fill: blue.darken(50%))[#text(weight: "bold", fill: white)[F#sub[1]]],
           grid-cell(fill: blue.darken(50%))[#text(weight: "bold", fill: white)[AUC]],
+
           grid-cell(fill: luma(248), pos: left)[Baseline],
           grid-cell(fill: luma(248))[72.3],
           grid-cell(fill: luma(248))[0.701],
           grid-cell(fill: luma(248))[0.743],
+
           grid-cell(fill: white, pos: left)[Model A],
           grid-cell(fill: white)[81.5],
           grid-cell(fill: white)[0.803],
           grid-cell(fill: white)[0.851],
+
           grid-cell(fill: luma(248), pos: left)[Model B],
           grid-cell(fill: luma(248))[88.9],
           grid-cell(fill: luma(248))[0.876],
@@ -390,9 +405,21 @@ return theta",
               paper-cell(text(weight: "bold")[Acc. (%)], pos: center),
               paper-cell(text(weight: "bold")[F#sub[1]], pos: center),
               paper-cell(text(weight: "bold")[AUC], pos: center),
-              paper-cell[Baseline], paper-cell(pos: center)[72.3], paper-cell(pos: center)[0.701], paper-cell(pos: center)[0.743],
-              paper-cell[Model A], paper-cell(pos: center)[81.5], paper-cell(pos: center)[0.803], paper-cell(pos: center)[0.851],
-              paper-cell[*Model B*], paper-cell(pos: center)[*88.9*], paper-cell(pos: center)[*0.876*], paper-cell(pos: center)[*0.903*],
+
+              paper-cell[Baseline],
+              paper-cell(pos: center)[72.3],
+              paper-cell(pos: center)[0.701],
+              paper-cell(pos: center)[0.743],
+
+              paper-cell[Model A],
+              paper-cell(pos: center)[81.5],
+              paper-cell(pos: center)[0.803],
+              paper-cell(pos: center)[0.851],
+
+              paper-cell[*Model B*],
+              paper-cell(pos: center)[*88.9*],
+              paper-cell(pos: center)[*0.876*],
+              paper-cell(pos: center)[*0.903*],
             )
             line(length: 100%, stroke: 0.9pt)
           })
@@ -422,14 +449,17 @@ return theta",
             grid-cell(fill: blue.darken(50%))[#text(weight: "bold", fill: white)[Acc. (%)]],
             grid-cell(fill: blue.darken(50%))[#text(weight: "bold", fill: white)[F#sub[1]]],
             grid-cell(fill: blue.darken(50%))[#text(weight: "bold", fill: white)[AUC]],
+
             grid-cell(fill: luma(248), pos: left)[Baseline],
             grid-cell(fill: luma(248))[72.3],
             grid-cell(fill: luma(248))[0.701],
             grid-cell(fill: luma(248))[0.743],
+
             grid-cell(fill: white, pos: left)[Model A],
             grid-cell(fill: white)[81.5],
             grid-cell(fill: white)[0.803],
             grid-cell(fill: white)[0.851],
+
             grid-cell(fill: luma(248), pos: left)[Model B],
             grid-cell(fill: luma(248))[88.9],
             grid-cell(fill: luma(248))[0.876],
@@ -448,85 +478,380 @@ return theta",
 #new-section("Diagrams & Charts")
 #section-slide("Diagrams & Charts")
 
+// ---- Diagram drawing helpers -------------------------------
+#let _arrow-head(x, y, dir: "r", color: luma(25)) = {
+  if dir == "r" {
+    place(top + left, dx: x - 6pt, dy: y - 3pt, polygon((0pt, 0pt), (6pt, 3pt), (0pt, 6pt), fill: color))
+  } else if dir == "l" {
+    place(top + left, dx: x, dy: y - 3pt, polygon((0pt, 3pt), (6pt, 0pt), (6pt, 6pt), fill: color))
+  } else if dir == "d" {
+    place(top + left, dx: x - 3pt, dy: y - 6pt, polygon((0pt, 0pt), (6pt, 0pt), (3pt, 6pt), fill: color))
+  } else if dir == "u" {
+    place(top + left, dx: x - 3pt, dy: y, polygon((0pt, 6pt), (3pt, 0pt), (6pt, 6pt), fill: color))
+  } else if dir == "dr" {
+    place(top + left, dx: x - 6pt, dy: y - 6pt, polygon((6pt, 6pt), (1pt, 4pt), (4pt, 1pt), fill: color))
+  } else if dir == "dl" {
+    place(top + left, dx: x, dy: y - 6pt, polygon((0pt, 6pt), (5pt, 4pt), (2pt, 1pt), fill: color))
+  } else if dir == "ur" {
+    place(top + left, dx: x - 6pt, dy: y, polygon((6pt, 0pt), (1pt, 2pt), (4pt, 5pt), fill: color))
+  } else {
+    place(top + left, dx: x, dy: y, polygon((0pt, 0pt), (5pt, 2pt), (2pt, 5pt), fill: color))
+  }
+}
+
+#let _arr-r(x1, y, x2, color: luma(25), weight: 0.8pt, label: none, label-dy: -8pt) = {
+  place(top + left, line(start: (x1, y), end: (x2 - 5pt, y), stroke: color + weight))
+  _arrow-head(x2, y, dir: "r", color: color)
+  if label != none {
+    place(top + left, dx: (x1 + x2) / 2 - 6pt, dy: y + label-dy, text(size: 6.4pt, fill: color, label))
+  }
+}
+
+#let _arr-l(x1, y, x2, color: luma(25), weight: 0.8pt, label: none, label-dy: -8pt) = {
+  place(top + left, line(start: (x1, y), end: (x2 + 5pt, y), stroke: color + weight))
+  _arrow-head(x2, y, dir: "l", color: color)
+  if label != none {
+    place(top + left, dx: (x1 + x2) / 2 - 6pt, dy: y + label-dy, text(size: 6.4pt, fill: color, label))
+  }
+}
+
+#let _arr-v(x, y1, y2, color: luma(25), weight: 0.8pt, label: none, label-dx: 4pt) = {
+  if y2 > y1 {
+    place(top + left, line(start: (x, y1), end: (x, y2 - 5pt), stroke: color + weight))
+    _arrow-head(x, y2, dir: "d", color: color)
+  } else {
+    place(top + left, line(start: (x, y1), end: (x, y2 + 5pt), stroke: color + weight))
+    _arrow-head(x, y2, dir: "u", color: color)
+  }
+  if label != none {
+    place(top + left, dx: x + label-dx, dy: (y1 + y2) / 2 - 4pt, text(size: 6.4pt, fill: color, label))
+  }
+}
+
+#let _arr-diag(x1, y1, x2, y2, dir, color: luma(25), weight: 0.8pt, label: none, label-dx: 0pt, label-dy: 0pt) = {
+  place(top + left, line(start: (x1, y1), end: (x2, y2), stroke: color + weight))
+  _arrow-head(x2, y2, dir: dir, color: color)
+  if label != none {
+    place(top + left, dx: (x1 + x2) / 2 + label-dx, dy: (y1 + y2) / 2 + label-dy, text(size: 6.4pt, fill: color, label))
+  }
+}
+
+#let _diagram-block(label, w: 52pt, h: 18pt, fill: luma(245), stroke: luma(25), text-size: 6.6pt, radius: 2pt) = box(
+  width: w,
+  height: h,
+  fill: fill,
+  stroke: stroke + 0.7pt,
+  radius: radius,
+  align(center + horizon, text(size: text-size, fill: luma(15), label)),
+)
+
+#let transformer-diagram = align(center, {
+  let W = 224pt
+  let H = 142pt
+  let ink = luma(15)
+  let enc-x = 16pt
+  let dec-x = 124pt
+  let col-w = 78pt
+  let pink = rgb("#F9DCDD")
+  let peach = rgb("#FFE3B8")
+  let bluefill = rgb("#C5E8F5")
+  let normfill = rgb("#F3F5C2")
+  let greenfill = rgb("#D8F0D9")
+  let violet = rgb("#E4E7F8")
+  let block-at(x, y, label, fill, h: 17pt, size: 6.2pt) = place(
+    top + left,
+    dx: x,
+    dy: y,
+    _diagram-block(label, w: 56pt, h: h, fill: fill, stroke: ink, text-size: size, radius: 2.2pt),
+  )
+  let plus(x, y) = place(top + left, dx: x - 5pt, dy: y - 5pt, circle(radius: 5pt, stroke: ink + 0.8pt, fill: white))
+  box(width: W, height: H, {
+    place(top + left, dx: enc-x - 7pt, dy: 38pt, block(
+      width: col-w,
+      height: 70pt,
+      stroke: ink + 1.3pt,
+      radius: 7pt,
+      fill: luma(250),
+    ))
+    place(top + left, dx: dec-x - 7pt, dy: 22pt, block(
+      width: col-w,
+      height: 91pt,
+      stroke: ink + 1.3pt,
+      radius: 7pt,
+      fill: luma(250),
+    ))
+    place(top + left, dx: enc-x - 21pt, dy: 67pt, text(size: 12pt, fill: ink, [N×]))
+    place(top + left, dx: dec-x + 73pt, dy: 64pt, text(size: 12pt, fill: ink, [N×]))
+
+    block-at(enc-x + 4pt, 118pt, [Input Embedding], pink, h: 16pt, size: 5.8pt)
+    plus(enc-x + 32pt, 111pt)
+    place(top + left, dx: enc-x - 12pt, dy: 103pt, text(size: 6.6pt, fill: ink)[Positional])
+    place(top + left, dx: enc-x - 12pt, dy: 111pt, text(size: 6.6pt, fill: ink)[Encoding])
+    place(top + left, dx: enc-x + 21pt, dy: 134pt, text(size: 6.8pt, fill: ink)[Inputs])
+    _arr-v(enc-x + 32pt, 140pt, 134pt, color: ink, weight: 0.9pt)
+    _arr-v(enc-x + 32pt, 118pt, 50pt, color: ink, weight: 0.9pt)
+    block-at(enc-x + 4pt, 82pt, [Multi-Head\ Attention], peach, h: 18pt, size: 5.3pt)
+    block-at(enc-x + 4pt, 67pt, [Add & Norm], normfill, h: 11pt, size: 5.5pt)
+    block-at(enc-x + 4pt, 50pt, [Feed\ Forward], bluefill, h: 15pt, size: 5.4pt)
+    block-at(enc-x + 4pt, 40pt, [Add & Norm], normfill, h: 10pt, size: 5.3pt)
+    _arr-r(enc-x + 62pt, 73pt, enc-x + 71pt, color: ink, weight: 0.9pt)
+    _arr-r(enc-x + 62pt, 45pt, enc-x + 71pt, color: ink, weight: 0.9pt)
+
+    block-at(dec-x + 4pt, 122pt, [Output Embedding], pink, h: 16pt, size: 5.8pt)
+    plus(dec-x + 32pt, 115pt)
+    place(top + left, dx: dec-x + 59pt, dy: 107pt, text(size: 6.6pt, fill: ink)[Positional])
+    place(top + left, dx: dec-x + 59pt, dy: 115pt, text(size: 6.6pt, fill: ink)[Encoding])
+    place(top + left, dx: dec-x + 13pt, dy: 136pt, text(size: 6.8pt, fill: ink)[Outputs])
+    _arr-v(dec-x + 32pt, 141pt, 138pt, color: ink, weight: 0.9pt)
+    _arr-v(dec-x + 32pt, 122pt, 108pt, color: ink, weight: 0.9pt)
+    block-at(dec-x + 4pt, 94pt, [Masked\ Multi-Head\ Attention], peach, h: 18pt, size: 4.8pt)
+    block-at(dec-x + 4pt, 81pt, [Add & Norm], normfill, h: 10pt, size: 5.3pt)
+    block-at(dec-x + 4pt, 65pt, [Multi-Head\ Attention], peach, h: 14pt, size: 5.0pt)
+    block-at(dec-x + 4pt, 52pt, [Add & Norm], normfill, h: 10pt, size: 5.3pt)
+    block-at(dec-x + 4pt, 38pt, [Feed\ Forward], bluefill, h: 12pt, size: 5.1pt)
+    block-at(dec-x + 4pt, 25pt, [Add & Norm], normfill, h: 10pt, size: 5.3pt)
+    block-at(dec-x + 4pt, 12pt, [Linear], violet, h: 10pt, size: 5.2pt)
+    block-at(dec-x + 4pt, 0pt, [Softmax], greenfill, h: 10pt, size: 5.2pt)
+    place(top + left, dx: dec-x + 63pt, dy: 1pt, text(size: 6.8pt, fill: ink)[Output\ Probs.])
+    _arr-r(enc-x + 70pt, 62pt, dec-x + 4pt, color: ink, weight: 0.9pt)
+    _arr-r(dec-x + 62pt, 86pt, dec-x + 71pt, color: ink, weight: 0.9pt)
+    _arr-r(dec-x + 62pt, 57pt, dec-x + 71pt, color: ink, weight: 0.9pt)
+  })
+})
+
+
+#let closed-loop-diagram = align(center, {
+  let W = 248pt
+  let H = 112pt
+  let ink = luma(0)
+  let stroke = ink + 1.0pt
+  let label(x, y, body, size: 7.2pt) = place(top + left, dx: x, dy: y, text(size: size, fill: ink, body))
+  let arrow-r(x1, y, x2) = {
+    place(top + left, line(start: (x1, y), end: (x2 - 5pt, y), stroke: stroke))
+    _arrow-head(x2, y, dir: "r", color: ink)
+  }
+  let arrow-l(x1, y, x2) = {
+    place(top + left, line(start: (x1, y), end: (x2 + 5pt, y), stroke: stroke))
+    _arrow-head(x2, y, dir: "l", color: ink)
+  }
+  let arrow-u(x, y1, y2) = {
+    place(top + left, line(start: (x, y1), end: (x, y2 + 5pt), stroke: stroke))
+    _arrow-head(x, y2, dir: "u", color: ink)
+  }
+  let arrow-d(x, y1, y2) = {
+    place(top + left, line(start: (x, y1), end: (x, y2 - 5pt), stroke: stroke))
+    _arrow-head(x, y2, dir: "d", color: ink)
+  }
+  let labeled-arrow(x1, y1, x2, y2, body, label-dx: 0pt, label-dy: 0pt, label-size: 8pt) = {
+    if y1 == y2 and x2 > x1 {
+      arrow-r(x1, y1, x2)
+    } else if y1 == y2 and x2 < x1 {
+      arrow-l(x1, y1, x2)
+    } else if x1 == x2 and y2 > y1 {
+      arrow-d(x1, y1, y2)
+    } else if x1 == x2 and y2 < y1 {
+      arrow-u(x1, y1, y2)
+    } else {
+      place(top + left, line(start: (x1, y1), end: (x2, y2), stroke: stroke))
+    }
+    if body != none {
+      label((x1 + x2) / 2 + label-dx, (y1 + y2) / 2 + label-dy, body, size: label-size)
+    }
+  }
+
+
+  let sys-box(x, y, label, w: 26pt, h: 26pt) = {
+    place(
+      top + left,
+      dx: x,
+      dy: y,
+      box(
+        width: w,
+        height: h,
+        fill: white,
+        stroke: ink + 1.2pt,
+        align(center + horizon, text(size: 8pt, fill: ink, label)),
+      ),
+    )
+  }
+
+  let sum-sign(x, y, body) = place(
+    top + left,
+    dx: x,
+    dy: y,
+    box(width: 5.5pt, height: 5.5pt, align(center + horizon, text(size: 5.8pt, fill: ink, body))),
+  )
+  let sum-node(x, y, kind: "feedback") = {
+    let r = 10pt
+    let d = 7.1pt
+    let signs = if kind == "disturbance" {
+      ((-8.6pt, -3.0pt, [+]), (-2.8pt, -8.6pt, [+]))
+    } else {
+      ((-8.6pt, -3.0pt, [+]), (-2.8pt, 3.2pt, [−]))
+    }
+    place(top + left, dx: x - r, dy: y - r, circle(radius: r, stroke: ink + 1.0pt, fill: white))
+    place(top + left, line(start: (x - d, y - d), end: (x + d, y + d), stroke: ink + 0.65pt))
+    place(top + left, line(start: (x - d, y + d), end: (x + d, y - d), stroke: ink + 0.65pt))
+    for (sx, sy, sign) in signs {
+      sum-sign(x + sx, y + sy, sign)
+    }
+  }
+  box(width: W, height: H, {
+    let y = 42pt
+    let s1 = 48pt
+    let s2 = 154pt
+    let low = 85pt
+    let arrow-len = 30pt
+    let disturbance-arrow-len = 20pt
+    let node-r = 10pt
+    let box-w = 26pt
+    let k-x = s1 + node-r + arrow-len
+    let g-x = s2 + node-r + arrow-len
+    let branch = g-x + box-w + arrow-len / 2
+    let h-x = 144pt
+
+    sum-node(s1, y)
+    label(k-x - 4pt, 17pt, [Controller], size: 7pt)
+
+    sys-box(k-x, 29pt, [$K(z)$])
+    // sys-box(50pt, 29pt, [$K(z)$])
+
+    sum-node(s2, y, kind: "disturbance")
+    label(g-x - 11pt, 17pt, [Target System], size: 7pt)
+    sys-box(g-x, 29pt, [$G(z)$])
+    sys-box(h-x, 72pt, [$H(z)$])
+    label(h-x - 7pt, 103pt, [Transducer], size: 7pt)
+
+    labeled-arrow(s1 - node-r - arrow-len, y, s1 - node-r, y, [$R(z)$], label-dx: -10pt, label-dy: -10pt)
+    labeled-arrow(s1 + node-r, y, k-x, y, [$E(z)$], label-dx: -10pt, label-dy: -10pt)
+    labeled-arrow(k-x + box-w, y, s2 - node-r, y, [$U(z)$], label-dx: -10pt, label-dy: -10pt)
+    labeled-arrow(s2 + node-r, y, g-x, y, [$V(z)$], label-dx: -10pt, label-dy: -10pt)
+    labeled-arrow(g-x + box-w, y, g-x + box-w + arrow-len, y, [$Y(z)$], label-dx: -10pt, label-dy: -10pt)
+    labeled-arrow(s2, y - node-r - disturbance-arrow-len, s2, y - node-r, [$D(z)$], label-dx: -9pt, label-dy: -21pt)
+    place(top + left, line(start: (branch, y), end: (branch, low), stroke: stroke))
+    arrow-l(branch, low, h-x + box-w)
+    place(top + left, line(start: (h-x, low), end: (s1, low), stroke: stroke))
+    arrow-u(s1, low, 52pt)
+    label(94pt, 90pt, [$W(z)$], size: 8pt)
+  })
+})
+
+
+
+#let kernel-image-diagram = align(center, {
+  let W = 220pt
+  let H = 86pt
+  let ink = luma(15)
+  let label-size = 9pt
+  let node(x, y, w, h, body, size) = place(
+    top + left,
+    dx: x - w / 2,
+    dy: y - h / 2,
+    box(width: w, height: h, align(center + horizon, text(size: size, fill: ink, body))),
+  )
+  let arrow-r(x1, y, x2, body, label-dx: 0pt, label-dy: -13pt) = {
+    place(top + left, line(start: (x1, y), end: (x2 - 5pt, y), stroke: ink + 0.8pt))
+    _arrow-head(x2, y, dir: "r", color: ink)
+    place(top + left, dx: (x1 + x2) / 2 + label-dx, dy: y + label-dy, text(size: label-size, fill: ink, body))
+  }
+  let arrow-v(x, y1, y2, body, label-dx: 7pt, label-dy: -4pt) = {
+    if y2 > y1 {
+      place(top + left, line(start: (x, y1), end: (x, y2 - 5pt), stroke: ink + 0.8pt))
+      _arrow-head(x, y2, dir: "d", color: ink)
+    } else {
+      place(top + left, line(start: (x, y1), end: (x, y2 + 5pt), stroke: ink + 0.8pt))
+      _arrow-head(x, y2, dir: "u", color: ink)
+    }
+    place(top + left, dx: x + label-dx, dy: (y1 + y2) / 2 + label-dy, text(size: label-size, fill: ink, body))
+  }
+  box(width: W, height: H, {
+    let top-y = 20pt
+    let bot-y = 68pt
+    let left-x = 66pt
+    let right-x = 162pt
+    let g-w = 24pt
+    let gp-w = 30pt
+    let q-w = 92pt
+    let im-w = 58pt
+    let g-arrow-w = 20pt
+    let gp-arrow-w = 24pt
+    let q-arrow-w = 74pt
+    let im-arrow-w = 42pt
+    let node-h = 18pt
+
+    node(left-x, top-y, g-w, node-h, [$G$], 18pt)
+    node(right-x, top-y, gp-w, node-h, [$G'$], 18pt)
+    node(left-x, bot-y, q-w, node-h, [$G slash ker phi$], 16pt)
+    node(right-x, bot-y, im-w, node-h, [$im phi$], 16pt)
+
+    arrow-r(left-x + g-arrow-w / 2 + 2pt, top-y, right-x - gp-arrow-w / 2 + 1pt, [$phi$], label-dx: -4pt)
+    arrow-v(left-x, top-y + node-h / 2 + 2pt, bot-y - node-h / 2 + 1pt, [$-$], label-dx: -13pt)
+    arrow-r(left-x + q-arrow-w / 2 + 2pt, bot-y, right-x - im-arrow-w / 2 + 1pt, [$overline(phi)$], label-dx: -8pt, label-dy: 5pt)
+    arrow-v(right-x, bot-y - node-h / 2 + 1pt, top-y + node-h / 2 + 2pt, [inc], label-dx: 7pt)
+  })
+})
+
+#let weighted-transition-graph = align(center, {
+  let W = 208pt
+  let H = 145pt
+  let ink = luma(25)
+  let edge = rgb("#C66A00")
+  let node(x, y, short) = {
+    place(top + left, dx: x - 13pt, dy: y - 13pt, box(
+      width: 26pt,
+      height: 26pt,
+      radius: 13pt,
+      stroke: ink + 0.7pt,
+      fill: white,
+      align(center + horizon, text(size: 8.4pt, style: "italic", short)),
+    ))
+  }
+  box(width: W, height: H, {
+    _arr-diag(103pt, 28pt, 76pt, 56pt, "dl", color: edge, weight: 0.85pt, label: [10], label-dx: -1pt, label-dy: -8pt)
+    _arr-diag(67pt, 75pt, 40pt, 96pt, "dl", color: edge, weight: 0.85pt, label: [10], label-dx: -3pt, label-dy: -9pt)
+    _arr-diag(35pt, 105pt, 64pt, 125pt, "dr", color: edge, weight: 0.85pt, label: [4], label-dx: -11pt, label-dy: -8pt)
+    _arr-v(74pt, 79pt, 116pt, color: edge, weight: 0.85pt, label: [5], label-dx: 5pt)
+    _arr-v(64pt, 116pt, 77pt, color: edge, weight: 0.85pt)
+    _arr-diag(122pt, 90pt, 82pt, 69pt, "ul", color: edge, weight: 0.85pt, label: [3], label-dx: -3pt, label-dy: -10pt)
+    _arr-diag(118pt, 104pt, 82pt, 125pt, "dl", color: edge, weight: 0.85pt, label: [9], label-dx: -2pt, label-dy: -3pt)
+    _arr-v(126pt, 75pt, 36pt, color: edge, weight: 0.85pt, label: [4], label-dx: -7pt)
+    _arr-v(137pt, 36pt, 75pt, color: edge, weight: 0.85pt)
+    _arr-l(177pt, 126pt, 88pt, color: edge, weight: 0.85pt, label: [10], label-dy: -9pt)
+    place(top + left, line(start: (180pt, 112pt), end: (194pt, 79pt), stroke: edge + 0.85pt))
+    place(top + left, line(start: (194pt, 79pt), end: (174pt, 17pt), stroke: edge + 0.85pt))
+    place(top + left, line(start: (174pt, 17pt), end: (140pt, 20pt), stroke: edge + 0.85pt))
+    _arrow-head(140pt, 20pt, dir: "l", color: edge)
+    place(top + left, dx: 190pt, dy: 67pt, text(size: 6.4pt, fill: edge)[10])
+    node(26pt, 103pt, [$P$])
+    node(76pt, 67pt, [$B$])
+    node(130pt, 22pt, [$D$])
+    node(128pt, 96pt, [$C$])
+    node(75pt, 127pt, [$M$])
+    node(181pt, 128pt, [$L$])
+  })
+})
+
 // ---- Chart slide 1: Transformer + Dynamic system -----------
 #slide(title: "Block Diagrams")[
   #two-col(
     left-width: 49%,
     [
-      The Transformer encoder stacks multi-head self-attention and feed-forward sub-layers. Each is wrapped in a residual connection followed by layer normalisation.
+      The Transformer architecture couples an encoder stack with an autoregressive decoder. Multi-head attention and feed-forward sub-layers are wrapped in residual connections followed by layer normalisation.
 
-      #fs-diagram(caption: [Simplified Transformer encoder block (Vaswani et al., 2017).])[
-        #let bw = 76pt; let bh = 17pt
-        #let orange = rgb("#d06000")
-        #let bblue = rgb("#2050a0")
-        #let green2 = rgb("#1a7040")
-        #let cbox(txt, fill: blue.darken(50%), w: 76pt, h: 17pt) = block(
-          width: w,
-          height: h,
-          fill: fill,
-          stroke: fill.darken(15%) + 0.5pt,
-          align(center + horizon, text(fill: white, size: 7pt, weight: "bold", txt)),
-        )
-        #let arr = block(width: bw, height: 9pt, align(center, text(size: 11pt, fill: luma(60), "^")))
-        #align(center, stack(
-          dir: ttb,
-          spacing: 2pt,
-          arr,
-          cbox([Feed Forward (FFN)], fill: orange),
-          v(3pt),
-          cbox([Add & Layer Norm], fill: bblue),
-          v(3pt),
-          arr,
-          cbox([Multi-Head Self-Attention], fill: green2),
-          v(3pt),
-          cbox([Add & Layer Norm], fill: bblue),
-          v(3pt),
-          block(width: bw, height: 13pt, align(center + horizon, text(
-            size: 7.5pt,
-            fill: luma(30),
-            [Embeddings + Positional Encoding],
-          ))),
-        ))
+      #fs-diagram(caption: [Transformer encoder-decoder block diagram (Vaswani et al., 2017).])[
+        #transformer-diagram
       ]
       Residual connections (Add) let gradients flow directly; Layer Norm stabilises training at each depth.
     ],
     [
-      A linear dynamical system in state-space form captures the evolution of state $bold(x)$ driven by input $bold(u)$ and observed as output $bold(y)$.
+      A closed-loop controller compares the reference signal with the measured output, drives the plant, and routes the response through a feedback transducer.
 
       #fs-diagram(
-        caption: [State-space block diagram: $dot(bold(x))=A bold(x)+B bold(u)$, $bold(y)=C bold(x)+D bold(u)$.],
+        caption: [Closed-loop control system with controller, plant, disturbance input, and feedback transducer.],
       )[
-        #align(center, {
-          set text(size: 8pt)
-          let tc = blue.darken(50%)
-          let bx(txt, fill: tc, w: 52pt, h: 22pt) = block(
-            width: w,
-            height: h,
-            fill: fill,
-            stroke: fill.darken(15%) + 0.5pt,
-            align(center + horizon, text(fill: white, size: 8pt, weight: "bold", txt)),
-          )
-          stack(
-            dir: ttb,
-            spacing: 4pt,
-            grid(
-              columns: (28pt, 52pt, 22pt, 52pt, 22pt, 52pt),
-              column-gutter: 3pt,
-              align: center + horizon,
-              [u ->], bx([B]), [->], bx([1/s (int)]), [->], bx([C]),
-            ),
-            align(right, text(size: 7.5pt, fill: luma(50))[-> y (output)]),
-            block(
-              width: 186pt,
-              height: 12pt,
-              stroke: luma(190) + 0.5pt,
-              fill: luma(250),
-              align(center + horizon, text(size: 7pt, fill: luma(50))[Feedback path: state matrix A]),
-            ),
-          )
-        })
+        #closed-loop-diagram
       ]
-      The integrator ($1/s$) holds the state; matrix $A$ forms the feedback loop governing stability and transient behaviour.
+      The disturbance $D(z)$ enters before the plant, while $H(z)$ shapes the measured feedback signal $W(z)$ returned to the summing junction.
     ],
   )
 ]
@@ -539,110 +864,31 @@ return theta",
       For a linear map $T: V -> W$, the *kernel* is mapped to zero and the *image* spans all reachable outputs. Rank-nullity: $dim(ker T) + dim(im T) = dim V$.
 
       #fs-diagram(caption: [Kernel-image decomposition for a linear map $T: V -> W$.])[
-        #align(center, {
-          set text(size: 8pt)
-          let lc = blue.darken(50%)
-          let gc = green.darken(30%)
-          grid(
-            columns: (88pt, 26pt, 88pt),
-            column-gutter: 0pt,
-            align: top,
-            block(width: 88pt, height: 86pt, stroke: lc + 0.8pt, inset: 5pt, {
-              text(weight: "bold", fill: lc, [V (domain)])
-              v(4pt)
-              block(width: 74pt, height: 26pt, fill: lc.lighten(82%), stroke: lc + 0.5pt, align(center + horizon, text(
-                fill: lc,
-                [ker T],
-              )))
-              v(3pt)
-              block(width: 74pt, height: 26pt, fill: luma(240), stroke: luma(180) + 0.4pt, align(center + horizon, text(
-                fill: luma(50),
-                [complement],
-              )))
-            }),
-            align(center + horizon, stack(dir: ttb, v(28pt), text(size: 14pt, fill: luma(50), [->]), text(
-              size: 7pt,
-              fill: luma(50),
-              [T],
-            ))),
-            block(width: 88pt, height: 86pt, stroke: gc + 0.8pt, inset: 5pt, {
-              text(weight: "bold", fill: gc, [W (codomain)])
-              v(4pt)
-              block(width: 74pt, height: 26pt, fill: gc.lighten(82%), stroke: gc + 0.5pt, align(center + horizon, text(
-                fill: gc,
-                [im T],
-              )))
-              v(3pt)
-              block(width: 74pt, height: 26pt, fill: luma(240), stroke: luma(180) + 0.4pt, align(center + horizon, text(
-                fill: luma(50),
-                [coker T],
-              )))
-            }),
-          )
-        })
+        #kernel-image-diagram
       ]
       Vectors in the kernel map to zero; those outside are mapped injectively onto the image.
     ],
     [
-      A finite automaton or Markov chain is a directed graph: *short labels* inside nodes, *descriptive names* outside.
+      A weighted directed graph encodes reachable states as nodes and transition costs as labels on the arcs. This version keeps the notation compact to match the reference diagram.
 
-      #fs-diagram(caption: [Three-state Markov chain; transition probabilities label the arcs.])[
-        #align(center, {
-          set text(size: 7.5pt)
-          let tc = blue.darken(50%)
-          let nd(lbl, fill: blue.darken(50%)) = box(
-            width: 32pt,
-            height: 32pt,
-            stroke: fill.darken(15%) + 0.8pt,
-            fill: fill,
-            radius: 16pt,
-            align(center + horizon, text(fill: white, weight: "bold", size: 9pt, lbl)),
-          )
-          grid(
-            columns: (36pt, 24pt, 36pt, 24pt, 36pt),
-            column-gutter: 0pt,
-            align: center + horizon,
-            nd([S0]),
-            stack(dir: ttb, spacing: 0pt, text(size: 10pt, fill: luma(50), [->]), text(
-              size: 6.5pt,
-              fill: luma(50),
-              [0.7],
-            )),
-            nd([S1], fill: green.darken(30%)),
-            stack(dir: ttb, spacing: 0pt, text(size: 10pt, fill: luma(50), [->]), text(
-              size: 6.5pt,
-              fill: luma(50),
-              [0.4],
-            )),
-            nd([S2], fill: red.darken(20%)),
-          )
-          v(3pt)
-          grid(
-            columns: (36pt, 24pt, 36pt, 24pt, 36pt),
-            column-gutter: 0pt,
-            align(center, text(size: 6.5pt, fill: luma(40), [Start])),
-            [],
-            align(center, text(size: 6.5pt, fill: luma(40), [Running])),
-            [],
-            align(center, text(size: 6.5pt, fill: luma(40), [Terminal])),
-          )
-          v(3pt)
-          text(size: 6.5pt, fill: luma(50))[Self-loop: $p(S_1->S_1)=0.6$. Absorbing: $p(S_2->S_2)=1$.]
-        })
+      #fs-diagram(caption: [Weighted directed transition graph; edge labels denote transition costs.])[
+        #weighted-transition-graph
       ]
-      The terminal state $S_2$ is absorbing; once entered no further transitions occur.
+      Parallel and long-range transitions are shown with separate arrows, making bidirectional moves and high-cost paths visible at a glance.
     ],
   )
 ]
 
 // ---- Chart slide 3: Line chart + Histogram -----------------
 #let accuracy-chart = align(center, {
-  let W = 164pt
-  let H = 88pt
-  let pl = 26pt
-  let pb = 16pt
-  let iw = W - pl - 5pt
-  let ih = H - pb - 7pt
+  let W = 248pt
+  let H = 126pt
+  let pl = 32pt
+  let pr = 13pt
+  let pt = 21pt
+  let pb = 24pt
+  let iw = W - pl - pr
+  let ih = H - pt - pb
   let xs = (0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0)
   let ya = (0.52, 0.57, 0.63, 0.70, 0.76, 0.81, 0.85, 0.88, 0.90, 0.91, 0.92)
   let yb = (0.48, 0.51, 0.55, 0.60, 0.65, 0.69, 0.73, 0.76, 0.79, 0.81, 0.83)
@@ -652,89 +898,101 @@ return theta",
   let ymin = 0.44
   let ymax = 0.96
   let px(xi) = pl + (xi - xmin) / (xmax - xmin) * iw
-  let py(yi) = H - pb - (yi - ymin) / (ymax - ymin) * ih
+  let py(yi) = pt + (ymax - yi) / (ymax - ymin) * ih
   let mkpath(ys, col) = {
     let pts = xs.zip(ys).map(p => (px(p.first()), py(p.last())))
     curve(
-      stroke: col + 1.2pt,
+      stroke: col + 1.35pt,
       fill: none,
       curve.move(pts.first()),
       ..pts.slice(1).map(curve.line),
     )
   }
-  box(width: W, height: H, stroke: luma(180) + 0.4pt, {
+  let markers(ys, col) = {
+    for (xv, yv) in xs.zip(ys) {
+      place(top + left, dx: px(xv) - 1.6pt, dy: py(yv) - 1.6pt, circle(radius: 1.6pt, fill: white, stroke: col + 0.7pt))
+    }
+  }
+  box(width: W, height: H, stroke: luma(180) + 0.45pt, fill: luma(252), {
+    place(top + left, dx: 8pt, dy: 5pt, text(size: 6.8pt, weight: "bold", fill: luma(25))[Validation accuracy by epoch])
+    place(top + left, dx: W - 91pt, dy: 5pt, box(width: 83pt, height: 13pt, fill: white, stroke: luma(220) + 0.35pt, {
+      place(top + left, line(start: (5pt, 6.5pt), end: (14pt, 6.5pt), stroke: blue.darken(50%) + 1.1pt))
+      place(top + left, dx: 17pt, dy: 3pt, text(size: 5.3pt, fill: luma(45))[A])
+      place(top + left, line(start: (28pt, 6.5pt), end: (37pt, 6.5pt), stroke: red.darken(20%) + 1.1pt))
+      place(top + left, dx: 40pt, dy: 3pt, text(size: 5.3pt, fill: luma(45))[B])
+      place(top + left, line(start: (52pt, 6.5pt), end: (61pt, 6.5pt), stroke: luma(150) + 1.1pt))
+      place(top + left, dx: 64pt, dy: 3pt, text(size: 5.3pt, fill: luma(45))[base])
+    }))
+    place(top + left, dx: pl + 3pt, dy: pt + 3pt, text(size: 5.2pt, fill: luma(75))[Accuracy])
     for yi in (0.5, 0.6, 0.7, 0.8, 0.9) {
-      place(top + left, line(start: (pl, py(yi)), end: (W - 4pt, py(yi)), stroke: luma(220) + 0.4pt))
-      place(top + left, dx: 0pt, dy: py(yi) - 4pt, text(size: 5.5pt, fill: luma(70), str(yi)))
+      place(top + left, line(start: (pl, py(yi)), end: (W - pr, py(yi)), stroke: luma(222) + 0.45pt))
+      place(top + left, dx: 7pt, dy: py(yi) - 3.6pt, text(size: 5.4pt, fill: luma(70), str(yi)))
     }
-    place(top + left, line(start: (pl, 7pt), end: (pl, H - pb), stroke: luma(120) + 0.6pt))
-    place(top + left, line(start: (pl, H - pb), end: (W - 3pt, H - pb), stroke: luma(120) + 0.6pt))
+    place(top + left, line(start: (pl, pt), end: (pl, H - pb), stroke: luma(95) + 0.65pt))
+    place(top + left, line(start: (pl, H - pb), end: (W - pr, H - pb), stroke: luma(95) + 0.65pt))
     for xi in (0, 1, 2, 3, 4, 5) {
-      place(top + left, dx: px(float(xi)) - 3pt, dy: H - pb + 2pt, text(size: 5.5pt, fill: luma(70), str(xi)))
+      place(top + left, line(
+        start: (px(float(xi)), H - pb),
+        end: (px(float(xi)), H - pb + 2pt),
+        stroke: luma(95) + 0.45pt,
+      ))
+      place(top + left, dx: px(float(xi)) - 2pt, dy: H - pb + 3.5pt, text(size: 5.4pt, fill: luma(70), str(xi)))
     }
+    place(top + left, dx: W / 2 - 12pt, dy: H - 9pt, text(size: 5.5pt, fill: luma(65))[Epoch])
     place(top + left, mkpath(ya, blue.darken(50%)))
     place(top + left, mkpath(yb, red.darken(20%)))
     place(top + left, mkpath(yc, luma(160)))
-    place(top + left, dx: pl + 4pt, dy: 8pt, {
-      set text(size: 6pt)
-      box(width: 10pt, height: 2pt, fill: blue.darken(50%))
-      h(2pt)
-      [Model A]
-      h(5pt)
-      box(width: 10pt, height: 2pt, fill: red.darken(20%))
-      h(2pt)
-      [Model B]
-      h(5pt)
-      box(width: 10pt, height: 2pt, fill: luma(160))
-      h(2pt)
-      [Baseline]
-    })
+    markers(ya, blue.darken(50%))
+    markers(yb, red.darken(20%))
   })
 })
 
 #let grouped-bar-chart = align(center, {
-  let W = 164pt
-  let H = 88pt
-  let pl = 22pt
-  let pb = 18pt
-  let ih = H - pb - 7pt
+  let W = 248pt
+  let H = 126pt
+  let pl = 32pt
+  let pr = 12pt
+  let pt = 21pt
+  let pb = 26pt
+  let ih = H - pt - pb
   let years = (2020, 2021, 2022, 2023, 2024)
   let va = (62, 67, 71, 74, 78)
   let vb = (55, 58, 61, 65, 69)
   let maxv = 85.0
-  let bw = 9pt
-  let gap = 3pt
-  let gg = 12pt
+  let bw = 10.5pt
+  let gap = 4pt
+  let group-step = 40pt
   let ca = blue.darken(50%)
   let cb = red.darken(20%)
-  box(width: W, height: H, stroke: luma(180) + 0.4pt, {
+  box(width: W, height: H, stroke: luma(180) + 0.45pt, fill: luma(252), {
+    place(top + left, dx: 8pt, dy: 5pt, text(size: 6.8pt, weight: "bold", fill: luma(25))[Mean score by cohort])
+    place(top + left, dx: W - 58pt, dy: 5pt, box(width: 50pt, height: 13pt, fill: white, stroke: luma(220) + 0.35pt, {
+      place(top + left, dx: 5pt, dy: 4pt, rect(width: 6pt, height: 5pt, fill: ca))
+      place(top + left, dx: 14pt, dy: 3pt, text(size: 5.3pt, fill: luma(45))[A])
+      place(top + left, dx: 27pt, dy: 4pt, rect(width: 6pt, height: 5pt, fill: cb))
+      place(top + left, dx: 36pt, dy: 3pt, text(size: 5.3pt, fill: luma(45))[B])
+    }))
+    place(top + left, dx: pl + 3pt, dy: pt + 3pt, text(size: 5.2pt, fill: luma(75))[Score])
     for score in (20, 40, 60, 80) {
       let yp = H - pb - (score / maxv) * ih
-      place(top + left, line(start: (pl, yp), end: (W - 3pt, yp), stroke: luma(215) + 0.4pt))
-      place(top + left, dx: 0pt, dy: yp - 4pt, text(size: 5pt, fill: luma(70), str(score)))
+      place(top + left, line(start: (pl, yp), end: (W - pr, yp), stroke: luma(222) + 0.45pt))
+      place(top + left, dx: 9pt, dy: yp - 3.5pt, text(size: 5.2pt, fill: luma(70), str(score)))
     }
-    place(top + left, line(start: (pl, 7pt), end: (pl, H - pb), stroke: luma(120) + 0.5pt))
-    place(top + left, line(start: (pl, H - pb), end: (W - 3pt, H - pb), stroke: luma(120) + 0.5pt))
+    place(top + left, line(start: (pl, pt), end: (pl, H - pb), stroke: luma(95) + 0.65pt))
+    place(top + left, line(start: (pl, H - pb), end: (W - pr, H - pb), stroke: luma(95) + 0.65pt))
     for (i, yr) in years.enumerate() {
       let a = va.at(i)
       let b = vb.at(i)
-      let x0 = pl + 6pt + float(i) * (2 * bw + gap + gg)
+      let x0 = pl + 11pt + float(i) * group-step
       let ha = (float(a) / maxv) * ih
       let hb = (float(b) / maxv) * ih
       place(top + left, dx: x0, dy: H - pb - ha, rect(width: bw, height: ha, fill: ca))
       place(top + left, dx: x0 + bw + gap, dy: H - pb - hb, rect(width: bw, height: hb, fill: cb))
-      place(top + left, dx: x0 - 1pt, dy: H - pb + 2pt, text(size: 5pt, fill: luma(50), str(yr)))
+      place(top + left, dx: x0 - 2pt, dy: H - pb + 3.5pt, text(size: 5.1pt, fill: luma(55), str(yr)))
+      place(top + left, dx: x0 - 1pt, dy: H - pb - ha - 7pt, text(size: 4.8pt, fill: ca, str(a)))
+      place(top + left, dx: x0 + bw + gap - 1pt, dy: H - pb - hb - 7pt, text(size: 4.8pt, fill: cb, str(b)))
     }
-    place(top + right, dx: -4pt, dy: 8pt, {
-      set text(size: 6pt)
-      rect(width: 8pt, height: 6pt, fill: ca)
-      h(2pt)
-      [A]
-      h(4pt)
-      rect(width: 8pt, height: 6pt, fill: cb)
-      h(2pt)
-      [B]
-    })
+    place(top + left, dx: W / 2 - 9pt, dy: H - 9pt, text(size: 5.5pt, fill: luma(65))[Year])
   })
 })
 
