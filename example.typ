@@ -34,6 +34,10 @@
 #new-section("Configuration")
 
 #slide(title: "Template Configuration")[
+  The template is configured from a single Typst dictionary. The table below lists the keys that can be passed through `config`, the expected value shape, and the defaults used when a key is omitted.
+
+  #v(3pt)
+
   #let cell(body, fill: white, pos: left, weight: "regular") = fs-table-cell(
     fill: fill,
     stroke: luma(200) + 0.45pt,
@@ -69,9 +73,16 @@
     cell[`logos`], cell[`list[string]`], cell[`()`], cell[Image paths shown on the cover.],
     cell[`TOC`], cell[Bool], cell[`true`], cell[Whether to add the table of contents slide.],
   )
+
+  #v(3pt)
+  These names are intentionally presentation-level settings, so changing the theme does not require editing the template internals.
 ]
 
 #slide(title: "Template Configuration Code")[
+  The example presentation stores its theme and metadata in `presentation-config`, then passes that dictionary to the template with `formal-slides.with`.
+
+  #v(3pt)
+
   #code-box(
     "#import \"formal-slides.typ\": *
 
@@ -104,13 +115,15 @@
     fill: luma(248),
     text-size: 5.6pt,
   )
+
+  #v(3pt)
+  The rest of the document can focus on sections and slides while the template reads these values for the cover, navigation, footer, body text, logos, TOC, and final slide.
 ]
 
 // ============================================================
 // SECTION 1 -- TYPOGRAPHY
 // ============================================================
 #new-section("Typography")
-#section-slide("Typography")
 
 #slide(title: "Default Fonts")[
   The template ships with three IBM Plex families:
@@ -161,7 +174,6 @@
 // SECTION 2 -- LISTS AND ENUMERATIONS
 // ============================================================
 #new-section("Lists & Enumerations")
-#section-slide("Lists & Enumerations")
 
 #slide(title: "Bullet Points and Nested Lists")[
   #two-col(
@@ -197,7 +209,6 @@
 // SECTION 3 -- FIGURES
 // ============================================================
 #new-section("Figures")
-#section-slide("Figures")
 
 #slide(title: "Inserting and Referencing Figures")[
   #two-col(
@@ -310,8 +321,7 @@
 // ============================================================
 // SECTION 4 -- TWO-COLUMN LAYOUT
 // ============================================================
-#new-section("Layouts")
-#section-slide("Two-Column Layouts")
+#new-section("Layouts", slide-title: "Two-Column Layouts")
 
 #slide(title: "Two-Column Layout")[
   #two-col(
@@ -347,8 +357,7 @@
 // ============================================================
 // SECTION 5 -- CODE BLOCKS
 // ============================================================
-#new-section("Code Blocks")
-#section-slide("Source Code & Pseudo-code")
+#new-section("Code Blocks", slide-title: "Source Code & Pseudo-code")
 
 #slide(title: "Source Code and Pseudo-code Side by Side")[
   #two-col(
@@ -393,7 +402,6 @@ return theta",
 // SECTION 6 -- TABLES
 // ============================================================
 #new-section("Tables")
-#section-slide("Tables")
 
 #slide(title: "Paper-style and Grid-style Tables (No Captions)")[
   #two-col(
@@ -589,7 +597,6 @@ return theta",
 // SECTION 7 -- DIAGRAMS AND CHARTS (three slides)
 // ============================================================
 #new-section("Diagrams & Charts")
-#section-slide("Diagrams & Charts")
 
 // ---- Diagram drawing helpers -------------------------------
 #let _arrow-head(x, y, dir: "r", color: luma(25)) = {
@@ -671,7 +678,8 @@ return theta",
   let small-size = 4.9pt
   let arrow-weight = 0.9pt
   let node-r = 3.5pt
-  let input-sum-y = 180pt
+  let positional-center-y = 180pt
+  let input-sum-y = positional-center-y
   let nx-y = 118pt
   let decoder-bottom-label-width = 94pt
   let pink = rgb("#F9DCDD")
@@ -690,7 +698,6 @@ return theta",
     nx-y: nx-y,
     pos-side: "left",
     pos-label-x: -15pt,
-    pos-label-y: input-sum-y,
     pos-circle-x: 49pt,
     emb-label: [Input\ Embedding],
     bottom-label: [Inputs],
@@ -706,7 +713,6 @@ return theta",
     nx-y: nx-y,
     pos-side: "right",
     pos-label-x: 229pt,
-    pos-label-y: input-sum-y,
     pos-circle-x: 224pt,
     emb-label: [Output\ Embedding],
     bottom-label: [Outputs (shifted right)],
@@ -723,12 +729,10 @@ return theta",
     dy: y,
     block(width: width, align(align-pos, text(size: size, fill: ink, body))),
   )
-  let diagram-text-vcenter(x, y, body, size: label-size, width: auto, align-pos: center) = place(
-    top + left,
-    dx: x,
-    dy: y - 2.5pt,
-    block(width: width, align(align-pos, text(size: size, fill: ink, body))),
-  )
+  let diagram-text-centered-on-y(x, center-y, body, size: label-size, width: auto, align-pos: center) = context {
+    let label = block(width: width, align(align-pos, text(size: size, fill: ink, body)))
+    place(top + left, dx: x, dy: center-y - measure(label).height / 2, label)
+  }
   let block-at(x, y, label, fill, h: 16pt, size: label-size) = place(
     top + left,
     dx: x,
@@ -824,13 +828,13 @@ return theta",
   let column-bottom(col) = {
     let emb-y = 188pt
     let emb-h = 14pt
-    let plus-y = input-sum-y
+    let plus-y = positional-center-y
     block-at(col.stack-x, emb-y, col.emb-label, pink, h: emb-h, size: 4.2pt)
     plus(cx(col), plus-y)
     arr-v(cx(col), emb-y + emb-h + 10pt, emb-y + emb-h)
     arr-v(cx(col), emb-y, plus-y + 3.5pt)
     diagram-text(col.bottom-label-x, 221pt, col.bottom-label, size: 7.2pt, width: col.bottom-label-width)
-    diagram-text-vcenter(col.pos-label-x, col.pos-label-y, [Positional Embedding], size: 5.0pt, width: 60pt)
+    diagram-text-centered-on-y(col.pos-label-x, positional-center-y, [Positional Embedding], size: 5.0pt, width: 60pt)
     pos-signal(col.pos-circle-x, plus-y)
     if col.pos-side == "left" {
       place(top + left, line(start: (col.pos-circle-x + node-r, plus-y), end: (cx(col) - node-r, plus-y), stroke: ink + arrow-weight))
@@ -1246,7 +1250,7 @@ return theta",
   #two-col(
     left-width: 49%,
     [
-      The Transformer architecture couples an encoder stack with an autoregressive decoder. Multi-head attention and feed-forward sub-layers are wrapped in residual connections followed by layer normalisation.
+      Transformer encoder-decoder stack with attention, feed-forward blocks, residual paths, and layer normalisation.
 
       #fs-diagram(caption: [Transformer encoder-decoder block diagram (Vaswani et al., 2017).])[
         #transformer-diagram
@@ -1493,7 +1497,6 @@ return theta",
 // SECTION 8 -- THEOREM-STYLE BOXES
 // ============================================================
 #new-section("Theorem-style Boxes")
-#section-slide("Theorem-style Boxes")
 
 #slide(title: "Definitions, Theorems, and Lemmas")[
   #two-col(

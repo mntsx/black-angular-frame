@@ -139,6 +139,18 @@
   _fs-pages.update(p => p + ((section: section, intro: intro),))
 }
 
+#let _register-section-target(title, loc) = {
+  if title != none and title != "" {
+    _fs-sec-targets.update(t => {
+      if t.find(entry => entry.title == title) == none {
+        t + ((title: title, loc: loc),)
+      } else {
+        t
+      }
+    })
+  }
+}
+
 #let _header-band(
   w,
   section,
@@ -633,15 +645,6 @@
 // Section management
 // ============================================================
 
-/// Declare a new section (increments counter, resets figure/theorem counters).
-#let new-section(title) = {
-  _sec-ctr.step()
-  for (_, c) in _thm-ctrs { c.update(0) }
-  _fig-ctr.update(0)
-  _cur-sec.update(title)
-  _toc-data.update(t => t + ((kind: "section", title: title),))
-}
-
 /// Register a subsection in the TOC (does not create a slide).
 #let new-subsection(title) = {
   _toc-data.update(t => t + ((kind: "sub", title: title),))
@@ -679,6 +682,8 @@
     let header-h = if header-title == none { 24.75pt } else { 50.25pt }
     let footer-h = 29.61pt
     let avail   = h - header-h - footer-h
+    let slide-loc = here()
+    _register-section-target(sec, slide-loc)
     _register-page(section: sec)
 
     page(
@@ -747,7 +752,7 @@
     }
     let sec-loc = here()
     _register-page(section: nav-sec, intro: true)
-    _fs-sec-targets.update(t => t + ((title: nav-sec, loc: sec-loc),))
+    _register-section-target(nav-sec, sec-loc)
 
     page(
       width: w, height: h, margin: 0pt,
@@ -812,6 +817,16 @@
       }
     )
   }
+}
+
+/// Declare a new section and render its intro slide.
+#let new-section(title, slide-title: auto) = {
+  _sec-ctr.step()
+  for (_, c) in _thm-ctrs { c.update(0) }
+  _fig-ctr.update(0)
+  _cur-sec.update(title)
+  _toc-data.update(t => t + ((kind: "section", title: title),))
+  section-slide(if slide-title == auto { title } else { slide-title })
 }
 
 /// Final message slide.
@@ -1009,7 +1024,7 @@
   _fs-clpad.update(cfg-content-lower-padding)
 
   // Global text defaults
-  set text(font: _serif, size: 11.5pt, fill: cfg-font-color)
+  set text(font: _serif, size: 10.5pt, fill: cfg-font-color)
   set figure(gap: _caption-gap)
   show figure.where(kind: table): it => block(
     above: _visual-y-margin,
@@ -1113,24 +1128,28 @@
     slide(title: "Table of Contents", section: none, show-title-band: false, {
       context {
         let entries = _toc-data.final()
+        let sec-targets = _fs-sec-targets.final()
         let sec-n   = 0
         text(font: _sans, size: 14pt, weight: "bold", fill: cfg-primary, [Table of Contents])
         v(8pt)
         for e in entries {
           if e.kind == "section" {
             sec-n += 1
+            let target = sec-targets.rev().find(entry => entry.title == e.title)
+            let number-cell = box(
+              width: 16pt, height: 16pt, fill: cfg-primary,
+              align(center + horizon,
+                text(font: _sans, fill: cfg-hfc1h, size: 8pt, weight: "bold", str(sec-n))
+              )
+            )
+            let title-cell = align(left + horizon,
+              text(font: _sans, size: 10pt, weight: "bold", fill: cfg-primary, e.title)
+            )
             v(3pt)
             grid(
               columns: (18pt, 1fr), column-gutter: 4pt,
-              box(
-                width: 16pt, height: 16pt, fill: cfg-primary,
-                align(center + horizon,
-                  text(font: _sans, fill: cfg-hfc1h, size: 8pt, weight: "bold", str(sec-n))
-                )
-              ),
-              align(left + horizon,
-                text(font: _sans, size: 10pt, weight: "bold", fill: cfg-primary, e.title)
-              )
+              if target != none { link(target.at("loc"))[#number-cell] } else { number-cell },
+              if target != none { link(target.at("loc"))[#title-cell] } else { title-cell },
             )
           } else {
             pad(left: 22pt,

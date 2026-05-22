@@ -75,7 +75,7 @@ Pass configuration through `#show: formal-slides.with(config: presentation-confi
 | `content-upper-padding` | Float 0-1 | `0.05` | Top proportion of the available content area kept empty. |
 | `content-lower-padding` | Float 0-1 | `0.05` | Bottom proportion of the available content area kept empty. |
 | `logos` | `list[string]` | `()` | Image paths shown on the cover. |
-| `TOC` | Bool | `true` | Whether to add the table of contents slide. |
+| `TOC` | Bool | `true` | Whether to add the table of contents slide with links to each section's divider or first slide. |
 
 The template still accepts the previous parameter names (`title-color`, `bg-color`, `cover-images`, `toc`, and related aliases) for existing documents, but new presentations should use the `config` object.
 
@@ -107,13 +107,13 @@ Standard content slide. Content is vertically centred in the available area.
 ]
 ```
 
-### `#new-section("Name")`
+### `#new-section("Name", slide-title: auto)`
 
-Registers a section (increments section counter, resets figure and theorem counters, updates the navigation bar label).
+Registers a section, increments the section counter, resets figure and theorem counters, updates the navigation bar label, and automatically renders the section intro slide. Use `slide-title:` when the intro slide should display a different title from the navigation label.
 
 ### `#section-slide("Name")`
 
-Renders a full-page section divider. Typically called right after `#new-section`.
+Renders an extra full-page section divider manually. This is no longer needed for the normal `#new-section(...)` workflow.
 
 ### `#new-subsection("Name")`
 
