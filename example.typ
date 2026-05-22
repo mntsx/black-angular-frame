@@ -792,42 +792,132 @@ return theta",
 })
 
 #let weighted-transition-graph = align(center, {
-  let W = 208pt
-  let H = 145pt
+  let W = 176pt
+  let H = 162pt
   let ink = luma(25)
   let edge = rgb("#C66A00")
+  let node-r = 13pt
+  let nodes = (
+    P: (x: 17pt, y: 99pt),
+    B: (x: 64pt, y: 58pt),
+    D: (x: 110pt, y: 17pt),
+    C: (x: 110pt, y: 98pt),
+    M: (x: 64pt, y: 139pt),
+    L: (x: 158pt, y: 139pt),
+  )
+  let pos(name) = nodes.at(name)
+  let arrow-dir(dx, dy) = {
+    let ax = calc.abs(dx)
+    let ay = calc.abs(dy)
+    if ax < ay * 0.45 {
+      if dy > 0pt { "d" } else { "u" }
+    } else if ay < ax * 0.45 {
+      if dx > 0pt { "r" } else { "l" }
+    } else if dx > 0pt and dy > 0pt {
+      "dr"
+    } else if dx < 0pt and dy > 0pt {
+      "dl"
+    } else if dx > 0pt and dy < 0pt {
+      "ur"
+    } else {
+      "ul"
+    }
+  }
   let node(x, y, short) = {
-    place(top + left, dx: x - 13pt, dy: y - 13pt, box(
-      width: 26pt,
-      height: 26pt,
-      radius: 13pt,
+    place(top + left, dx: x - node-r, dy: y - node-r, box(
+      width: 2 * node-r,
+      height: 2 * node-r,
+      radius: node-r,
       stroke: ink + 0.7pt,
       fill: white,
-      align(center + horizon, text(size: 8.4pt, style: "italic", short)),
+      align(center + horizon, text(size: 8.8pt, style: "italic", short)),
     ))
   }
+  let node-by-name(name, body) = {
+    let p = pos(name)
+    node(p.x, p.y, body)
+  }
+  let label-at(x, y, body) = {
+    place(top + left, dx: x - 7.5pt, dy: y - 5pt, box(
+      width: 15pt,
+      height: 10pt,
+      fill: white,
+      inset: 0pt,
+      align(center + horizon, text(size: 7.6pt, fill: ink, body)),
+    ))
+  }
+  let edge-line(a, b, label: none, label-dx: 0pt, label-dy: 0pt, both: false) = {
+    let pa = pos(a)
+    let pb = pos(b)
+    let dx = pb.x - pa.x
+    let dy = pb.y - pa.y
+    let ndx = dx / 1pt
+    let ndy = dy / 1pt
+    let len = calc.sqrt(ndx * ndx + ndy * ndy)
+    let ux = ndx / len
+    let uy = ndy / len
+    let sx = pa.x + ux * (node-r + 1pt)
+    let sy = pa.y + uy * (node-r + 1pt)
+    let ex = pb.x - ux * (node-r + 1pt)
+    let ey = pb.y - uy * (node-r + 1pt)
+
+    place(top + left, line(start: (sx, sy), end: (ex, ey), stroke: edge + 0.85pt))
+    _arrow-head(ex, ey, dir: arrow-dir(dx, dy), color: edge)
+    if both {
+      _arrow-head(sx, sy, dir: arrow-dir(-dx, -dy), color: edge)
+    }
+    if label != none {
+      label-at((sx + ex) / 2 + label-dx, (sy + ey) / 2 + label-dy, label)
+    }
+  }
+  let edge-curve(a, b, label: none, label-dx: 0pt, label-dy: 0pt) = {
+    let pa = pos(a)
+    let pb = pos(b)
+    let c1x = W + 18pt
+    let c1y = H - 42pt
+    let c2x = W + 8pt
+    let c2y = 22pt
+    let sdx = (c1x - pa.x) / 1pt
+    let sdy = (c1y - pa.y) / 1pt
+    let slen = calc.sqrt(sdx * sdx + sdy * sdy)
+    let sx = pa.x + sdx / slen * (node-r + 1pt)
+    let sy = pa.y + sdy / slen * (node-r + 1pt)
+    let edx = (c2x - pb.x) / 1pt
+    let edy = (c2y - pb.y) / 1pt
+    let elen = calc.sqrt(edx * edx + edy * edy)
+    let ex = pb.x + edx / elen * (node-r + 1pt)
+    let ey = pb.y + edy / elen * (node-r + 1pt)
+
+    place(top + left, curve(
+      stroke: edge + 0.85pt,
+      fill: none,
+      curve.move((sx, sy)),
+      curve.cubic((c1x, c1y), (c2x, c2y), (ex, ey)),
+    ))
+    _arrow-head(ex, ey, dir: "l", color: edge)
+    if label != none {
+      let mx = 0.125 * sx + 0.375 * c1x + 0.375 * c2x + 0.125 * ex
+      let my = 0.125 * sy + 0.375 * c1y + 0.375 * c2y + 0.125 * ey
+      label-at(mx + label-dx, my + label-dy, label)
+    }
+  }
   box(width: W, height: H, {
-    _arr-diag(103pt, 28pt, 76pt, 56pt, "dl", color: edge, weight: 0.85pt, label: [10], label-dx: -1pt, label-dy: -8pt)
-    _arr-diag(67pt, 75pt, 40pt, 96pt, "dl", color: edge, weight: 0.85pt, label: [10], label-dx: -3pt, label-dy: -9pt)
-    _arr-diag(35pt, 105pt, 64pt, 125pt, "dr", color: edge, weight: 0.85pt, label: [4], label-dx: -11pt, label-dy: -8pt)
-    _arr-v(74pt, 79pt, 116pt, color: edge, weight: 0.85pt, label: [5], label-dx: 5pt)
-    _arr-v(64pt, 116pt, 77pt, color: edge, weight: 0.85pt)
-    _arr-diag(122pt, 90pt, 82pt, 69pt, "ul", color: edge, weight: 0.85pt, label: [3], label-dx: -3pt, label-dy: -10pt)
-    _arr-diag(118pt, 104pt, 82pt, 125pt, "dl", color: edge, weight: 0.85pt, label: [9], label-dx: -2pt, label-dy: -3pt)
-    _arr-v(126pt, 75pt, 36pt, color: edge, weight: 0.85pt, label: [4], label-dx: -7pt)
-    _arr-v(137pt, 36pt, 75pt, color: edge, weight: 0.85pt)
-    _arr-l(177pt, 126pt, 88pt, color: edge, weight: 0.85pt, label: [10], label-dy: -9pt)
-    place(top + left, line(start: (180pt, 112pt), end: (194pt, 79pt), stroke: edge + 0.85pt))
-    place(top + left, line(start: (194pt, 79pt), end: (174pt, 17pt), stroke: edge + 0.85pt))
-    place(top + left, line(start: (174pt, 17pt), end: (140pt, 20pt), stroke: edge + 0.85pt))
-    _arrow-head(140pt, 20pt, dir: "l", color: edge)
-    place(top + left, dx: 190pt, dy: 67pt, text(size: 6.4pt, fill: edge)[10])
-    node(26pt, 103pt, [$P$])
-    node(76pt, 67pt, [$B$])
-    node(130pt, 22pt, [$D$])
-    node(128pt, 96pt, [$C$])
-    node(75pt, 127pt, [$M$])
-    node(181pt, 128pt, [$L$])
+    edge-line("D", "B", label: [10])
+    edge-line("B", "P", label: [10])
+    edge-line("P", "M", label: [4])
+    edge-line("B", "M", label: [5], both: true)
+    edge-line("C", "B", label: [3])
+    edge-line("M", "C", label: [9])
+    edge-line("D", "C", label: [4], both: true)
+    edge-line("L", "M", label: [10])
+    edge-curve("L", "D", label: [10])
+
+    node-by-name("P", [$P$])
+    node-by-name("B", [$B$])
+    node-by-name("D", [$D$])
+    node-by-name("C", [$C$])
+    node-by-name("M", [$M$])
+    node-by-name("L", [$L$])
   })
 })
 
@@ -861,12 +951,12 @@ return theta",
   #two-col(
     left-width: 49%,
     [
-      For a linear map $T: V -> W$, the *kernel* is mapped to zero and the *image* spans all reachable outputs. Rank-nullity: $dim(ker T) + dim(im T) = dim V$.
+      For a homomorphism $phi: G -> G'$, the *kernel* determines the quotient $G slash ker phi$, while the *image* is the subgroup of reachable outputs in $G'$.
 
-      #fs-diagram(caption: [Kernel-image decomposition for a linear map $T: V -> W$.])[
+      #fs-diagram(caption: [Kernel-image decomposition for a homomorphism $phi: G -> G'$.])[
         #kernel-image-diagram
       ]
-      Vectors in the kernel map to zero; those outside are mapped injectively onto the image.
+      The induced map $overline(phi)$ sends cosets modulo $ker phi$ onto $im phi$, and the inclusion embeds that image back into $G'$.
     ],
     [
       A weighted directed graph encodes reachable states as nodes and transition costs as labels on the arcs. This version keeps the notation compact to match the reference diagram.
@@ -899,6 +989,23 @@ return theta",
   let ymax = 0.96
   let px(xi) = pl + (xi - xmin) / (xmax - xmin) * iw
   let py(yi) = pt + (ymax - yi) / (ymax - ymin) * ih
+  let tick-label(x, y, width, body, size: 5.4pt, fill: luma(70)) = {
+    place(top + left, dx: x - width / 2, dy: y - 4.5pt, box(
+      width: width,
+      height: 9pt,
+      inset: 0pt,
+      align(center + horizon, text(size: size, fill: fill, body)),
+    ))
+  }
+  let line-legend-item(x, y, col, body, text-width: 18pt) = {
+    place(top + left, line(start: (x, y), end: (x + 9pt, y), stroke: col + 1.1pt))
+    place(top + left, dx: x + 12pt, dy: y - 6.5pt, box(
+      width: text-width,
+      height: 13pt,
+      inset: 0pt,
+      align(left + horizon, text(size: 5.3pt, fill: luma(45), body)),
+    ))
+  }
   let mkpath(ys, col) = {
     let pts = xs.zip(ys).map(p => (px(p.first()), py(p.last())))
     curve(
@@ -916,17 +1023,14 @@ return theta",
   box(width: W, height: H, stroke: luma(180) + 0.45pt, fill: luma(252), {
     place(top + left, dx: 8pt, dy: 5pt, text(size: 6.8pt, weight: "bold", fill: luma(25))[Validation accuracy by epoch])
     place(top + left, dx: W - 91pt, dy: 5pt, box(width: 83pt, height: 13pt, fill: white, stroke: luma(220) + 0.35pt, {
-      place(top + left, line(start: (5pt, 6.5pt), end: (14pt, 6.5pt), stroke: blue.darken(50%) + 1.1pt))
-      place(top + left, dx: 17pt, dy: 3pt, text(size: 5.3pt, fill: luma(45))[A])
-      place(top + left, line(start: (28pt, 6.5pt), end: (37pt, 6.5pt), stroke: red.darken(20%) + 1.1pt))
-      place(top + left, dx: 40pt, dy: 3pt, text(size: 5.3pt, fill: luma(45))[B])
-      place(top + left, line(start: (52pt, 6.5pt), end: (61pt, 6.5pt), stroke: luma(150) + 1.1pt))
-      place(top + left, dx: 64pt, dy: 3pt, text(size: 5.3pt, fill: luma(45))[base])
+      line-legend-item(5pt, 6.5pt, blue.darken(50%), [A], text-width: 8pt)
+      line-legend-item(28pt, 6.5pt, red.darken(20%), [B], text-width: 8pt)
+      line-legend-item(52pt, 6.5pt, luma(150), [base], text-width: 17pt)
     }))
     place(top + left, dx: pl + 3pt, dy: pt + 3pt, text(size: 5.2pt, fill: luma(75))[Accuracy])
     for yi in (0.5, 0.6, 0.7, 0.8, 0.9) {
       place(top + left, line(start: (pl, py(yi)), end: (W - pr, py(yi)), stroke: luma(222) + 0.45pt))
-      place(top + left, dx: 7pt, dy: py(yi) - 3.6pt, text(size: 5.4pt, fill: luma(70), str(yi)))
+      tick-label(pl / 2, py(yi), pl - 8pt, str(yi))
     }
     place(top + left, line(start: (pl, pt), end: (pl, H - pb), stroke: luma(95) + 0.65pt))
     place(top + left, line(start: (pl, H - pb), end: (W - pr, H - pb), stroke: luma(95) + 0.65pt))
@@ -936,7 +1040,7 @@ return theta",
         end: (px(float(xi)), H - pb + 2pt),
         stroke: luma(95) + 0.45pt,
       ))
-      place(top + left, dx: px(float(xi)) - 2pt, dy: H - pb + 3.5pt, text(size: 5.4pt, fill: luma(70), str(xi)))
+      tick-label(px(float(xi)), H - pb + 8pt, 12pt, str(xi))
     }
     place(top + left, dx: W / 2 - 12pt, dy: H - 9pt, text(size: 5.5pt, fill: luma(65))[Epoch])
     place(top + left, mkpath(ya, blue.darken(50%)))
@@ -954,84 +1058,114 @@ return theta",
   let pr = 12pt
   let pt = 21pt
   let pb = 26pt
+  let iw = W - pl - pr
   let ih = H - pt - pb
+  let baseline = H - pb
   let years = (2020, 2021, 2022, 2023, 2024)
   let va = (62, 67, 71, 74, 78)
   let vb = (55, 58, 61, 65, 69)
   let maxv = 85.0
   let bw = 10.5pt
   let gap = 4pt
-  let group-step = 40pt
+  let group-w = 2 * bw + gap
+  let group-step = iw / years.len()
   let ca = blue.darken(50%)
   let cb = red.darken(20%)
+  let py(score) = baseline - (float(score) / maxv) * ih
+  let group-center(i) = pl + (float(i) + 0.5) * group-step
+  let group-left(i) = group-center(i) - group-w / 2
+  let bar-center(i, which) = group-left(i) + if which == "a" { bw / 2 } else { bw + gap + bw / 2 }
+  let tick-label(x, y, width, body, size: 5.2pt, fill: luma(70)) = {
+    place(top + left, dx: x - width / 2, dy: y - 4.5pt, box(
+      width: width,
+      height: 9pt,
+      inset: 0pt,
+      align(center + horizon, text(size: size, fill: fill, body)),
+    ))
+  }
+  let value-label(x, y, body, fill) = {
+    place(top + left, dx: x - 7pt, dy: y - 9pt, box(
+      width: 14pt,
+      height: 8pt,
+      inset: 0pt,
+      align(center + horizon, text(size: 4.8pt, fill: fill, body)),
+    ))
+  }
+  let swatch-legend-item(x, y, col, body, text-width: 8pt) = {
+    place(top + left, dx: x, dy: y - 2.5pt, rect(width: 6pt, height: 5pt, fill: col))
+    place(top + left, dx: x + 9pt, dy: y - 6.5pt, box(
+      width: text-width,
+      height: 13pt,
+      inset: 0pt,
+      align(left + horizon, text(size: 5.3pt, fill: luma(45), body)),
+    ))
+  }
   box(width: W, height: H, stroke: luma(180) + 0.45pt, fill: luma(252), {
     place(top + left, dx: 8pt, dy: 5pt, text(size: 6.8pt, weight: "bold", fill: luma(25))[Mean score by cohort])
     place(top + left, dx: W - 58pt, dy: 5pt, box(width: 50pt, height: 13pt, fill: white, stroke: luma(220) + 0.35pt, {
-      place(top + left, dx: 5pt, dy: 4pt, rect(width: 6pt, height: 5pt, fill: ca))
-      place(top + left, dx: 14pt, dy: 3pt, text(size: 5.3pt, fill: luma(45))[A])
-      place(top + left, dx: 27pt, dy: 4pt, rect(width: 6pt, height: 5pt, fill: cb))
-      place(top + left, dx: 36pt, dy: 3pt, text(size: 5.3pt, fill: luma(45))[B])
+      swatch-legend-item(5pt, 6.5pt, ca, [A])
+      swatch-legend-item(27pt, 6.5pt, cb, [B])
     }))
     place(top + left, dx: pl + 3pt, dy: pt + 3pt, text(size: 5.2pt, fill: luma(75))[Score])
     for score in (20, 40, 60, 80) {
-      let yp = H - pb - (score / maxv) * ih
+      let yp = py(score)
       place(top + left, line(start: (pl, yp), end: (W - pr, yp), stroke: luma(222) + 0.45pt))
-      place(top + left, dx: 9pt, dy: yp - 3.5pt, text(size: 5.2pt, fill: luma(70), str(score)))
+      tick-label(pl / 2, yp, pl - 8pt, str(score))
     }
-    place(top + left, line(start: (pl, pt), end: (pl, H - pb), stroke: luma(95) + 0.65pt))
-    place(top + left, line(start: (pl, H - pb), end: (W - pr, H - pb), stroke: luma(95) + 0.65pt))
+    place(top + left, line(start: (pl, pt), end: (pl, baseline), stroke: luma(95) + 0.65pt))
+    place(top + left, line(start: (pl, baseline), end: (W - pr, baseline), stroke: luma(95) + 0.65pt))
     for (i, yr) in years.enumerate() {
       let a = va.at(i)
       let b = vb.at(i)
-      let x0 = pl + 11pt + float(i) * group-step
-      let ha = (float(a) / maxv) * ih
-      let hb = (float(b) / maxv) * ih
-      place(top + left, dx: x0, dy: H - pb - ha, rect(width: bw, height: ha, fill: ca))
-      place(top + left, dx: x0 + bw + gap, dy: H - pb - hb, rect(width: bw, height: hb, fill: cb))
-      place(top + left, dx: x0 - 2pt, dy: H - pb + 3.5pt, text(size: 5.1pt, fill: luma(55), str(yr)))
-      place(top + left, dx: x0 - 1pt, dy: H - pb - ha - 7pt, text(size: 4.8pt, fill: ca, str(a)))
-      place(top + left, dx: x0 + bw + gap - 1pt, dy: H - pb - hb - 7pt, text(size: 4.8pt, fill: cb, str(b)))
+      let x0 = group-left(i)
+      let ya = py(a)
+      let yb = py(b)
+      place(top + left, dx: x0, dy: ya, rect(width: bw, height: baseline - ya, fill: ca))
+      place(top + left, dx: x0 + bw + gap, dy: yb, rect(width: bw, height: baseline - yb, fill: cb))
+      tick-label(group-center(i), baseline + 8pt, group-step - 2pt, str(yr), size: 5.1pt, fill: luma(55))
+      value-label(bar-center(i, "a"), ya, str(a), ca)
+      value-label(bar-center(i, "b"), yb, str(b), cb)
     }
     place(top + left, dx: W / 2 - 9pt, dy: H - 9pt, text(size: 5.5pt, fill: luma(65))[Year])
   })
 })
 
-#slide(title: "Data Visualisation: Curves and Histogram (No Captions)")[
+#slide(title: "Model Accuracy and Cohort Scores (No Captions)")[
   #two-col(
     left-width: 49%,
     [
-      The dataset (`assets/curves.csv`) tracks accuracy for two models and a random baseline over epochs $x in [0,5]$. The line chart below is introduced with enough text to test how plotted figures sit after ordinary explanatory prose.
+      The accuracy curves compare Model A, Model B, and a 50% baseline across epochs $x in [0,5]$. Model A stays ahead throughout, while both learned models rise well above the baseline.
 
       #fs-visual[#accuracy-chart]
-      At epoch 5: *Model A* 92%, *Model B* 83%, well above the 50% baseline. The gap between models narrows after epoch 3. The paragraph after the chart intentionally spans multiple lines to make the visual-to-text spacing easy to compare.
+      At epoch 5, *Model A* reaches 92% and *Model B* reaches 83%. Their gap grows up to epoch 3 and then narrows from 12 to 9 percentage points by the final epoch.
     ],
     [
-      Mean test scores for two groups tracked across five consecutive academic years. Both groups improve; *Group A* consistently leads. The grouped bar chart uses the same visual wrapper, so it should share the same spacing as other images and diagrams.
+      The grouped bars compare mean test scores for Group A and Group B from 2020 to 2024. Both cohorts improve each year, with *Group A* leading every annual pair.
 
       #fs-visual[#grouped-bar-chart]
-      The gap widens from 7 pts (2020) to 9 pts (2024), suggesting diverging learning trajectories. The extra line of commentary below the figure helps confirm that the lower margin remains consistent across chart types.
+      Scores rise from 62 to 78 for *Group A* and from 55 to 69 for *Group B*. The gap widens from 7 points in 2020 to 9 points in 2024.
     ],
   )
 ]
 
-#slide(title: "Data Visualisation: Curves and Histogram (With Captions)")[
+#slide(title: "Model Accuracy and Cohort Scores (With Captions)")[
   #two-col(
     left-width: 49%,
     [
-      The dataset (`assets/curves.csv`) tracks accuracy for two models and a random baseline over epochs $x in [0,5]$. The line chart below is introduced with enough text to test how plotted figures sit after ordinary explanatory prose.
+      The accuracy curves compare Model A, Model B, and a 50% baseline across epochs $x in [0,5]$. Model A stays ahead throughout, while both learned models rise well above the baseline.
 
       #fs-figure(caption: [Accuracy vs. epoch for Model A, Model B, and random baseline.])[
         #accuracy-chart
       ]
-      At epoch 5: *Model A* 92%, *Model B* 83%, well above the 50% baseline. The gap between models narrows after epoch 3. The paragraph after the chart intentionally spans multiple lines to make the caption-to-text spacing easy to compare.
+      At epoch 5, *Model A* reaches 92% and *Model B* reaches 83%. Their gap grows up to epoch 3 and then narrows from 12 to 9 percentage points by the final epoch.
     ],
     [
-      Mean test scores for two groups tracked across five consecutive academic years. Both groups improve; *Group A* consistently leads. The grouped bar chart uses the same figure wrapper, so it should share the same spacing as other images and diagrams.
+      The grouped bars compare mean test scores for Group A and Group B from 2020 to 2024. Both cohorts improve each year, with *Group A* leading every annual pair.
 
       #fs-figure(caption: [Mean test score by group and year (2020-2024).])[
         #grouped-bar-chart
       ]
-      The gap widens from 7 pts (2020) to 9 pts (2024), suggesting diverging learning trajectories. The extra line of commentary below the figure helps confirm that the lower margin remains consistent across chart types.
+      Scores rise from 62 to 78 for *Group A* and from 55 to 69 for *Group B*. The gap widens from 7 points in 2020 to 9 points in 2024.
     ],
   )
 ]
