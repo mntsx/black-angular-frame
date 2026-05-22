@@ -5,18 +5,106 @@
 
 #import "formal-slides.typ": *
 
-#show: formal-slides.with(
+#let presentation-config = (
   title: "Formal Slides",
   subtitle: "A Typst Template for Academic Presentations",
+  authors: "Author One, Author Two",
   institution: "Institution Name",
   date: "May 2025",
-  authors: ("Author One", "Author Two"),
-  ratio: 16 / 9,
-  title-color: rgb("#1C1C1C"),
-  bg-color: white,
-  toc: true,
-  cover-images: ("assets/typst-logo.png", "assets/github-logo.png"),
+  final-message: "Thank you for your attention",
+  primary-color: rgb("#1C1C1C"),
+  secondary-color: rgb("#D9D9D9"),
+  background-color: rgb("#FFFFFF"),
+  font-color: luma(20),
+  header-font-color-1: rgb("#999999"),
+  header-font-color-2: rgb("#1C1C1C"),
+  header-font-color-1-highlight: rgb("#FFFFFF"),
+  content-center: 0.3,
+  content-upper-padding: 0.05,
+  content-lower-padding: 0.05,
+  logos: ("assets/typst-logo.png", "assets/github-logo.png"),
+  TOC: true,
 )
+
+#show: formal-slides.with(config: presentation-config)
+
+// ============================================================
+// CONFIGURATION
+// ============================================================
+#new-section("Configuration")
+
+#slide(title: "Template Configuration")[
+  #let cell(body, fill: white, pos: left, weight: "regular") = fs-table-cell(
+    fill: fill,
+    stroke: luma(200) + 0.45pt,
+    pos: pos,
+    inset: (x: 3pt, y: 2pt),
+  )[
+    #text(font: "IBM Plex Sans", size: 5.6pt, weight: weight, body)
+  ]
+
+  #grid(
+    columns: (23%, 20%, 20%, 37%),
+    cell(fill: rgb("#1C1C1C"), weight: "bold")[#text(fill: white)[Name]],
+    cell(fill: rgb("#1C1C1C"), weight: "bold")[#text(fill: white)[Expected value]],
+    cell(fill: rgb("#1C1C1C"), weight: "bold")[#text(fill: white)[Default]],
+    cell(fill: rgb("#1C1C1C"), weight: "bold")[#text(fill: white)[Description]],
+
+    cell[`title`], cell[String], cell[`""`], cell[Presentation title.],
+    cell[`subtitle`], cell[String], cell[`""`], cell[Presentation subtitle.],
+    cell[`authors`], cell[String], cell[`""`], cell[Author line shown on the cover and footer.],
+    cell[`institution`], cell[String], cell[`""`], cell[Institution shown on the cover and footer.],
+    cell[`date`], cell[String], cell[`""`], cell[Date shown on the cover.],
+    cell[`final-message`], cell[String], cell[`""`], cell[Message shown on the last slide.],
+    cell[`primary-color`], cell[Color], cell[`rgb("#1C1C1C")`], cell[Main bars, highlights, numbering, and accents.],
+    cell[`secondary-color`], cell[Color], cell[`rgb("#D9D9D9")`], cell[Secondary header and footer bands.],
+    cell[`background-color`], cell[Color], cell[`rgb("#FFFFFF")`], cell[Slide background color.],
+    cell[`font-color`], cell[Color], cell[`luma(20)`], cell[Default body text color.],
+    cell[`header-font-color-1`], cell[Color], cell[`_muted-nav(primary-color)`], cell[Inactive text in the primary header band and text in the lower footer band.],
+    cell[`header-font-color-2`], cell[Color], cell[`primary-color`], cell[Text in the secondary header and footer bands.],
+    cell[`header-font-color-1-highlight`], cell[Color], cell[`rgb("#FFFFFF")`], cell[Active text in the primary header band.],
+    cell[`content-center`], cell[Float 0-1], cell[`0.3`], cell[Vertical position used to center content; 0 starts at the top, 1 at the bottom.],
+    cell[`content-upper-padding`], cell[Float 0-1], cell[`0.05`], cell[Top proportion of the available content area kept empty.],
+    cell[`content-lower-padding`], cell[Float 0-1], cell[`0.05`], cell[Bottom proportion of the available content area kept empty.],
+    cell[`logos`], cell[`list[string]`], cell[`()`], cell[Image paths shown on the cover.],
+    cell[`TOC`], cell[Bool], cell[`true`], cell[Whether to add the table of contents slide.],
+  )
+]
+
+#slide(title: "Template Configuration Code")[
+  #code-box(
+    "#import \"formal-slides.typ\": *
+
+#let presentation-config = (
+  title: \"Formal Slides\",
+  subtitle: \"A Typst Template for Academic Presentations\",
+  authors: \"Author One, Author Two\",
+  institution: \"Institution Name\",
+  date: \"May 2025\",
+  final-message: \"Thank you for your attention\",
+  primary-color: rgb(\"#1C1C1C\"),
+  secondary-color: rgb(\"#D9D9D9\"),
+  background-color: rgb(\"#FFFFFF\"),
+  font-color: luma(20),
+  header-font-color-1: rgb(\"#999999\"),
+  header-font-color-2: rgb(\"#1C1C1C\"),
+  header-font-color-1-highlight: rgb(\"#FFFFFF\"),
+  content-center: 0.3,
+  content-upper-padding: 0.05,
+  content-lower-padding: 0.05,
+  logos: (\"assets/typst-logo.png\", \"assets/github-logo.png\"),
+  TOC: true,
+)
+
+#show: formal-slides.with(config: presentation-config)",
+    type: "Typst",
+    title: "Import and configure the template",
+    lang: "typst",
+    color: luma(90),
+    fill: luma(248),
+    text-size: 5.6pt,
+  )
+]
 
 // ============================================================
 // SECTION 1 -- TYPOGRAPHY

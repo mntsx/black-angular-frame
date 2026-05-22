@@ -3,7 +3,7 @@
 // Formal academic presentation theme for Typst
 // Usage:
 //   #import "formal-slides.typ": *
-//   #show: formal-slides.with(title: "My Talk", ...)
+//   #show: formal-slides.with(config: (title: "My Talk", ...))
 //   #slide(title: "First")[...]
 // ============================================================
 
@@ -19,6 +19,14 @@
 #let _fs-subt   = state("_fs-subt",   "")
 #let _fs-inst   = state("_fs-inst",   none)
 #let _fs-auth   = state("_fs-auth",   none)
+#let _fs-fc     = state("_fs-fc",     luma(20))
+#let _fs-hfc1   = state("_fs-hfc1",   rgb("#999999"))
+#let _fs-hfc2   = state("_fs-hfc2",   rgb("#1C1C1C"))
+#let _fs-hfc1h  = state("_fs-hfc1h",  white)
+#let _fs-final  = state("_fs-final",  "")
+#let _fs-cctr   = state("_fs-cctr",   0.3)
+#let _fs-cupad  = state("_fs-cupad",  0.05)
+#let _fs-clpad  = state("_fs-clpad",  0.05)
 #let _fs-pages  = state("_fs-pages",  ())
 #let _fs-sec-targets = state("_fs-sec-targets", ())
 
@@ -54,6 +62,12 @@
 #let _single-col-x-margin = 2 * _slide-x-margin
 #let _nav-compact-threshold = 4
 #let _cover-image-gap = 18pt
+
+#let _clamp01(value) = {
+  if value < 0 { 0 }
+  else if value > 1 { 1 }
+  else { value }
+}
 
 // ============================================================
 // Shared chrome
@@ -99,15 +113,15 @@
   }
 }
 
-#let _nav-dot(active: false, color) = box(
+#let _nav-dot(active: false, color, inactive-fill: auto, active-fill: white) = box(
   width: 6.2pt,
   height: 6.2pt,
   inset: 0pt,
   align(center + horizon,
     circle(
       radius: 2pt,
-      fill: if active { white } else { none },
-      stroke: if active { none } else { _muted-nav(color) + 0.7pt },
+      fill: if active { active-fill } else { none },
+      stroke: if active { none } else { (if inactive-fill == auto { _muted-nav(color) } else { inactive-fill }) + 0.7pt },
     )
   )
 )
@@ -125,7 +139,18 @@
   _fs-pages.update(p => p + ((section: section, intro: intro),))
 }
 
-#let _header-band(w, section, slide-title: none, primary, secondary) = context {
+#let _header-band(
+  w,
+  section,
+  slide-title: none,
+  primary,
+  secondary,
+  header-font-color-1: auto,
+  header-font-color-2: auto,
+  header-font-color-1-highlight: white,
+) = context {
+  let hfc1 = if header-font-color-1 == auto { _muted-nav(primary) } else { header-font-color-1 }
+  let hfc2 = if header-font-color-2 == auto { primary } else { header-font-color-2 }
   let titles = _toc-data.final().filter(e => e.kind == "section").map(e => e.title)
   let sec-targets = _fs-sec-targets.final()
   let pages = _fs-pages.final()
@@ -166,7 +191,7 @@
                 inset: (left: 0.4pt, right: 0.4pt, top: 1.3pt, bottom: 1.1pt),
                 {
                   layout(size => {
-                    let title-fill = if section == title { white } else { _muted-nav(primary) }
+                    let title-fill = if section == title { header-font-color-1-highlight } else { hfc1 }
                     let current-page = pages.at(page-no - 1, default: (intro: false))
                     let is-current-section = section == title
                     let is-section-intro = is-current-section and current-page.intro
@@ -177,7 +202,7 @@
                     } else {
                       str(slide-count)
                     }
-                    let progress-fill = if is-current-section { white } else { _muted-nav(primary) }
+                    let progress-fill = if is-current-section { header-font-color-1-highlight } else { hfc1 }
                     if target != none {
                       link(target.at("loc"))[
                         #_ellipsis-text(title, size.width, font: _sans, size: 7.1pt, fill: title-fill)
@@ -202,7 +227,14 @@
                                 height: 6.2pt,
                                 inset: 0pt,
                                 align(center + horizon,
-                                  move(dy: -1.25pt, _nav-dot(active: is-section-slide or is-section-intro, primary))
+                                  move(dy: -1.25pt,
+                                    _nav-dot(
+                                      active: is-section-slide or is-section-intro,
+                                      primary,
+                                      inactive-fill: hfc1,
+                                      active-fill: header-font-color-1-highlight,
+                                    )
+                                  )
                                 ),
                               ),
                               block(
@@ -221,7 +253,12 @@
                     } else {
                       move(dy: -2pt, box[
                         #for dot-idx in range(slide-count) {
-                          _nav-dot(active: is-section-slide and active-dot-index == dot-idx + 1, primary)
+                          _nav-dot(
+                            active: is-section-slide and active-dot-index == dot-idx + 1,
+                            primary,
+                            inactive-fill: hfc1,
+                            active-fill: header-font-color-1-highlight,
+                          )
                           if dot-idx + 1 < slide-count { h(1.4pt) }
                         }
                       ])
@@ -245,7 +282,7 @@
           height: 100%,
           align(horizon,
             align(left,
-              text(font: _sans, fill: primary, size: 14pt, slide-title)
+              text(font: _sans, fill: hfc2, size: 14pt, slide-title)
             )
           ),
         )
@@ -254,7 +291,20 @@
   )
 }
 
-#let _footer-band(w, left-top, right-top, left-bottom, page-no, primary, secondary) = {
+#let _footer-band(
+  w,
+  left-top,
+  right-top,
+  left-bottom,
+  page-no,
+  primary,
+  secondary,
+  header-font-color-1: auto,
+  header-font-color-2: auto,
+  header-font-color-1-highlight: white,
+) = {
+  let hfc1 = if header-font-color-1 == auto { _muted-nav(primary) } else { header-font-color-1 }
+  let hfc2 = if header-font-color-2 == auto { primary } else { header-font-color-2 }
   stack(
     dir: ttb,
     spacing: 0pt,
@@ -268,7 +318,7 @@
           align(horizon,
             align(left,
               if _single-line(left-top) != none {
-                text(font: _sans, fill: primary, size: 7pt, _single-line(left-top))
+                text(font: _sans, fill: hfc2, size: 7pt, _single-line(left-top))
               } else { [] }
             )
           ),
@@ -279,7 +329,7 @@
           align(horizon,
             align(right,
               if _single-line(right-top) != none {
-                text(font: _sans, fill: primary, size: 7pt, _single-line(right-top))
+                text(font: _sans, fill: hfc2, size: 7pt, _single-line(right-top))
               } else { [] }
             )
           ),
@@ -296,7 +346,7 @@
           align(horizon,
             align(left,
               if _single-line(left-bottom) != none {
-                move(dy: -1pt, text(font: _sans, fill: white, size: 7pt, _single-line(left-bottom)))
+                move(dy: -1pt, text(font: _sans, fill: hfc1, size: 7pt, _single-line(left-bottom)))
               } else { [] }
             )
           ),
@@ -306,11 +356,35 @@
           height: 100%,
           align(horizon,
             align(right,
-              move(dy: -1pt, text(font: _sans, fill: white, size: 6.8pt, _single-line(page-no)))
+              move(dy: -1pt, text(font: _sans, fill: hfc1, size: 6.8pt, _single-line(page-no)))
             )
           ),
         ),
       )
+    }),
+  )
+}
+
+#let _slide-body-area(w, h, body) = context {
+  let center = _clamp01(_fs-cctr.get())
+  let upper = _clamp01(_fs-cupad.get())
+  let lower = _clamp01(_fs-clpad.get())
+  let usable-ratio = calc.max(0, 1 - upper - lower)
+
+  block(
+    width: w,
+    height: h,
+    inset: (x: _single-col-x-margin, y: 0pt),
+    clip: true,
+    layout(size => {
+      let content-width = size.width
+      let inner-top = size.height * upper
+      let inner-height = size.height * usable-ratio
+      let content = block(width: content-width, body)
+      let measured = measure(content)
+      let free-height = calc.max(0pt, inner-height - measured.height)
+      let dy = inner-top + if center <= 0 { 0pt } else { free-height * center }
+      place(top + left, dy: dy, content)
     }),
   )
 }
@@ -589,6 +663,9 @@
     let ft  = _fs-ft.get()
     let auth = _fs-auth.get()
     let inst = _fs-inst.get()
+    let hfc1 = _fs-hfc1.get()
+    let hfc2 = _fs-hfc2.get()
+    let hfc1h = _fs-hfc1h.get()
     let cur = _cur-sec.get()
     let sec = if section == auto { cur } else { section }
     let header-title = if show-title-band == auto {
@@ -609,19 +686,41 @@
       background: rect(width: 100%, height: 100%, fill: bg),
       header: none, footer: none,
       {
-        place(top + left, float: false, _header-band(w, if sec == none { "" } else { sec }, slide-title: header-title, tc, sc))
-        place(bottom + left, float: false, _footer-band(w, auth, inst, ft, counter(page).display() + " / " + str(counter(page).final().first()), tc, sc))
+        place(
+          top + left,
+          float: false,
+          _header-band(
+            w,
+            if sec == none { "" } else { sec },
+            slide-title: header-title,
+            tc,
+            sc,
+            header-font-color-1: hfc1,
+            header-font-color-2: hfc2,
+            header-font-color-1-highlight: hfc1h,
+          ),
+        )
+        place(
+          bottom + left,
+          float: false,
+          _footer-band(
+            w,
+            auth,
+            inst,
+            ft,
+            counter(page).display() + " / " + str(counter(page).final().first()),
+            tc,
+            sc,
+            header-font-color-1: hfc1,
+            header-font-color-2: hfc2,
+            header-font-color-1-highlight: hfc1h,
+          ),
+        )
         place(
           top + left,
           dy: header-h,
           float: false,
-          block(
-            width: w,
-            height: avail,
-            inset: (x: _single-col-x-margin, y: 0pt),
-            clip: true,
-            align(horizon, body)
-          )
+          _slide-body-area(w, avail, body)
         )
       }
     )
@@ -639,6 +738,9 @@
     let ft  = _fs-ft.get()
     let auth = _fs-auth.get()
     let inst = _fs-inst.get()
+    let hfc1 = _fs-hfc1.get()
+    let hfc2 = _fs-hfc2.get()
+    let hfc1h = _fs-hfc1h.get()
     let nav-sec = {
       let cur = _cur-sec.get()
       if cur == none or cur == "" { sec-title } else { cur }
@@ -652,8 +754,35 @@
       background: rect(width: 100%, height: 100%, fill: bg),
       header: none, footer: none,
       {
-        place(top + left, float: false, _header-band(w, nav-sec, tc, sc))
-        place(bottom + left, float: false, _footer-band(w, auth, inst, ft, counter(page).display() + " / " + str(counter(page).final().first()), tc, sc))
+        place(
+          top + left,
+          float: false,
+          _header-band(
+            w,
+            nav-sec,
+            tc,
+            sc,
+            header-font-color-1: hfc1,
+            header-font-color-2: hfc2,
+            header-font-color-1-highlight: hfc1h,
+          ),
+        )
+        place(
+          bottom + left,
+          float: false,
+          _footer-band(
+            w,
+            auth,
+            inst,
+            ft,
+            counter(page).display() + " / " + str(counter(page).final().first()),
+            tc,
+            sc,
+            header-font-color-1: hfc1,
+            header-font-color-2: hfc2,
+            header-font-color-1-highlight: hfc1h,
+          ),
+        )
         block(
           width: w,
           height: h - 24.75pt - 29.61pt,
@@ -665,7 +794,7 @@
                   width: 100%, fill: tc, inset: (x: 12pt, y: 4pt),
                   context {
                     let n = _sec-ctr.get().first()
-                    text(font: _sans, fill: white, size: 8pt, [Section #n])
+                    text(font: _sans, fill: hfc1h, size: 8pt, [Section #n])
                   }
                 )
                 block(
@@ -685,7 +814,7 @@
   }
 }
 
-/// Final "Thank You" slide.
+/// Final message slide.
 #let thank-you-slide = context {
   let tc = _fs-tc.get()
   let sc = _fs-sc.get()
@@ -695,6 +824,10 @@
   let ft = _fs-ft.get()
   let auth = _fs-auth.get()
   let inst = _fs-inst.get()
+  let hfc1 = _fs-hfc1.get()
+  let hfc2 = _fs-hfc2.get()
+  let hfc1h = _fs-hfc1h.get()
+  let final-message = _fs-final.get()
   _register-page()
 
   page(
@@ -702,12 +835,39 @@
     background: rect(width: 100%, height: 100%, fill: bg),
     header: none, footer: none,
     {
-      place(top + left, float: false, _header-band(w, "", tc, sc))
-      place(bottom + left, float: false, _footer-band(w, auth, inst, ft, counter(page).display() + " / " + str(counter(page).final().first()), tc, sc))
+      place(
+        top + left,
+        float: false,
+        _header-band(
+          w,
+          "",
+          tc,
+          sc,
+          header-font-color-1: hfc1,
+          header-font-color-2: hfc2,
+          header-font-color-1-highlight: hfc1h,
+        ),
+      )
+      place(
+        bottom + left,
+        float: false,
+        _footer-band(
+          w,
+          auth,
+          inst,
+          ft,
+          counter(page).display() + " / " + str(counter(page).final().first()),
+          tc,
+          sc,
+          header-font-color-1: hfc1,
+          header-font-color-2: hfc2,
+          header-font-color-1-highlight: hfc1h,
+        ),
+      )
       block(
         width: w, height: h - 24.75pt - 29.61pt,
         align(center + horizon,
-          text(font: _serif, size: 24pt, style: "italic", fill: tc, [Thank you for your attention])
+          text(font: _serif, size: 24pt, style: "italic", fill: tc, final-message)
         )
       )
     }
@@ -716,20 +876,32 @@
 
 // ============================================================
 // Main entry point  --  use via:
-//   #show: formal-slides.with(title: "...", ...)
+//   #show: formal-slides.with(config: (title: "...", ...))
 // ============================================================
 #let formal-slides(
+  config:          (:),
   title:           none,
   subtitle:        none,
   institution:     none,
   institute:       none,
   date:            none,
   authors:         none,
-  ratio:           4/3,
-  title-color:     rgb("#1C1C1C"),
-  secondary-color: rgb("#D9D9D9"),
-  bg-color:        white,
-  toc:             true,
+  final-message:   none,
+  primary-color:   none,
+  secondary-color: none,
+  background-color: none,
+  font-color:      none,
+  header-font-color-1: none,
+  header-font-color-2: none,
+  header-font-color-1-highlight: none,
+  content-center:  none,
+  content-upper-padding: none,
+  content-lower-padding: none,
+  logos:           none,
+  ratio:           16/9,
+  title-color:     none,
+  bg-color:        none,
+  toc:             none,
   footer-title:    auto,
   footer-subtitle: auto,
   logo:            none,
@@ -737,20 +909,78 @@
   cover-image-height: 45pt,
   body
 ) = {
-  assert(title != none, message: "formal-slides: `title` is required")
+  let cfg-title = config.at("title", default: if title == none { "" } else { title })
+  let cfg-subtitle = config.at("subtitle", default: if subtitle == none { "" } else { subtitle })
+  let cfg-authors = config.at("authors", default: if authors == none { "" } else { authors })
+  let cfg-institution = config.at(
+    "institution",
+    default: if institution != none { institution } else if institute != none { institute } else { "" },
+  )
+  let cfg-date = config.at("date", default: if date == none { "" } else { date })
+  let cfg-final-message = config.at(
+    "final-message",
+    default: if final-message == none { "" } else { final-message },
+  )
+  let cfg-primary = config.at(
+    "primary-color",
+    default: if primary-color != none { primary-color } else if title-color != none { title-color } else { rgb("#1C1C1C") },
+  )
+  let cfg-secondary = config.at(
+    "secondary-color",
+    default: if secondary-color == none { rgb("#D9D9D9") } else { secondary-color },
+  )
+  let cfg-background = config.at(
+    "background-color",
+    default: if background-color != none { background-color } else if bg-color != none { bg-color } else { rgb("#FFFFFF") },
+  )
+  let cfg-font-color = config.at(
+    "font-color",
+    default: if font-color == none { luma(20) } else { font-color },
+  )
+  let cfg-hfc1 = config.at(
+    "header-font-color-1",
+    default: if header-font-color-1 == none { _muted-nav(cfg-primary) } else { header-font-color-1 },
+  )
+  let cfg-hfc2 = config.at(
+    "header-font-color-2",
+    default: if header-font-color-2 == none { cfg-primary } else { header-font-color-2 },
+  )
+  let cfg-hfc1h = config.at(
+    "header-font-color-1-highlight",
+    default: if header-font-color-1-highlight == none { white } else { header-font-color-1-highlight },
+  )
+  let cfg-content-center = config.at(
+    "content-center",
+    default: if content-center == none { 0.3 } else { content-center },
+  )
+  let cfg-content-upper-padding = config.at(
+    "content-upper-padding",
+    default: if content-upper-padding == none { 0.05 } else { content-upper-padding },
+  )
+  let cfg-content-lower-padding = config.at(
+    "content-lower-padding",
+    default: if content-lower-padding == none { 0.05 } else { content-lower-padding },
+  )
+  let cfg-logos = config.at(
+    "logos",
+    default: if logos != none { logos } else if cover-images != none { cover-images } else if logo != none { (logo,) } else { () },
+  )
+  let cfg-toc = config.at("TOC", default: if toc == none { true } else { toc })
 
-  let ft  = if footer-title    == auto { title }    else { footer-title }
-  let fst = if footer-subtitle == auto { subtitle } else { footer-subtitle }
-  let inst = if institution != none { institution } else { institute }
-  let cover-imgs = if cover-images == none {
+  let ft  = if footer-title    == auto { cfg-title }    else { footer-title }
+  let fst = if footer-subtitle == auto { cfg-subtitle } else { footer-subtitle }
+  let inst = if cfg-institution == "" { none } else { cfg-institution }
+  let subt = if cfg-subtitle == "" { none } else { cfg-subtitle }
+  let date-text = if cfg-date == "" { none } else { cfg-date }
+  let cover-imgs = if cfg-logos == none {
     ()
-  } else if type(cover-images) == array {
-    cover-images
+  } else if type(cfg-logos) == array {
+    cfg-logos
   } else {
-    (cover-images,)
+    (cfg-logos,)
   }
-  let auth = if authors != none {
-    let al = if type(authors) == array { authors } else { (authors,) }
+  let auth = if cfg-authors != "" and cfg-authors != none {
+    let al = if type(cfg-authors) == array { cfg-authors } else { (cfg-authors,) }
     al.join([,  ])
   } else { none }
 
@@ -758,20 +988,28 @@
   let h = w / ratio
 
   // Push config into state so slide() can read it contextually
-  _fs-tc.update(title-color)
-  _fs-sc.update(secondary-color)
-  _fs-bg.update(bg-color)
+  _fs-tc.update(cfg-primary)
+  _fs-sc.update(cfg-secondary)
+  _fs-bg.update(cfg-background)
   _fs-w.update(w)
   _fs-h.update(h)
   _fs-ft.update(ft)
   _fs-fst.update(fst)
-  _fs-title.update(title)
-  _fs-subt.update(if subtitle == none { "" } else { subtitle })
+  _fs-title.update(cfg-title)
+  _fs-subt.update(cfg-subtitle)
   _fs-inst.update(inst)
   _fs-auth.update(auth)
+  _fs-fc.update(cfg-font-color)
+  _fs-hfc1.update(cfg-hfc1)
+  _fs-hfc2.update(cfg-hfc2)
+  _fs-hfc1h.update(cfg-hfc1h)
+  _fs-final.update(cfg-final-message)
+  _fs-cctr.update(cfg-content-center)
+  _fs-cupad.update(cfg-content-upper-padding)
+  _fs-clpad.update(cfg-content-lower-padding)
 
   // Global text defaults
-  set text(font: _serif, size: 11.5pt, fill: luma(20))
+  set text(font: _serif, size: 11.5pt, fill: cfg-font-color)
   set figure(gap: _caption-gap)
   show figure.where(kind: table): it => block(
     above: _visual-y-margin,
@@ -797,25 +1035,52 @@
   // ---- Title slide -----------------------------------------
   page(
       width: w, height: h, margin: 0pt,
-      background: rect(width: 100%, height: 100%, fill: bg-color),
+      background: rect(width: 100%, height: 100%, fill: cfg-background),
       header: none, footer: none,
       {
         _register-page()
-        place(top + left, float: false, _header-band(w, "", title-color, secondary-color))
-        place(bottom + left, float: false, _footer-band(w, auth, inst, ft, context counter(page).display() + " / " + str(counter(page).final().first()), title-color, secondary-color))
+        place(
+          top + left,
+          float: false,
+          _header-band(
+            w,
+            "",
+            cfg-primary,
+            cfg-secondary,
+            header-font-color-1: cfg-hfc1,
+            header-font-color-2: cfg-hfc2,
+            header-font-color-1-highlight: cfg-hfc1h,
+          ),
+        )
+        place(
+          bottom + left,
+          float: false,
+          _footer-band(
+            w,
+            auth,
+            inst,
+            ft,
+            context counter(page).display() + " / " + str(counter(page).final().first()),
+            cfg-primary,
+            cfg-secondary,
+            header-font-color-1: cfg-hfc1,
+            header-font-color-2: cfg-hfc2,
+            header-font-color-1-highlight: cfg-hfc1h,
+          ),
+        )
         block(
           width: w, height: h - 24.75pt - 29.61pt,
           align(center + horizon, {
             block(
-              width: 84%, fill: title-color,
+              width: 84%, fill: cfg-primary,
               inset: (x: 14pt, y: 10pt),
               align(center + horizon, {
-                set text(font: _sans, fill: white)
-                text(size: 19pt, title)
-                if subtitle != none {
+                set text(font: _sans, fill: cfg-hfc1h)
+                text(size: 19pt, cfg-title)
+                if subt != none {
                   linebreak()
                   v(4pt)
-                  text(size: 11pt, subtitle)
+                  text(size: 11pt, subt)
                 }
               })
             )
@@ -830,20 +1095,13 @@
               linebreak()
               v(6pt)
             }
-            if date != none {
-              text(font: _sans, size: 10pt, date)
+            if date-text != none {
+              text(font: _sans, size: 10pt, date-text)
               linebreak()
             }
             v(26pt)
             if cover-imgs != () {
               _cover-image-row(cover-imgs, height: cover-image-height)
-            } else if logo != none {
-              image(logo, height: cover-image-height)
-            } else {
-              box(
-                stroke: title-color + 1pt, inset: (x: 12pt, y: 14pt),
-                text(font: _mono, size: 9pt, fill: title-color, weight: "bold", [typst])
-              )
             }
           })
         )
@@ -851,12 +1109,12 @@
   )
 
   // ---- TOC slide -------------------------------------------
-  if toc {
+  if cfg-toc {
     slide(title: "Table of Contents", section: none, show-title-band: false, {
       context {
         let entries = _toc-data.final()
         let sec-n   = 0
-        text(font: _sans, size: 14pt, weight: "bold", fill: title-color, [Table of Contents])
+        text(font: _sans, size: 14pt, weight: "bold", fill: cfg-primary, [Table of Contents])
         v(8pt)
         for e in entries {
           if e.kind == "section" {
@@ -865,13 +1123,13 @@
             grid(
               columns: (18pt, 1fr), column-gutter: 4pt,
               box(
-                width: 16pt, height: 16pt, fill: title-color,
+                width: 16pt, height: 16pt, fill: cfg-primary,
                 align(center + horizon,
-                  text(font: _sans, fill: white, size: 8pt, weight: "bold", str(sec-n))
+                  text(font: _sans, fill: cfg-hfc1h, size: 8pt, weight: "bold", str(sec-n))
                 )
               ),
               align(left + horizon,
-                text(font: _sans, size: 10pt, weight: "bold", fill: title-color, e.title)
+                text(font: _sans, size: 10pt, weight: "bold", fill: cfg-primary, e.title)
               )
             )
           } else {
