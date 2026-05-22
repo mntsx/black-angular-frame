@@ -323,10 +323,10 @@ return theta",
           left: 5pt,
           right: 5pt,
           top: if first-data { 6pt } else { 4pt },
-          bottom: if header { 6pt } else { 4pt },
+          bottom: if header { 7pt } else { 4pt },
         ),
         align: pos,
-        text(font: "IBM Plex Sans", body),
+        text(font: "IBM Plex Serif", body),
       )
       #fs-visual[
         #block(width: 100%, {
@@ -414,10 +414,10 @@ return theta",
           left: 5pt,
           right: 5pt,
           top: if first-data { 6pt } else { 4pt },
-          bottom: if header { 6pt } else { 4pt },
+          bottom: if header { 7pt } else { 4pt },
         ),
         align: pos,
-        text(font: "IBM Plex Sans", body),
+        text(font: "IBM Plex Serif", body),
       )
       #figure(
         kind: table,
