@@ -351,6 +351,15 @@
   align(center, body),
 )
 
+/// Cell helper for grid-built tables. Uses the template's table font.
+#let fs-table-cell(body, fill: none, stroke: none, pos: left, inset: (x: 5pt, y: 4pt)) = block(
+  width: 100%,
+  fill: fill,
+  stroke: stroke,
+  inset: inset,
+  align(pos, text(font: _sans, body)),
+)
+
 /// Numbered figure with optional italic caption.
 /// Counters reset per section.
 #let fs-figure(body, caption: none, caption-gap: _caption-gap) = {

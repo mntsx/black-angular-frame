@@ -314,28 +314,41 @@ return theta",
 
       This table is introduced by a short paragraph rather than a single label. The extra prose makes the spacing above the table visible in a realistic slide, where a table usually follows a sentence or two of setup.
 
-      #let paper-cell(body, pos: left) = block(width: 100%, inset: (x: 5pt, y: 4pt), align(pos, body))
+      #let paper-cell(body, pos: left, header: false, model-col: false, first-data: false) = grid.cell(
+        stroke: (
+          bottom: if header { 0.6pt } else { none },
+          right: if model-col { 0.6pt } else { none },
+        ),
+        inset: (
+          left: 5pt,
+          right: 5pt,
+          top: if first-data { 6pt } else { 4pt },
+          bottom: if header { 6pt } else { 4pt },
+        ),
+        align: pos,
+        text(font: "IBM Plex Sans", body),
+      )
       #fs-visual[
         #block(width: 100%, {
           line(length: 100%, stroke: 0.9pt)
           grid(
             columns: (28%, 24%, 24%, 24%),
-            paper-cell(text(weight: "bold")[Method]),
-            paper-cell(text(weight: "bold")[Acc. (%)], pos: center),
-            paper-cell(text(weight: "bold")[F#sub[1]], pos: center),
-            paper-cell(text(weight: "bold")[AUC], pos: center),
+            paper-cell(header: true, model-col: true)[*Method*],
+            paper-cell(header: true, pos: center)[*Acc. (%)*],
+            paper-cell(header: true, pos: center)[*F#sub[1]*],
+            paper-cell(header: true, pos: center)[*AUC*],
 
-            paper-cell[Baseline],
-            paper-cell(pos: center)[72.3],
-            paper-cell(pos: center)[0.701],
-            paper-cell(pos: center)[0.743],
+            paper-cell(model-col: true, first-data: true)[Baseline],
+            paper-cell(pos: center, first-data: true)[72.3],
+            paper-cell(pos: center, first-data: true)[0.701],
+            paper-cell(pos: center, first-data: true)[0.743],
 
-            paper-cell[Model A],
+            paper-cell(model-col: true)[Model A],
             paper-cell(pos: center)[81.5],
             paper-cell(pos: center)[0.803],
             paper-cell(pos: center)[0.851],
 
-            paper-cell[*Model B*],
+            paper-cell(model-col: true)[Model B],
             paper-cell(pos: center)[*88.9*],
             paper-cell(pos: center)[*0.876*],
             paper-cell(pos: center)[*0.903*],
@@ -350,20 +363,19 @@ return theta",
 
       The grid version is meant for dense numeric summaries or dashboard-like reporting. A longer lead-in makes it easier to see whether the table feels attached to the explanation or floats too far away.
 
-      #let grid-cell(body, fill: white, stroke: luma(200) + 0.6pt, pos: center) = block(
-        width: 100%,
+      #let grid-cell(body, fill: white, stroke: luma(200) + 0.6pt, pos: center) = fs-table-cell(
         fill: fill,
         stroke: stroke,
-        inset: (x: 5pt, y: 4pt),
-        align(pos, body),
+        pos: pos,
+        body,
       )
       #fs-visual[
         #block(width: 100%, grid(
           columns: (28%, 24%, 24%, 24%),
-          grid-cell(fill: blue.darken(50%), pos: left)[#text(weight: "bold", fill: white)[Method]],
-          grid-cell(fill: blue.darken(50%))[#text(weight: "bold", fill: white)[Acc. (%)]],
-          grid-cell(fill: blue.darken(50%))[#text(weight: "bold", fill: white)[F#sub[1]]],
-          grid-cell(fill: blue.darken(50%))[#text(weight: "bold", fill: white)[AUC]],
+          grid-cell(fill: blue.darken(50%), pos: left)[#text(fill: white)[Method]],
+          grid-cell(fill: blue.darken(50%))[#text(fill: white)[Acc. (%)]],
+          grid-cell(fill: blue.darken(50%))[#text(fill: white)[F#sub[1]]],
+          grid-cell(fill: blue.darken(50%))[#text(fill: white)[AUC]],
 
           grid-cell(fill: luma(248), pos: left)[Baseline],
           grid-cell(fill: luma(248))[72.3],
@@ -376,9 +388,9 @@ return theta",
           grid-cell(fill: white)[0.851],
 
           grid-cell(fill: luma(248), pos: left)[Model B],
-          grid-cell(fill: luma(248))[88.9],
-          grid-cell(fill: luma(248))[0.876],
-          grid-cell(fill: luma(248))[0.903],
+          grid-cell(fill: luma(248))[*88.9*],
+          grid-cell(fill: luma(248))[*0.876*],
+          grid-cell(fill: luma(248))[*0.903*],
         ))
       ]
       Dashboard style: solid grid, alternating row shading. This closing note also spans multiple lines, which helps reveal whether the table block leaves enough room before normal prose resumes.
@@ -393,7 +405,20 @@ return theta",
 
       Captions are useful when the table needs to be referenced later in the talk or connected to a source. This paragraph gives the captioned table enough surrounding prose to test both the top margin and the caption spacing.
 
-      #let paper-cell(body, pos: left) = block(width: 100%, inset: (x: 5pt, y: 4pt), align(pos, body))
+      #let paper-cell(body, pos: left, header: false, model-col: false, first-data: false) = grid.cell(
+        stroke: (
+          bottom: if header { 0.6pt } else { none },
+          right: if model-col { 0.6pt } else { none },
+        ),
+        inset: (
+          left: 5pt,
+          right: 5pt,
+          top: if first-data { 6pt } else { 4pt },
+          bottom: if header { 6pt } else { 4pt },
+        ),
+        align: pos,
+        text(font: "IBM Plex Sans", body),
+      )
       #figure(
         kind: table,
         caption: [Placeholder caption for the paper-style table.],
@@ -402,22 +427,22 @@ return theta",
             line(length: 100%, stroke: 0.9pt)
             grid(
               columns: (28%, 24%, 24%, 24%),
-              paper-cell(text(weight: "bold")[Method]),
-              paper-cell(text(weight: "bold")[Acc. (%)], pos: center),
-              paper-cell(text(weight: "bold")[F#sub[1]], pos: center),
-              paper-cell(text(weight: "bold")[AUC], pos: center),
+              paper-cell(header: true, model-col: true)[*Method*],
+              paper-cell(header: true, pos: center)[*Acc. (%)*],
+              paper-cell(header: true, pos: center)[*F#sub[1]*],
+              paper-cell(header: true, pos: center)[*AUC*],
 
-              paper-cell[Baseline],
-              paper-cell(pos: center)[72.3],
-              paper-cell(pos: center)[0.701],
-              paper-cell(pos: center)[0.743],
+              paper-cell(model-col: true, first-data: true)[Baseline],
+              paper-cell(pos: center, first-data: true)[72.3],
+              paper-cell(pos: center, first-data: true)[0.701],
+              paper-cell(pos: center, first-data: true)[0.743],
 
-              paper-cell[Model A],
+              paper-cell(model-col: true)[Model A],
               paper-cell(pos: center)[81.5],
               paper-cell(pos: center)[0.803],
               paper-cell(pos: center)[0.851],
 
-              paper-cell[*Model B*],
+              paper-cell(model-col: true)[Model B],
               paper-cell(pos: center)[*88.9*],
               paper-cell(pos: center)[*0.876*],
               paper-cell(pos: center)[*0.903*],
@@ -433,12 +458,11 @@ return theta",
 
       The captioned grid table shows how a more operational table behaves inside the same layout. The text before it is intentionally longer so vertical spacing is visible without relying on empty slide area.
 
-      #let grid-cell(body, fill: white, stroke: luma(200) + 0.6pt, pos: center) = block(
-        width: 100%,
+      #let grid-cell(body, fill: white, stroke: luma(200) + 0.6pt, pos: center) = fs-table-cell(
         fill: fill,
         stroke: stroke,
-        inset: (x: 5pt, y: 4pt),
-        align(pos, body),
+        pos: pos,
+        body,
       )
       #figure(
         kind: table,
@@ -446,10 +470,10 @@ return theta",
         {
           block(width: 100%, grid(
             columns: (28%, 24%, 24%, 24%),
-            grid-cell(fill: blue.darken(50%), pos: left)[#text(weight: "bold", fill: white)[Method]],
-            grid-cell(fill: blue.darken(50%))[#text(weight: "bold", fill: white)[Acc. (%)]],
-            grid-cell(fill: blue.darken(50%))[#text(weight: "bold", fill: white)[F#sub[1]]],
-            grid-cell(fill: blue.darken(50%))[#text(weight: "bold", fill: white)[AUC]],
+            grid-cell(fill: blue.darken(50%), pos: left)[#text(fill: white)[Method]],
+            grid-cell(fill: blue.darken(50%))[#text(fill: white)[Acc. (%)]],
+            grid-cell(fill: blue.darken(50%))[#text(fill: white)[F#sub[1]]],
+            grid-cell(fill: blue.darken(50%))[#text(fill: white)[AUC]],
 
             grid-cell(fill: luma(248), pos: left)[Baseline],
             grid-cell(fill: luma(248))[72.3],
@@ -462,9 +486,9 @@ return theta",
             grid-cell(fill: white)[0.851],
 
             grid-cell(fill: luma(248), pos: left)[Model B],
-            grid-cell(fill: luma(248))[88.9],
-            grid-cell(fill: luma(248))[0.876],
-            grid-cell(fill: luma(248))[0.903],
+            grid-cell(fill: luma(248))[*88.9*],
+            grid-cell(fill: luma(248))[*0.876*],
+            grid-cell(fill: luma(248))[*0.903*],
           ))
         },
       )
