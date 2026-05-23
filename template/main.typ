@@ -3,7 +3,7 @@
 // This file demonstrates all features of the template.
 // ============================================================
 
-#import "black-angular-frame.typ": *
+#import "@preview/black-angular-frame:0.1.0": *
 
 #let presentation-config = (
   title: "Black Angular Frame",
@@ -102,14 +102,14 @@
   #v(3pt)
 
   #code-box(
-    "#import \"black-angular-frame.typ\": *
+    "#import \"@preview/black-angular-frame:0.1.0\": *
 
 #let presentation-config = (
   title: \"Black Angular Frame\",
   subtitle: \"A Typst Template for Academic Presentations\",
   authors: \"Author One, Author Two\",
   institution: \"Institution Name\",
-  date: \"May 2025\",
+  date: \"May 2026\",
   final-message: \"Thank you for your attention\",
   primary-color: rgb(\"#1C1C1C\"),
   secondary-color: rgb(\"#D9D9D9\"),
@@ -144,7 +144,7 @@
 #new-section("Typography")
 
 #slide(title: "Default Fonts")[
-  The template ships with three IBM Plex families:
+  The template uses three IBM Plex families when available, with standard fallback fonts if they are not installed:
 
   #v(5pt)
   #grid(

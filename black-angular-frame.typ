@@ -909,7 +909,7 @@
 }
 
 /// Final message slide.
-#let thank-you-slide = context {
+#let final-slide = context {
   let tc = _fs-tc.get()
   let sc = _fs-sc.get()
   let bg = _fs-bg.get()
