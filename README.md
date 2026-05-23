@@ -1,15 +1,15 @@
-# blackboard-frame
+# black-angular-frame
 
 A Typst presentation template with a square, minimal, academic design language: a solid navigation bar on top, a two-level footer with page number, a tinted title strip for regular content slides, and compact box environments without wasted whitespace.
 
-![blackboard-frame thumbnail](thumbnail.png)
+![black-angular-frame thumbnail](thumbnail.png)
 
 ---
 
 ## Quick start
 
 ```typst
-#import "@preview/blackboard-frame:0.1.0": *
+#import "@preview/black-angular-frame:0.1.0": *
 
 #let presentation-config = (
   title: "My Presentation",
@@ -21,7 +21,7 @@ A Typst presentation template with a square, minimal, academic design language: 
   TOC: true,
 )
 
-#show: blackboard-frame.with(config: presentation-config)
+#show: black-angular-frame.with(config: presentation-config)
 
 #new-section("Introduction")
 
@@ -36,7 +36,7 @@ A Typst presentation template with a square, minimal, academic design language: 
 Initialize from the template after publication with:
 
 ```bash
-typst init @preview/blackboard-frame:0.1.0
+typst init @preview/black-angular-frame:0.1.0
 ```
 
 For local development in this repository, compile the demo with:
@@ -47,13 +47,13 @@ typst compile example.typ example.pdf --font-path assets/fonts
 
 The source file is `example.typ` and the output path should be exactly `example.pdf`; this repository keeps only that generated PDF.
 
-The local demo imports `blackboard-frame.typ` directly and uses the fonts in `assets/fonts/`. For VS Code + Tinymist, the workspace already includes `.vscode/settings.json` with `tinymist.fontPaths = ["assets/fonts"]`, so IBM Plex is discovered automatically inside this repository.
+The local demo imports `black-angular-frame.typ` directly and uses the fonts in `assets/fonts/`. For VS Code + Tinymist, the workspace already includes `.vscode/settings.json` with `tinymist.fontPaths = ["assets/fonts"]`, so IBM Plex is discovered automatically inside this repository.
 
 ---
 
 ## Template configuration
 
-Pass configuration through `#show: blackboard-frame.with(config: presentation-config)`.
+Pass configuration through `#show: black-angular-frame.with(config: presentation-config)`.
 
 | Name | Expected value | Default | Description |
 |------|----------------|---------|-------------|
@@ -272,9 +272,9 @@ The file `example.typ` is a complete demo presentation covering all template fea
 ## Repository layout
 
 ```
-blackboard-frame/
+black-angular-frame/
 ├── typst.toml                 # Package manifest
-├── blackboard-frame.typ       # Package entrypoint
+├── black-angular-frame.typ       # Package entrypoint
 ├── template/
 │   └── main.typ               # typst init starter file
 ├── thumbnail.png              # Universe thumbnail
