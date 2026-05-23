@@ -1,9 +1,9 @@
 // ============================================================
-// formal-slides -- Typst presentation template
+// blackboard-frame -- Typst presentation template
 // Formal academic presentation theme for Typst
 // Usage:
-//   #import "formal-slides.typ": *
-//   #show: formal-slides.with(config: (title: "My Talk", ...))
+//   #import "blackboard-frame.typ": *
+//   #show: blackboard-frame.with(config: (title: "My Talk", ...))
 //   #slide(title: "First")[...]
 // ============================================================
 
@@ -891,9 +891,9 @@
 
 // ============================================================
 // Main entry point  --  use via:
-//   #show: formal-slides.with(config: (title: "...", ...))
+//   #show: blackboard-frame.with(config: (title: "...", ...))
 // ============================================================
-#let formal-slides(
+#let blackboard-frame(
   config:          (:),
   title:           none,
   subtitle:        none,

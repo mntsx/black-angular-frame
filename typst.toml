@@ -1,12 +1,24 @@
 [package]
-name        = "formal-slides"
-version     = "0.1.0"
-description = "Academic presentation template inspired by the UChicago Beamer theme"
-authors     = ["formal-slides contributors"]
-license     = "MIT"
-keywords    = ["presentation", "slides", "beamer", "academic"]
-entrypoint  = "formal-slides.typ"
+name = "blackboard-frame"
+version = "0.1.0"
+entrypoint = "blackboard-frame.typ"
+authors = ["Miguel Montes <@miguelm7654>"]
+license = "MIT"
+description = "Formal academic slide decks."
+repository = "https://github.com/miguelm7654/blackboard-frame"
+keywords = ["slides", "presentation", "academic", "beamer"]
+categories = ["presentation"]
+exclude = [
+  "example.typ",
+  "example.pdf",
+  "assets/fonts/**",
+  "assets/curves.csv",
+  "tinymist.lock",
+  ".vscode/**",
+  "tmp/**",
+]
 
 [template]
-path   = "example.typ"
-thumbnail = "example.pdf"
+path = "template"
+entrypoint = "main.typ"
+thumbnail = "thumbnail.png"

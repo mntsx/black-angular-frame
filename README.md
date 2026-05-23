@@ -1,4 +1,4 @@
-# formal-slides
+# blackboard-frame
 
 A Typst presentation template with a square, minimal, academic design language: a solid navigation bar on top, a two-level footer with page number, a tinted title strip for regular content slides, and compact box environments without wasted whitespace.
 
@@ -7,30 +7,19 @@ A Typst presentation template with a square, minimal, academic design language: 
 ## Quick start
 
 ```typst
-#import "formal-slides.typ": *
+#import "@preview/blackboard-frame:0.1.0": *
 
 #let presentation-config = (
-  title:       "My Presentation",
-  subtitle:    "An optional subtitle",
-  authors:     "Alice, Bob",
+  title: "My Presentation",
+  subtitle: "An optional subtitle",
+  authors: "Alice, Bob",
   institution: "Institution Name",
-  date:        "May 2025",
+  date: "May 2026",
   final-message: "Thank you for your attention",
-  primary-color: rgb("#1C1C1C"),
-  secondary-color: rgb("#D9D9D9"),
-  background-color: rgb("#FFFFFF"),
-  font-color: luma(20),
-  header-font-color-1: rgb("#999999"),
-  header-font-color-2: rgb("#1C1C1C"),
-  header-font-color-1-highlight: rgb("#FFFFFF"),
-  content-center: 0.3,
-  content-upper-padding: 0.05,
-  content-lower-padding: 0.05,
-  logos: ("assets/typst-logo.png", "assets/github-logo.png"),
   TOC: true,
 )
 
-#show: formal-slides.with(config: presentation-config)
+#show: blackboard-frame.with(config: presentation-config)
 
 #new-section("Introduction")
 
@@ -42,19 +31,27 @@ A Typst presentation template with a square, minimal, academic design language: 
 #thank-you-slide
 ```
 
-Compile with:
+Initialize from the template after publication with:
+
+```bash
+typst init @preview/blackboard-frame:0.1.0
+```
+
+For local development in this repository, compile the demo with:
 
 ```bash
 typst compile example.typ example.pdf --font-path assets/fonts
 ```
 
-For VS Code + Tinymist, the workspace already includes `.vscode/settings.json` with `tinymist.fontPaths = ["assets/fonts"]`, so IBM Plex is discovered automatically inside this repository.
+The source file is `example.typ` and the output path should be exactly `example.pdf`; this repository keeps only that generated PDF.
+
+The local demo imports `blackboard-frame.typ` directly and uses the fonts in `assets/fonts/`. For VS Code + Tinymist, the workspace already includes `.vscode/settings.json` with `tinymist.fontPaths = ["assets/fonts"]`, so IBM Plex is discovered automatically inside this repository.
 
 ---
 
 ## Template configuration
 
-Pass configuration through `#show: formal-slides.with(config: presentation-config)`.
+Pass configuration through `#show: blackboard-frame.with(config: presentation-config)`.
 
 | Name | Expected value | Default | Description |
 |------|----------------|---------|-------------|
@@ -83,7 +80,9 @@ The template still accepts the previous parameter names (`title-color`, `bg-colo
 
 ## Fonts
 
-The template uses three IBM Plex families. The font files are included in `assets/fonts/` so no external installation is needed.
+The template uses IBM Plex when available, with Liberation and DejaVu fallbacks. For local compilation with IBM Plex, install the fonts on your system or pass them with `--font-path`.
+
+This repository keeps IBM Plex files in `assets/fonts/` so `example.typ` can compile locally with the intended typography. The package manifest excludes `assets/fonts/**` from the Typst Universe bundle, because Universe packages must not ship font files.
 
 | Role | Font |
 |------|------|
@@ -91,7 +90,7 @@ The template uses three IBM Plex families. The font files are included in `asset
 | Titles and UI elements | IBM Plex Sans |
 | Code and verbatim | IBM Plex Mono |
 
-Fallback chains include Liberation and DejaVu, so the template works even if the IBM Plex files are unavailable.
+Fallback chains include Liberation and DejaVu, so the template works even when IBM Plex is unavailable.
 
 ---
 
@@ -262,18 +261,32 @@ The file `example.typ` is a complete demo presentation covering all template fea
 ## Repository layout
 
 ```
-formal-slides/
-├── formal-slides.typ       # Template — import this
-├── example.typ             # Full demo presentation
-├── example.pdf             # Pre-compiled demo PDF
+blackboard-frame/
+├── typst.toml                 # Package manifest
+├── blackboard-frame.typ       # Package entrypoint
+├── template/
+│   └── main.typ               # typst init starter file
+├── thumbnail.png              # Universe thumbnail
+├── example.typ                # Full local demo presentation
+├── example.pdf                # Pre-compiled local demo PDF
 ├── assets/
+│   ├── typst-logo.png         # Demo logo asset
+│   ├── github-logo.png        # Demo logo asset
 │   ├── fonts/              # IBM Plex Serif / Sans / Mono TTF files
-│   └── curves.csv          # Sample data for the line chart slide
+│   └── curves.csv             # Sample data for the line chart slide
 └── README.md
 ```
+
+The Typst Universe bundle is controlled by `exclude` in `typst.toml`. The local demo, generated PDFs, local fonts, Tinymist lockfile, and temporary files stay in the repository but are excluded from the published package archive.
+
+---
+
+## Acknowledgements
+
+This template was visually inspired by academic Beamer themes, especially UChicago-style slide layouts. It is not affiliated with or endorsed by the University of Chicago. No University of Chicago logos or brand assets are included.
 
 ---
 
 ## License
 
-The template code is released under the MIT License. The IBM Plex fonts are distributed under the [SIL Open Font License 1.1](https://scripts.sil.org/OFL).
+The template code is released under the MIT License. The IBM Plex fonts kept for local demo builds are distributed under the SIL Open Font License 1.1; see `assets/fonts/OFL-1.1.txt`. Font files are excluded from the Typst Universe package bundle.

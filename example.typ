@@ -1,12 +1,12 @@
 // ============================================================
-// formal-slides -- Example / Demo Presentation
+// blackboard-frame -- Example / Demo Presentation
 // This file demonstrates all features of the template.
 // ============================================================
 
-#import "formal-slides.typ": *
+#import "blackboard-frame.typ": *
 
 #let presentation-config = (
-  title: "Formal Slides",
+  title: "Blackboard Frame",
   subtitle: "A Typst Template for Academic Presentations",
   authors: "Author One, Author Two",
   institution: "Institution Name",
@@ -26,7 +26,7 @@
   TOC: true,
 )
 
-#show: formal-slides.with(config: presentation-config)
+#show: blackboard-frame.with(config: presentation-config)
 
 // ============================================================
 // CONFIGURATION
@@ -71,7 +71,7 @@
     cell[`content-upper-padding`], cell[Float 0-1], cell[`0.05`], cell[Top proportion of the available content area kept empty.],
     cell[`content-lower-padding`], cell[Float 0-1], cell[`0.05`], cell[Bottom proportion of the available content area kept empty.],
     cell[`logos`], cell[`list[string]`], cell[`()`], cell[Image paths shown on the cover.],
-    cell[`TOC`], cell[Bool], cell[`true`], cell[Whether to add the table of contents slide.],
+    cell[`TOC`], cell[Bool], cell[`true`], cell[Whether to add the table of contents slide with section links.],
   )
 
   #v(3pt)
@@ -79,15 +79,15 @@
 ]
 
 #slide(title: "Template Configuration Code")[
-  The example presentation stores its theme and metadata in `presentation-config`, then passes that dictionary to the template with `formal-slides.with`.
+  The example presentation stores its theme and metadata in `presentation-config`, then passes that dictionary to the template with `blackboard-frame.with`.
 
   #v(3pt)
 
   #code-box(
-    "#import \"formal-slides.typ\": *
+    "#import \"blackboard-frame.typ\": *
 
 #let presentation-config = (
-  title: \"Formal Slides\",
+  title: \"Blackboard Frame\",
   subtitle: \"A Typst Template for Academic Presentations\",
   authors: \"Author One, Author Two\",
   institution: \"Institution Name\",
@@ -107,7 +107,7 @@
   TOC: true,
 )
 
-#show: formal-slides.with(config: presentation-config)",
+#show: blackboard-frame.with(config: presentation-config)",
     type: "Typst",
     title: "Import and configure the template",
     lang: "typst",
