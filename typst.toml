@@ -1,11 +1,11 @@
 [package]
-name = "blackboard-frame"
+name = "black-angular-frame"
 version = "0.1.0"
-entrypoint = "blackboard-frame.typ"
+entrypoint = "black-angular-frame.typ"
 authors = ["Miguel Montes <@miguelm7654>"]
 license = "MIT"
 description = "Formal academic slide decks."
-repository = "https://github.com/miguelm7654/blackboard-frame"
+repository = "https://github.com/miguelm7654/black-angular-frame"
 keywords = ["slides", "presentation", "academic", "beamer"]
 categories = ["presentation"]
 exclude = [

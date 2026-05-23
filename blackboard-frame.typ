@@ -1,9 +1,9 @@
 // ============================================================
-// blackboard-frame -- Typst presentation template
+// black-angular-frame -- Typst presentation template
 // Formal academic presentation theme for Typst
 // Usage:
-//   #import "blackboard-frame.typ": *
-//   #show: blackboard-frame.with(config: (title: "My Talk", ...))
+//   #import "black-angular-frame.typ": *
+//   #show: black-angular-frame.with(config: (title: "My Talk", ...))
 //   #slide(title: "First")[...]
 // ============================================================
 
@@ -163,6 +163,7 @@
   let nav-margin = 22.4pt
   let nav-top = 3.425pt
   let nav-bottom = 2.025pt
+  let nav-item-x-inset = 0.4pt
   let active-dot-index = {
     if (
       page-no <= pages.len()
@@ -182,12 +183,48 @@
       none
     }
   }
+  let nav-slide-count(title) = {
+    calc.max(1, pages.filter(entry => entry.section == title and not entry.intro).len())
+  }
+  let nav-progress-label(title) = {
+    let slide-count = nav-slide-count(title)
+    let current-page = pages.at(page-no - 1, default: (intro: false))
+    let is-current-section = section == title
+    let is-section-slide = is-current-section and active-dot-index != none
+    if is-section-slide {
+      str(active-dot-index) + "/" + str(slide-count)
+    } else {
+      str(slide-count)
+    }
+  }
+  let nav-progress-width(title) = {
+    let slide-count = nav-slide-count(title)
+    if slide-count > _nav-compact-threshold {
+      let label-width = measure(text(font: _sans, size: 6.8pt, nav-progress-label(title))).width
+      6.2pt + 1.6pt + label-width
+    } else {
+      6.2pt * slide-count + 1.4pt * calc.max(0, slide-count - 1)
+    }
+  }
+  let nav-title-width(title, item-width) = {
+    let inner-width = calc.max(0pt, item-width - 2 * nav-item-x-inset)
+    let value = _single-line(title)
+    if value == none or type(value) != str {
+      0pt
+    } else {
+      let raw-width = measure(text(font: _sans, size: 7.1pt, value)).width
+      calc.min(raw-width, inner-width)
+    }
+  }
+  let nav-visible-width(title, item-width) = {
+    calc.max(nav-title-width(title, item-width), nav-progress-width(title))
+  }
   let nav-item(title, item-width) = {
-    let slide-count = calc.max(1, pages.filter(entry => entry.section == title and not entry.intro).len())
+    let slide-count = nav-slide-count(title)
     let target = sec-targets.rev().find(entry => entry.title == title)
     block(
       width: item-width,
-      inset: (left: 0.4pt, right: 0.4pt, top: 1.3pt, bottom: 1.1pt),
+      inset: (left: nav-item-x-inset, right: nav-item-x-inset, top: 1.3pt, bottom: 1.1pt),
       {
         layout(size => {
           let title-fill = if section == title { header-font-color-1-highlight } else { hfc1 }
@@ -196,11 +233,7 @@
           let is-section-intro = is-current-section and current-page.intro
           let is-section-slide = is-current-section and active-dot-index != none
           let use-compact-progress = slide-count > _nav-compact-threshold
-          let progress-label = if is-section-slide {
-            str(active-dot-index) + "/" + str(slide-count)
-          } else {
-            str(slide-count)
-          }
+          let progress-label = nav-progress-label(title)
           let progress-fill = if is-current-section { header-font-color-1-highlight } else { hfc1 }
 
           let title-content = if target != none {
@@ -282,40 +315,46 @@
       inset: (x: 0pt, y: 0pt),
       {
         if titles != () {
-          if titles.len() <= 3 {
-            layout(size => {
-              let usable-width = size.width - 2 * nav-margin
-              let positions = if titles.len() == 1 {
-                (50%,)
-              } else if titles.len() == 2 {
-                (33.333%, 66.667%)
-              } else {
-                (25%, 50%, 75%)
-              }
-              let item-width = if titles.len() == 1 {
-                calc.min(usable-width, 260pt)
-              } else if titles.len() == 2 {
-                calc.min(usable-width / 3, 210pt)
-              } else {
-                calc.min(usable-width / 4, 160pt)
-              }
-              for (idx, title) in titles.enumerate() {
-                place(
-                  top + left,
-                  dx: nav-margin + usable-width * positions.at(idx) - item-width / 2,
-                  dy: nav-top,
-                  nav-item(title, item-width),
-                )
-              }
-            })
-          } else {
-            grid(
-              columns: titles.map(_ => 1fr),
-              column-gutter: 0pt,
-              inset: (left: nav-margin, right: nav-margin, top: nav-top, bottom: nav-bottom),
-              ..titles.map(title => nav-item(title, 100%)),
+          layout(size => {
+            let usable-width = size.width - 2 * nav-margin
+            let positions = if titles.len() == 1 {
+              (0.5,)
+            } else if titles.len() == 2 {
+              (1 / 3, 2 / 3)
+            } else if titles.len() == 3 {
+              (1 / 4, 1 / 2, 3 / 4)
+            } else {
+              range(titles.len()).map(idx => (idx + 0.5) / titles.len())
+            }
+            let item-width = if titles.len() == 1 {
+              calc.min(usable-width, 260pt)
+            } else if titles.len() == 2 {
+              calc.min(usable-width / 3, 210pt)
+            } else if titles.len() == 3 {
+              calc.min(usable-width / 4, 160pt)
+            } else {
+              usable-width / titles.len()
+            }
+            let relative-lefts = positions.map(pos => usable-width * pos - item-width / 2)
+            let first-left = relative-lefts.at(0)
+            let last-left = relative-lefts.at(relative-lefts.len() - 1)
+            let last-title = titles.at(titles.len() - 1)
+            let last-visible-width = nav-visible-width(last-title, item-width)
+            let centering-shift = (
+              (
+                usable-width - first-left - last-left - last-visible-width - 2 * nav-item-x-inset
+              )
+                / 2
             )
-          }
+            for (idx, title) in titles.enumerate() {
+              place(
+                top + left,
+                dx: nav-margin + centering-shift + relative-lefts.at(idx),
+                dy: nav-top,
+                nav-item(title, item-width),
+              )
+            }
+          })
         }
       },
     ),
@@ -334,7 +373,6 @@
     },
   )
 }
-
 #let _footer-band(
   w,
   left-top,
@@ -934,9 +972,9 @@
 
 // ============================================================
 // Main entry point  --  use via:
-//   #show: blackboard-frame.with(config: (title: "...", ...))
+//   #show: black-angular-frame.with(config: (title: "...", ...))
 // ============================================================
-#let blackboard-frame(
+#let black-angular-frame(
   config: (:),
   title: none,
   subtitle: none,

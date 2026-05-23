@@ -1,12 +1,12 @@
 // ============================================================
-// blackboard-frame -- Example / Demo Presentation
+// black-angular-frame -- Example / Demo Presentation
 // This file demonstrates all features of the template.
 // ============================================================
 
-#import "blackboard-frame.typ": *
+#import "black-angular-frame.typ": *
 
 #let presentation-config = (
-  title: "Blackboard Frame",
+  title: "Black Angular Frame",
   subtitle: "A Typst Template for Academic Presentations",
   authors: "Author One, Author Two",
   institution: "Institution Name",
@@ -26,7 +26,7 @@
   TOC: true,
 )
 
-#show: blackboard-frame.with(config: presentation-config)
+#show: black-angular-frame.with(config: presentation-config)
 
 // ============================================================
 // CONFIGURATION
@@ -64,12 +64,30 @@
     cell[`secondary-color`], cell[Color], cell[`rgb("#D9D9D9")`], cell[Secondary header and footer bands.],
     cell[`background-color`], cell[Color], cell[`rgb("#FFFFFF")`], cell[Slide background color.],
     cell[`font-color`], cell[Color], cell[`luma(20)`], cell[Default body text color.],
-    cell[`header-font-color-1`], cell[Color], cell[`_muted-nav(primary-color)`], cell[Inactive text in the primary header band and text in the lower footer band.],
-    cell[`header-font-color-2`], cell[Color], cell[`primary-color`], cell[Text in the secondary header and footer bands.],
-    cell[`header-font-color-1-highlight`], cell[Color], cell[`rgb("#FFFFFF")`], cell[Active text in the primary header band.],
-    cell[`content-center`], cell[Float 0-1], cell[`0.3`], cell[Vertical position used to center content; 0 starts at the top, 1 at the bottom.],
-    cell[`content-upper-padding`], cell[Float 0-1], cell[`0.05`], cell[Top proportion of the available content area kept empty.],
-    cell[`content-lower-padding`], cell[Float 0-1], cell[`0.05`], cell[Bottom proportion of the available content area kept empty.],
+    cell[`header-font-color-1`],
+    cell[Color],
+    cell[`_muted-nav(primary-color)`],
+    cell[Inactive text in the primary header band and text in the lower footer band.],
+    cell[`header-font-color-2`],
+    cell[Color],
+    cell[`primary-color`],
+    cell[Text in the secondary header and footer bands.],
+    cell[`header-font-color-1-highlight`],
+    cell[Color],
+    cell[`rgb("#FFFFFF")`],
+    cell[Active text in the primary header band.],
+    cell[`content-center`],
+    cell[Float 0-1],
+    cell[`0.3`],
+    cell[Vertical position used to center content; 0 starts at the top, 1 at the bottom.],
+    cell[`content-upper-padding`],
+    cell[Float 0-1],
+    cell[`0.05`],
+    cell[Top proportion of the available content area kept empty.],
+    cell[`content-lower-padding`],
+    cell[Float 0-1],
+    cell[`0.05`],
+    cell[Bottom proportion of the available content area kept empty.],
     cell[`logos`], cell[`list[string]`], cell[`()`], cell[Image paths shown on the cover.],
     cell[`TOC`], cell[Bool], cell[`true`], cell[Whether to add the table of contents slide with section links.],
   )
@@ -79,15 +97,15 @@
 ]
 
 #slide(title: "Template Configuration Code")[
-  The example presentation stores its theme and metadata in `presentation-config`, then passes that dictionary to the template with `blackboard-frame.with`.
+  The example presentation stores its theme and metadata in `presentation-config`, then passes that dictionary to the template with `black-angular-frame.with`.
 
   #v(3pt)
 
   #code-box(
-    "#import \"blackboard-frame.typ\": *
+    "#import \"black-angular-frame.typ\": *
 
 #let presentation-config = (
-  title: \"Blackboard Frame\",
+  title: \"Black Angular Frame\",
   subtitle: \"A Typst Template for Academic Presentations\",
   authors: \"Author One, Author Two\",
   institution: \"Institution Name\",
@@ -107,7 +125,7 @@
   TOC: true,
 )
 
-#show: blackboard-frame.with(config: presentation-config)",
+#show: black-angular-frame.with(config: presentation-config)",
     type: "Typst",
     title: "Import and configure the template",
     lang: "typst",
@@ -837,9 +855,17 @@ return theta",
     diagram-text-centered-on-y(col.pos-label-x, positional-center-y, [Positional Embedding], size: 5.0pt, width: 60pt)
     pos-signal(col.pos-circle-x, plus-y)
     if col.pos-side == "left" {
-      place(top + left, line(start: (col.pos-circle-x + node-r, plus-y), end: (cx(col) - node-r, plus-y), stroke: ink + arrow-weight))
+      place(top + left, line(
+        start: (col.pos-circle-x + node-r, plus-y),
+        end: (cx(col) - node-r, plus-y),
+        stroke: ink + arrow-weight,
+      ))
     } else {
-      place(top + left, line(start: (cx(col) + node-r, plus-y), end: (col.pos-circle-x - node-r, plus-y), stroke: ink + arrow-weight))
+      place(top + left, line(
+        start: (cx(col) + node-r, plus-y),
+        end: (col.pos-circle-x - node-r, plus-y),
+        stroke: ink + arrow-weight,
+      ))
     }
   }
   let sum-to-attention(col, layer, gap: 6pt) = place(
@@ -853,14 +879,46 @@ return theta",
   let lower-attn-shift = 3pt
 
   let enc-layers = (
-    (key: "attn", x: encoder.stack-x, y: 138pt + lower-attn-shift, h: 16pt, label: [Multi-Head\ Attention], fill: peach, size: 4.5pt),
-    (key: "norm1", x: encoder.stack-x, y: 123pt + lower-attn-shift, h: 9pt, label: [Add & Norm], fill: normfill, size: 4.8pt),
+    (
+      key: "attn",
+      x: encoder.stack-x,
+      y: 138pt + lower-attn-shift,
+      h: 16pt,
+      label: [Multi-Head\ Attention],
+      fill: peach,
+      size: 4.5pt,
+    ),
+    (
+      key: "norm1",
+      x: encoder.stack-x,
+      y: 123pt + lower-attn-shift,
+      h: 9pt,
+      label: [Add & Norm],
+      fill: normfill,
+      size: 4.8pt,
+    ),
     (key: "ff", x: encoder.stack-x, y: 92pt, h: 15pt, label: [Feed\ Forward], fill: bluefill, size: 4.7pt),
     (key: "norm2", x: encoder.stack-x, y: 77pt, h: 9pt, label: [Add & Norm], fill: normfill, size: 4.8pt),
   )
   let dec-layers = (
-    (key: "masked", x: decoder.stack-x, y: 139pt + lower-attn-shift, h: 18pt, label: [Masked\ Multi-Head\ Attention], fill: peach, size: 4.0pt),
-    (key: "norm1", x: decoder.stack-x, y: 125pt + lower-attn-shift, h: 9pt, label: [Add & Norm], fill: normfill, size: 4.8pt),
+    (
+      key: "masked",
+      x: decoder.stack-x,
+      y: 139pt + lower-attn-shift,
+      h: 18pt,
+      label: [Masked\ Multi-Head\ Attention],
+      fill: peach,
+      size: 4.0pt,
+    ),
+    (
+      key: "norm1",
+      x: decoder.stack-x,
+      y: 125pt + lower-attn-shift,
+      h: 9pt,
+      label: [Add & Norm],
+      fill: normfill,
+      size: 4.8pt,
+    ),
     (key: "cross", x: decoder.stack-x, y: 98pt, h: 14pt, label: [Multi-Head\ Attention], fill: peach, size: 4.2pt),
     (key: "norm2", x: decoder.stack-x, y: 84pt, h: 9pt, label: [Add & Norm], fill: normfill, size: 4.8pt),
     (key: "ff", x: decoder.stack-x, y: 59pt, h: 14pt, label: [Feed\ Forward], fill: bluefill, size: 4.4pt),
@@ -893,11 +951,35 @@ return theta",
     sum-to-attention(encoder, enc("attn"))
     sum-to-attention(decoder, dec("masked"))
 
-    residual(encoder, enc("attn"), enc("norm1"), input-sum-y - 3.5pt, enc("attn").y + enc("attn").h + 6pt, side: "left", branch-pct: 0.65)
+    residual(
+      encoder,
+      enc("attn"),
+      enc("norm1"),
+      input-sum-y - 3.5pt,
+      enc("attn").y + enc("attn").h + 6pt,
+      side: "left",
+      branch-pct: 0.65,
+    )
     residual(encoder, enc("ff"), enc("norm2"), enc("norm1").y, enc("ff").y + enc("ff").h, side: "left", branch-pct: 0.5)
-    residual(decoder, dec("masked"), dec("norm1"), input-sum-y - 3.5pt, dec("masked").y + dec("masked").h + 6pt, side: "right", branch-pct: 0.65)
+    residual(
+      decoder,
+      dec("masked"),
+      dec("norm1"),
+      input-sum-y - 3.5pt,
+      dec("masked").y + dec("masked").h + 6pt,
+      side: "right",
+      branch-pct: 0.65,
+    )
     residual(decoder, dec("cross"), dec("norm2"), dec("norm1").y, dec("cross").y + dec("cross").h, side: "right")
-    residual(decoder, dec("ff"), dec("norm3"), dec("norm2").y, dec("ff").y + dec("ff").h, side: "right", branch-pct: 0.5)
+    residual(
+      decoder,
+      dec("ff"),
+      dec("norm3"),
+      dec("norm2").y,
+      dec("ff").y + dec("ff").h,
+      side: "right",
+      branch-pct: 0.5,
+    )
 
     arr-v(cx(encoder), enc("attn").y, enc("norm1").y + enc("norm1").h)
     arr-v(cx(encoder), enc("norm1").y, enc("ff").y + enc("ff").h)
@@ -909,12 +991,15 @@ return theta",
       dec("cross").x + block-w - 9pt,
     )
     let cross-right-route-y = branch-y(dec("norm1").y, dec("cross").y + dec("cross").h, pct: 0.3) - 4pt
-    arrow-poly((
-      (cx(decoder), dec("norm1").y),
-      (cx(decoder), cross-right-route-y),
-      (cross-input-xs.last(), cross-right-route-y),
-      (cross-input-xs.last(), dec("cross").y + dec("cross").h),
-    ), dir: "u")
+    arrow-poly(
+      (
+        (cx(decoder), dec("norm1").y),
+        (cx(decoder), cross-right-route-y),
+        (cross-input-xs.last(), cross-right-route-y),
+        (cross-input-xs.last(), dec("cross").y + dec("cross").h),
+      ),
+      dir: "u",
+    )
     arr-v(cx(decoder), dec("cross").y, dec("norm2").y + dec("norm2").h)
     arr-v(cx(decoder), dec("norm2").y, dec("ff").y + dec("ff").h)
     arr-v(cx(decoder), dec("ff").y, dec("norm3").y + dec("norm3").h)
@@ -935,11 +1020,14 @@ return theta",
       (cross-input-xs.at(1), cross-in-y),
     ))
     arr-v(cross-input-xs.at(1), cross-in-y, dec("cross").y + dec("cross").h)
-    arrow-poly((
-      (enc-dec-route-x, cross-in-y),
-      (cross-input-xs.at(0), cross-in-y),
-      (cross-input-xs.at(0), dec("cross").y + dec("cross").h),
-    ), dir: "u")
+    arrow-poly(
+      (
+        (enc-dec-route-x, cross-in-y),
+        (cross-input-xs.at(0), cross-in-y),
+        (cross-input-xs.at(0), dec("cross").y + dec("cross").h),
+      ),
+      dir: "u",
+    )
   })
 })
 
@@ -1110,7 +1198,14 @@ return theta",
 
     arrow-r(left-x + g-arrow-w / 2 + 2pt, top-y, right-x - gp-arrow-w / 2 + 1pt, [$phi$], label-dx: -4pt)
     arrow-v(left-x, top-y + node-h / 2 + 2pt, bot-y - node-h / 2 + 1pt, [$-$], label-dx: -13pt)
-    arrow-r(left-x + q-arrow-w / 2 + 2pt, bot-y, right-x - im-arrow-w / 2 + 1pt, [$overline(phi)$], label-dx: -8pt, label-dy: 5pt)
+    arrow-r(
+      left-x + q-arrow-w / 2 + 2pt,
+      bot-y,
+      right-x - im-arrow-w / 2 + 1pt,
+      [$overline(phi)$],
+      label-dx: -8pt,
+      label-dy: 5pt,
+    )
     arrow-v(right-x, bot-y - node-h / 2 + 1pt, top-y + node-h / 2 + 2pt, [inc], label-dx: 7pt)
   })
 })
