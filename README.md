@@ -47,7 +47,7 @@ typst compile example.typ example.pdf --font-path assets/fonts
 
 The source file is `example.typ` and the output path should be exactly `example.pdf`; this repository keeps only that generated PDF.
 
-The local demo imports `black-angular-frame.typ` directly and uses the fonts in `assets/fonts/`. For VS Code + Tinymist, the workspace already includes `.vscode/settings.json` with `tinymist.fontPaths = ["assets/fonts"]`, so IBM Plex is discovered automatically inside this repository.
+The local demo imports `black-angular-frame.typ` directly and uses the fonts in `assets/fonts/`. If you use VS Code + Tinymist, configure the font path manually if you want IBM Plex to be discovered from `assets/fonts/`.
 
 ---
 
@@ -73,10 +73,12 @@ Pass configuration through `#show: black-angular-frame.with(config: presentation
 | `content-center` | Float 0-1 | `0.3` | Vertical position used to center content; `0` starts at the top, `1` at the bottom. |
 | `content-upper-padding` | Float 0-1 | `0.05` | Top proportion of the available content area kept empty. |
 | `content-lower-padding` | Float 0-1 | `0.05` | Bottom proportion of the available content area kept empty. |
-| `logos` | `list[string]` | `()` | Image paths shown on the cover. |
+| `logos` | `array[content]` | `()` | Logo images or custom content shown on the cover. |
 | `TOC` | Bool | `true` | Whether to add the table of contents slide with links to each section's divider or first slide. |
 
 The template still accepts the previous parameter names (`title-color`, `bg-color`, `cover-images`, `toc`, and related aliases) for existing documents, but new presentations should use the `config` object.
+
+For cover logos, pass Typst content rather than path strings, for example `logos: (image("assets/logo.png", height: 45pt),)`. This keeps image paths resolved from the user document instead of from the package internals.
 
 ---
 
@@ -274,16 +276,19 @@ The file `example.typ` is a complete demo presentation covering all template fea
 ```
 black-angular-frame/
 ├── typst.toml                 # Package manifest
-├── black-angular-frame.typ       # Package entrypoint
+├── black-angular-frame.typ    # Package entrypoint
 ├── template/
-│   └── main.typ               # typst init starter file
+│   ├── main.typ               # typst init starter file
+│   └── assets/                # Starter assets copied by typst init
+│       ├── typst-logo.png     # Demo logo asset
+│       └── github-logo.png    # Demo logo asset
 ├── thumbnail.png              # Universe thumbnail
 ├── example.typ                # Full local demo presentation
 ├── example.pdf                # Pre-compiled local demo PDF
 ├── assets/
-│   ├── typst-logo.png         # Demo logo asset
-│   ├── github-logo.png        # Demo logo asset
-│   ├── fonts/              # IBM Plex Serif / Sans / Mono TTF files
+│   ├── typst-logo.png         # Local demo logo asset
+│   ├── github-logo.png        # Local demo logo asset
+│   ├── fonts/                 # IBM Plex Serif / Sans / Mono TTF files
 │   └── curves.csv             # Sample data for the line chart slide
 └── README.md
 ```

@@ -22,7 +22,10 @@
   content-center: 0.3,
   content-upper-padding: 0.05,
   content-lower-padding: 0.05,
-  logos: ("assets/typst-logo.png", "assets/github-logo.png"),
+  logos: (
+    image("assets/typst-logo.png", height: 45pt),
+    image("assets/github-logo.png", height: 45pt),
+  ),
   TOC: true,
 )
 
@@ -88,7 +91,7 @@
     cell[Float 0-1],
     cell[`0.05`],
     cell[Bottom proportion of the available content area kept empty.],
-    cell[`logos`], cell[`list[string]`], cell[`()`], cell[Image paths shown on the cover.],
+    cell[`logos`], cell[`array[content]`], cell[`()`], cell[Logo images or custom content shown on the cover.],
     cell[`TOC`], cell[Bool], cell[`true`], cell[Whether to add the table of contents slide with section links.],
   )
 
@@ -109,7 +112,7 @@
   subtitle: \"A Typst Template for Academic Presentations\",
   authors: \"Author One, Author Two\",
   institution: \"Institution Name\",
-  date: \"May 2025\",
+  date: \"May 2026\",
   final-message: \"Thank you for your attention\",
   primary-color: rgb(\"#1C1C1C\"),
   secondary-color: rgb(\"#D9D9D9\"),
@@ -121,7 +124,7 @@
   content-center: 0.3,
   content-upper-padding: 0.05,
   content-lower-padding: 0.05,
-  logos: (\"assets/typst-logo.png\", \"assets/github-logo.png\"),
+  logos: (\n    image(\"assets/typst-logo.png\", height: 45pt),\n    image(\"assets/github-logo.png\", height: 45pt),\n  ),
   TOC: true,
 )
 

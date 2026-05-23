@@ -91,11 +91,19 @@
   }
 }
 
-#let _ellipsis-text(content, width, font: _sans, size: 10pt, fill: black) = context {
+#let _ellipsis-text(
+  content,
+  width,
+  font: _sans,
+  size: 10pt,
+  fill: black,
+  reserve: 8pt,
+) = context {
+  let effective-width = calc.max(0pt, width - reserve)
   let text-width = value => measure(text(font: font, size: size, fill: fill, value)).width
   let value = _single-line(content)
 
-  if value == none or type(value) != str or text-width(value) <= width {
+  if value == none or type(value) != str or text-width(value) <= effective-width {
     text(font: font, size: size, fill: fill, value)
   } else {
     let suffix = "..."
@@ -103,7 +111,7 @@
       font: font,
       size: size,
       fill: fill,
-      _fit-ellipsis(value, value.len(), width, text-width, suffix: suffix),
+      _fit-ellipsis(value, value.len(), effective-width, text-width, suffix: suffix),
     )
   }
 }
@@ -119,12 +127,20 @@
   )),
 )
 
-#let _cover-image-row(paths, height: 45pt) = {
+#let _cover-image-item(logo, height: 45pt) = {
+  if type(logo) == str {
+    image(logo, height: height)
+  } else {
+    logo
+  }
+}
+
+#let _cover-image-row(logos, height: 45pt) = {
   grid(
-    columns: paths.map(_ => auto),
+    columns: logos.map(_ => auto),
     column-gutter: _cover-image-gap,
     align: horizon,
-    ..paths.map(path => image(path, height: height)),
+    ..logos.map(logo => _cover-image-item(logo, height: height)),
   )
 }
 
