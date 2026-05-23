@@ -1,13 +1,15 @@
-# black-angular-frame
+# blackboard-frame
 
 A Typst presentation template with a square, minimal, academic design language: a solid navigation bar on top, a two-level footer with page number, a tinted title strip for regular content slides, and compact box environments without wasted whitespace.
+
+![blackboard-frame thumbnail](thumbnail.png)
 
 ---
 
 ## Quick start
 
 ```typst
-#import "@preview/black-angular-frame:0.1.0": *
+#import "@preview/blackboard-frame:0.1.0": *
 
 #let presentation-config = (
   title: "My Presentation",
@@ -19,7 +21,7 @@ A Typst presentation template with a square, minimal, academic design language: 
   TOC: true,
 )
 
-#show: black-angular-frame.with(config: presentation-config)
+#show: blackboard-frame.with(config: presentation-config)
 
 #new-section("Introduction")
 
@@ -34,7 +36,7 @@ A Typst presentation template with a square, minimal, academic design language: 
 Initialize from the template after publication with:
 
 ```bash
-typst init @preview/black-angular-frame:0.1.0
+typst init @preview/blackboard-frame:0.1.0
 ```
 
 For local development in this repository, compile the demo with:
@@ -45,13 +47,13 @@ typst compile example.typ example.pdf --font-path assets/fonts
 
 The source file is `example.typ` and the output path should be exactly `example.pdf`; this repository keeps only that generated PDF.
 
-The local demo imports `black-angular-frame.typ` directly and uses the fonts in `assets/fonts/`. For VS Code + Tinymist, the workspace already includes `.vscode/settings.json` with `tinymist.fontPaths = ["assets/fonts"]`, so IBM Plex is discovered automatically inside this repository.
+The local demo imports `blackboard-frame.typ` directly and uses the fonts in `assets/fonts/`. For VS Code + Tinymist, the workspace already includes `.vscode/settings.json` with `tinymist.fontPaths = ["assets/fonts"]`, so IBM Plex is discovered automatically inside this repository.
 
 ---
 
 ## Template configuration
 
-Pass configuration through `#show: black-angular-frame.with(config: presentation-config)`.
+Pass configuration through `#show: blackboard-frame.with(config: presentation-config)`.
 
 | Name | Expected value | Default | Description |
 |------|----------------|---------|-------------|
@@ -225,34 +227,43 @@ Code fragments and pseudo-code can use the same framed header style as theorem b
 The file `example.typ` is a complete demo presentation covering all template features. Below is a summary of each section.
 
 ### Section 1 — Configuration
+
 - Template configuration table with name, expected value, default, and description.
 - Exact Typst code used by the example presentation to import and configure the template.
 
 ### Section 2 — Typography
+
 - Side-by-side comparison of the three IBM Plex families (Serif, Sans, Mono) with representative weight and style variants.
 - Size scale from 8 pt to 18 pt; semantic use of bold, italic, color, and underline.
 
 ### Section 3 — Lists & Enumerations
+
 - Unordered bullet list (3 levels) and ordered enumeration (3 levels) side by side in two columns.
 
 ### Section 4 — Figures
+
 - Two numbered figures with placeholder rectangles and captions. Explains how to replace placeholders with real images.
 
 ### Section 5 — Layouts
+
 - A two-column layout with explanatory text on the left and a content block on the right.
 
 ### Section 6 — Code Blocks
+
 - Python source code and pseudo-code side by side, both rendered as framed boxes with a theorem-style `type | title` header.
 
 ### Section 7 — Tables
+
 - Paper-style booktabs table (horizontal rules only) and grid-style table (full borders, colored header, alternating row shading) side by side.
 
 ### Section 8 — Diagrams & Charts
+
 - Two block diagrams — a Transformer encoder block (matching the original color scheme: orange FFN, blue Add & Norm, green attention) and a state-space system block diagram.
 - A linear-algebra kernel/image decomposition diagram and a three-state Markov chain transition graph with labeled arcs.
 - A line chart of model accuracy vs. epoch (data from `assets/curves.csv`) and a grouped bar histogram of test scores by group and year (2020–2024).
 
 ### Section 9 — Theorem-style Boxes
+
 - `#definition`, `#theorem`, `#lemma`, `#corollary`, and `#proof` environments demonstrated with the Banach fixed-point theorem and Picard–Lindelöf corollary.
 - `#example`, `#exercise`, `#proposition`, and three `#fs-box` calls with custom kind labels ("note", "warning", "custom") and custom colors.
 
@@ -261,9 +272,9 @@ The file `example.typ` is a complete demo presentation covering all template fea
 ## Repository layout
 
 ```
-black-angular-frame/
+blackboard-frame/
 ├── typst.toml                 # Package manifest
-├── black-angular-frame.typ       # Package entrypoint
+├── blackboard-frame.typ       # Package entrypoint
 ├── template/
 │   └── main.typ               # typst init starter file
 ├── thumbnail.png              # Universe thumbnail
