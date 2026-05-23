@@ -8,55 +8,55 @@
 // ============================================================
 
 // ---- Internal state ----------------------------------------
-#let _fs-tc     = state("_fs-tc",     rgb("#1C1C1C"))
-#let _fs-sc     = state("_fs-sc",     rgb("#D9D9D9"))
-#let _fs-bg     = state("_fs-bg",     white)
-#let _fs-w      = state("_fs-w",      254mm)
-#let _fs-h      = state("_fs-h",      143mm)
-#let _fs-ft     = state("_fs-ft",     none)
-#let _fs-fst    = state("_fs-fst",    none)
-#let _fs-title  = state("_fs-title",  "")
-#let _fs-subt   = state("_fs-subt",   "")
-#let _fs-inst   = state("_fs-inst",   none)
-#let _fs-auth   = state("_fs-auth",   none)
-#let _fs-fc     = state("_fs-fc",     luma(20))
-#let _fs-hfc1   = state("_fs-hfc1",   rgb("#999999"))
-#let _fs-hfc2   = state("_fs-hfc2",   rgb("#1C1C1C"))
-#let _fs-hfc1h  = state("_fs-hfc1h",  white)
-#let _fs-final  = state("_fs-final",  "")
-#let _fs-cctr   = state("_fs-cctr",   0.3)
-#let _fs-cupad  = state("_fs-cupad",  0.05)
-#let _fs-clpad  = state("_fs-clpad",  0.05)
-#let _fs-pages  = state("_fs-pages",  ())
+#let _fs-tc = state("_fs-tc", rgb("#1C1C1C"))
+#let _fs-sc = state("_fs-sc", rgb("#D9D9D9"))
+#let _fs-bg = state("_fs-bg", white)
+#let _fs-w = state("_fs-w", 254mm)
+#let _fs-h = state("_fs-h", 143mm)
+#let _fs-ft = state("_fs-ft", none)
+#let _fs-fst = state("_fs-fst", none)
+#let _fs-title = state("_fs-title", "")
+#let _fs-subt = state("_fs-subt", "")
+#let _fs-inst = state("_fs-inst", none)
+#let _fs-auth = state("_fs-auth", none)
+#let _fs-fc = state("_fs-fc", luma(20))
+#let _fs-hfc1 = state("_fs-hfc1", rgb("#999999"))
+#let _fs-hfc2 = state("_fs-hfc2", rgb("#1C1C1C"))
+#let _fs-hfc1h = state("_fs-hfc1h", white)
+#let _fs-final = state("_fs-final", "")
+#let _fs-cctr = state("_fs-cctr", 0.3)
+#let _fs-cupad = state("_fs-cupad", 0.05)
+#let _fs-clpad = state("_fs-clpad", 0.05)
+#let _fs-pages = state("_fs-pages", ())
 #let _fs-sec-targets = state("_fs-sec-targets", ())
 
-#let _sec-ctr   = counter("_fs-sec")
-#let _fig-ctr   = counter("_fs-fig")
-#let _cur-sec   = state("_fs-cursec", "")
-#let _toc-data  = state("_fs-toc",    ())
+#let _sec-ctr = counter("_fs-sec")
+#let _fig-ctr = counter("_fs-fig")
+#let _cur-sec = state("_fs-cursec", "")
+#let _toc-data = state("_fs-toc", ())
 
-#let _thm-ctrs  = (
-  theorem:     counter("_fs-thm"),
-  lemma:       counter("_fs-lem"),
-  corollary:   counter("_fs-cor"),
+#let _thm-ctrs = (
+  theorem: counter("_fs-thm"),
+  lemma: counter("_fs-lem"),
+  corollary: counter("_fs-cor"),
   proposition: counter("_fs-prp"),
-  definition:  counter("_fs-def"),
-  example:     counter("_fs-exa"),
-  exercise:    counter("_fs-exr"),
-  remark:      counter("_fs-rmk"),
+  definition: counter("_fs-def"),
+  example: counter("_fs-exa"),
+  exercise: counter("_fs-exr"),
+  remark: counter("_fs-rmk"),
 )
 
 // ---- Color helpers -----------------------------------------
 #let _lmix(c, pct) = color.mix((c, 100% - pct), (white, pct))
-#let _title-bg(c)  = _lmix(c, 88%)
-#let _sub-hdr(c)   = _lmix(c, 40%)
+#let _title-bg(c) = _lmix(c, 88%)
+#let _sub-hdr(c) = _lmix(c, 40%)
 #let _soft-rule(c) = _lmix(c, 72%)
 #let _muted-nav(c) = color.mix((white, 55%), (c, 45%))
 
 // ---- Font stacks -------------------------------------------
-#let _sans  = ("IBM Plex Sans",  "Liberation Sans",  "DejaVu Sans")
-#let _serif = ("IBM Plex Serif", "Liberation Serif",  "DejaVu Serif")
-#let _mono  = ("IBM Plex Mono",  "Liberation Mono",   "DejaVu Sans Mono")
+#let _sans = ("IBM Plex Sans", "Liberation Sans", "DejaVu Sans")
+#let _serif = ("IBM Plex Serif", "Liberation Serif", "DejaVu Serif")
+#let _mono = ("IBM Plex Mono", "Liberation Mono", "DejaVu Sans Mono")
 
 #let _slide-x-margin = 22.4pt
 #let _single-col-x-margin = 2 * _slide-x-margin
@@ -64,9 +64,7 @@
 #let _cover-image-gap = 18pt
 
 #let _clamp01(value) = {
-  if value < 0 { 0 }
-  else if value > 1 { 1 }
-  else { value }
+  if value < 0 { 0 } else if value > 1 { 1 } else { value }
 }
 
 // ============================================================
@@ -74,14 +72,11 @@
 // ============================================================
 
 #let _single-line(content) = {
-  if content == none { none }
-  else if type(content) == str { content.replace("\n", " ") }
-  else { content }
+  if content == none { none } else if type(content) == str { content.replace("\n", " ") } else { content }
 }
 
 #let _fit-ellipsis(value, remaining, width, text-width, suffix: "...") = {
-  if remaining <= 0 { suffix }
-  else {
+  if remaining <= 0 { suffix } else {
     let omitted = value.len() - remaining
     let candidate = if omitted < suffix.len() {
       value.slice(0, remaining) + value.slice(remaining)
@@ -117,13 +112,11 @@
   width: 6.2pt,
   height: 6.2pt,
   inset: 0pt,
-  align(center + horizon,
-    circle(
-      radius: 2pt,
-      fill: if active { active-fill } else { none },
-      stroke: if active { none } else { (if inactive-fill == auto { _muted-nav(color) } else { inactive-fill }) + 0.7pt },
-    )
-  )
+  align(center + horizon, circle(
+    radius: 2pt,
+    fill: if active { active-fill } else { none },
+    stroke: if active { none } else { (if inactive-fill == auto { _muted-nav(color) } else { inactive-fill }) + 0.7pt },
+  )),
 )
 
 #let _cover-image-row(paths, height: 45pt) = {
@@ -167,8 +160,16 @@
   let sec-targets = _fs-sec-targets.final()
   let pages = _fs-pages.final()
   let page-no = counter(page).get().first()
+  let nav-margin = 22.4pt
+  let nav-top = 3.425pt
+  let nav-bottom = 2.025pt
   let active-dot-index = {
-    if page-no <= pages.len() and section != none and section != "" and not pages.at(page-no - 1, default: (intro: false)).intro {
+    if (
+      page-no <= pages.len()
+        and section != none
+        and section != ""
+        and not pages.at(page-no - 1, default: (intro: false)).intro
+    ) {
       let seen = 0
       for (idx, entry) in pages.enumerate() {
         if entry.section == section and not entry.intro {
@@ -181,6 +182,96 @@
       none
     }
   }
+  let nav-item(title, item-width) = {
+    let slide-count = calc.max(1, pages.filter(entry => entry.section == title and not entry.intro).len())
+    let target = sec-targets.rev().find(entry => entry.title == title)
+    block(
+      width: item-width,
+      inset: (left: 0.4pt, right: 0.4pt, top: 1.3pt, bottom: 1.1pt),
+      {
+        layout(size => {
+          let title-fill = if section == title { header-font-color-1-highlight } else { hfc1 }
+          let current-page = pages.at(page-no - 1, default: (intro: false))
+          let is-current-section = section == title
+          let is-section-intro = is-current-section and current-page.intro
+          let is-section-slide = is-current-section and active-dot-index != none
+          let use-compact-progress = slide-count > _nav-compact-threshold
+          let progress-label = if is-section-slide {
+            str(active-dot-index) + "/" + str(slide-count)
+          } else {
+            str(slide-count)
+          }
+          let progress-fill = if is-current-section { header-font-color-1-highlight } else { hfc1 }
+
+          let title-content = if target != none {
+            link(target.at("loc"))[
+              #_ellipsis-text(
+                title,
+                size.width,
+                font: _sans,
+                size: 7.1pt,
+                fill: title-fill,
+              )
+            ]
+          } else {
+            _ellipsis-text(
+              title,
+              size.width,
+              font: _sans,
+              size: 7.1pt,
+              fill: title-fill,
+            )
+          }
+
+          let progress-content = if use-compact-progress {
+            grid(
+              columns: (auto, auto),
+              column-gutter: 1.6pt,
+              align: horizon,
+              _nav-dot(
+                active: is-section-slide or is-section-intro,
+                primary,
+                inactive-fill: hfc1,
+                active-fill: header-font-color-1-highlight,
+              ),
+              move(
+                dy: -0.2pt,
+                text(font: _sans, fill: progress-fill, size: 6.8pt, progress-label),
+              ),
+            )
+          } else {
+            box[
+              #for dot-idx in range(slide-count) {
+                _nav-dot(
+                  active: is-section-slide and active-dot-index == dot-idx + 1,
+                  primary,
+                  inactive-fill: hfc1,
+                  active-fill: header-font-color-1-highlight,
+                )
+                if dot-idx + 1 < slide-count { h(1.4pt) }
+              }
+            ]
+          }
+
+          grid(
+            columns: (1fr,),
+            rows: (8.6pt, 6.2pt),
+            row-gutter: 0pt,
+            block(
+              width: 100%,
+              height: 8.6pt,
+              align(left + horizon, title-content),
+            ),
+            block(
+              width: 100%,
+              height: 6.2pt,
+              align(left + horizon, move(dy: 2pt, progress-content)),
+            ),
+          )
+        })
+      },
+    )
+  }
   stack(
     dir: ttb,
     spacing: 0pt,
@@ -191,97 +282,42 @@
       inset: (x: 0pt, y: 0pt),
       {
         if titles != () {
-          grid(
-            columns: titles.map(_ => 1fr),
-            column-gutter: 0pt,
-            inset: (left: 22.4pt, right: 22.4pt, top: 3.425pt, bottom: 2.025pt),
-            ..titles.enumerate().map(((idx, title)) => {
-              let slide-count = calc.max(1, pages.filter(entry => entry.section == title and not entry.intro).len())
-              let target = sec-targets.rev().find(entry => entry.title == title)
-              block(
-                width: 100%,
-                inset: (left: 0.4pt, right: 0.4pt, top: 1.3pt, bottom: 1.1pt),
-                {
-                  layout(size => {
-                    let title-fill = if section == title { header-font-color-1-highlight } else { hfc1 }
-                    let current-page = pages.at(page-no - 1, default: (intro: false))
-                    let is-current-section = section == title
-                    let is-section-intro = is-current-section and current-page.intro
-                    let is-section-slide = is-current-section and active-dot-index != none
-                    let use-compact-progress = slide-count > _nav-compact-threshold
-                    let progress-label = if is-section-slide {
-                      str(active-dot-index) + "/" + str(slide-count)
-                    } else {
-                      str(slide-count)
-                    }
-                    let progress-fill = if is-current-section { header-font-color-1-highlight } else { hfc1 }
-                    if target != none {
-                      link(target.at("loc"))[
-                        #_ellipsis-text(title, size.width, font: _sans, size: 7.1pt, fill: title-fill)
-                      ]
-                    } else {
-                      _ellipsis-text(title, size.width, font: _sans, size: 7.1pt, fill: title-fill)
-                    }
-                    linebreak(justify: false)
-                    if use-compact-progress {
-                      move(
-                        dy: -0.85pt,
-                        block(
-                          height: 6.2pt,
-                          width: 100%,
-                          inset: 0pt,
-                          align(horizon,
-                            grid(
-                              columns: (auto, auto),
-                              column-gutter: 1.6pt,
-                              align: horizon,
-                              block(
-                                height: 6.2pt,
-                                inset: 0pt,
-                                align(center + horizon,
-                                  move(dy: -1.25pt,
-                                    _nav-dot(
-                                      active: is-section-slide or is-section-intro,
-                                      primary,
-                                      inactive-fill: hfc1,
-                                      active-fill: header-font-color-1-highlight,
-                                    )
-                                  )
-                                ),
-                              ),
-                              block(
-                                height: 6.2pt,
-                                inset: 0pt,
-                                align(left + horizon,
-                                  move(dy: -1.35pt,
-                                    text(font: _sans, fill: progress-fill, size: 6.8pt, progress-label)
-                                  )
-                                )
-                              ),
-                            )
-                          ),
-                        )
-                      )
-                    } else {
-                      move(dy: -2pt, box[
-                        #for dot-idx in range(slide-count) {
-                          _nav-dot(
-                            active: is-section-slide and active-dot-index == dot-idx + 1,
-                            primary,
-                            inactive-fill: hfc1,
-                            active-fill: header-font-color-1-highlight,
-                          )
-                          if dot-idx + 1 < slide-count { h(1.4pt) }
-                        }
-                      ])
-                    }
-                  })
-                }
-              )
-            }),
-          )
+          if titles.len() <= 3 {
+            layout(size => {
+              let usable-width = size.width - 2 * nav-margin
+              let positions = if titles.len() == 1 {
+                (50%,)
+              } else if titles.len() == 2 {
+                (33.333%, 66.667%)
+              } else {
+                (25%, 50%, 75%)
+              }
+              let item-width = if titles.len() == 1 {
+                calc.min(usable-width, 260pt)
+              } else if titles.len() == 2 {
+                calc.min(usable-width / 3, 210pt)
+              } else {
+                calc.min(usable-width / 4, 160pt)
+              }
+              for (idx, title) in titles.enumerate() {
+                place(
+                  top + left,
+                  dx: nav-margin + usable-width * positions.at(idx) - item-width / 2,
+                  dy: nav-top,
+                  nav-item(title, item-width),
+                )
+              }
+            })
+          } else {
+            grid(
+              columns: titles.map(_ => 1fr),
+              column-gutter: 0pt,
+              inset: (left: nav-margin, right: nav-margin, top: nav-top, bottom: nav-bottom),
+              ..titles.map(title => nav-item(title, 100%)),
+            )
+          }
         }
-      }
+      },
     ),
     if slide-title != none {
       block(
@@ -292,12 +328,8 @@
         block(
           width: 100%,
           height: 100%,
-          align(horizon,
-            align(left,
-              text(font: _sans, fill: hfc2, size: 14pt, slide-title)
-            )
-          ),
-        )
+          align(horizon, align(left, text(font: _sans, fill: hfc2, size: 14pt, slide-title))),
+        ),
       )
     },
   )
@@ -327,24 +359,16 @@
         block(
           width: 100%,
           height: 100%,
-          align(horizon,
-            align(left,
-              if _single-line(left-top) != none {
-                text(font: _sans, fill: hfc2, size: 7pt, _single-line(left-top))
-              } else { [] }
-            )
-          ),
+          align(horizon, align(left, if _single-line(left-top) != none {
+            text(font: _sans, fill: hfc2, size: 7pt, _single-line(left-top))
+          } else { [] })),
         ),
         block(
           width: 100%,
           height: 100%,
-          align(horizon,
-            align(right,
-              if _single-line(right-top) != none {
-                text(font: _sans, fill: hfc2, size: 7pt, _single-line(right-top))
-              } else { [] }
-            )
-          ),
+          align(horizon, align(right, if _single-line(right-top) != none {
+            text(font: _sans, fill: hfc2, size: 7pt, _single-line(right-top))
+          } else { [] })),
         ),
       )
     }),
@@ -355,22 +379,19 @@
         block(
           width: 100%,
           height: 100%,
-          align(horizon,
-            align(left,
-              if _single-line(left-bottom) != none {
-                move(dy: -1pt, text(font: _sans, fill: hfc1, size: 7pt, _single-line(left-bottom)))
-              } else { [] }
-            )
-          ),
+          align(horizon, align(left, if _single-line(left-bottom) != none {
+            move(dy: -1pt, text(font: _sans, fill: hfc1, size: 7pt, _single-line(left-bottom)))
+          } else { [] })),
         ),
         block(
           width: 100%,
           height: 100%,
-          align(horizon,
-            align(right,
-              move(dy: -1pt, text(font: _sans, fill: hfc1, size: 6.8pt, _single-line(page-no)))
-            )
-          ),
+          align(horizon, align(right, move(dy: -1pt, text(
+            font: _sans,
+            fill: hfc1,
+            size: 6.8pt,
+            _single-line(page-no),
+          )))),
         ),
       )
     }),
@@ -415,7 +436,7 @@
       column-gutter: gutter,
       grid.cell(align: top + start)[#left],
       grid.cell(align: top + start)[#right],
-    )
+    ),
   )
 }
 
@@ -454,11 +475,7 @@
     align(center, body)
     if caption != none {
       v(caption-gap)
-      align(center,
-        context text(size: 0.72em, style: "italic",
-          [*Figure #_fig-ctr.display().* #caption]
-        )
-      )
+      align(center, context text(size: 0.72em, style: "italic", [*Figure #_fig-ctr.display().* #caption]))
     }
   })
 }
@@ -474,46 +491,51 @@
 // Theorem-style boxes
 // ============================================================
 #let _panel-box(type-label, title, color, body, body-fill: none, width: 100%) = block(
-  width: width, breakable: false, above: _visual-y-margin, below: _visual-y-margin,
-  stroke: color + 0.8pt, fill: body-fill, inset: 0pt, spacing: 0pt,
-  align(top + left,
-    stack(
-      dir: ttb,
-      spacing: 0pt,
-      if title != none {
-        grid(
-          columns: (auto, 1fr), column-gutter: 0pt,
-          block(
-            fill: color,
-            inset: (left: 5pt, right: 5pt, top: 3.5pt, bottom: 5.3pt),
-            text(font: _sans, fill: white, weight: "bold", size: 0.80em, type-label)
-          ),
-          block(
-            fill: _sub-hdr(color),
-            inset: (left: 5pt, right: 5pt, top: 3.5pt, bottom: 5.3pt),
-            width: 100%,
-            text(font: _sans, fill: white, size: 0.80em, title)
-          )
-        )
-      } else {
+  width: width,
+  breakable: false,
+  above: _visual-y-margin,
+  below: _visual-y-margin,
+  stroke: color + 0.8pt,
+  fill: body-fill,
+  inset: 0pt,
+  spacing: 0pt,
+  align(top + left, stack(
+    dir: ttb,
+    spacing: 0pt,
+    if title != none {
+      grid(
+        columns: (auto, 1fr),
+        column-gutter: 0pt,
         block(
-          width: 100%,
           fill: color,
           inset: (left: 5pt, right: 5pt, top: 3.5pt, bottom: 5.3pt),
-          text(font: _sans, fill: white, weight: "bold", size: 0.80em, type-label)
-        )
-      },
-      if body-fill != none {
-        block(width: 100%, height: 1.2pt, fill: body-fill)
-      },
+          text(font: _sans, fill: white, weight: "bold", size: 0.80em, type-label),
+        ),
+        block(
+          fill: _sub-hdr(color),
+          inset: (left: 5pt, right: 5pt, top: 3.5pt, bottom: 5.3pt),
+          width: 100%,
+          text(font: _sans, fill: white, size: 0.80em, title),
+        ),
+      )
+    } else {
       block(
         width: 100%,
-        inset: (left: 5pt, right: 5pt, top: 5pt, bottom: 7pt),
-        fill: body-fill,
-        align(left, body),
-      ),
-    )
-  )
+        fill: color,
+        inset: (left: 5pt, right: 5pt, top: 3.5pt, bottom: 5.3pt),
+        text(font: _sans, fill: white, weight: "bold", size: 0.80em, type-label),
+      )
+    },
+    if body-fill != none {
+      block(width: 100%, height: 1.2pt, fill: body-fill)
+    },
+    block(
+      width: 100%,
+      inset: (left: 5pt, right: 5pt, top: 5pt, bottom: 7pt),
+      fill: body-fill,
+      align(left, body),
+    ),
+  )),
 )
 
 #let _tbox(kind, name, color, body, width: 100%) = {
@@ -528,21 +550,33 @@
 }
 
 /// Theorem box
-#let theorem(name: none, color: blue.darken(50%), width: 100%, body)      = { _tbox("theorem",     name, color, body, width: width) }
+#let theorem(name: none, color: blue.darken(50%), width: 100%, body) = {
+  _tbox("theorem", name, color, body, width: width)
+}
 /// Lemma box
-#let lemma(name: none, color: blue.darken(30%), width: 100%, body)        = { _tbox("lemma",       name, color, body, width: width) }
+#let lemma(name: none, color: blue.darken(30%), width: 100%, body) = { _tbox("lemma", name, color, body, width: width) }
 /// Corollary box
-#let corollary(name: none, color: blue.darken(40%), width: 100%, body)    = { _tbox("corollary",   name, color, body, width: width) }
+#let corollary(name: none, color: blue.darken(40%), width: 100%, body) = {
+  _tbox("corollary", name, color, body, width: width)
+}
 /// Proposition box
-#let proposition(name: none, color: teal.darken(30%), width: 100%, body)  = { _tbox("proposition", name, color, body, width: width) }
+#let proposition(name: none, color: teal.darken(30%), width: 100%, body) = {
+  _tbox("proposition", name, color, body, width: width)
+}
 /// Definition box
-#let definition(name: none, color: purple.darken(20%), width: 100%, body) = { _tbox("definition",  name, color, body, width: width) }
+#let definition(name: none, color: purple.darken(20%), width: 100%, body) = {
+  _tbox("definition", name, color, body, width: width)
+}
 /// Example box
-#let example(name: none, color: green.darken(30%), width: 100%, body)     = { _tbox("example",     name, color, body, width: width) }
+#let example(name: none, color: green.darken(30%), width: 100%, body) = {
+  _tbox("example", name, color, body, width: width)
+}
 /// Exercise box
-#let exercise(name: none, color: orange.darken(20%), width: 100%, body)   = { _tbox("exercise",    name, color, body, width: width) }
+#let exercise(name: none, color: orange.darken(20%), width: 100%, body) = {
+  _tbox("exercise", name, color, body, width: width)
+}
 /// Remark box
-#let remark(name: none, color: luma(90), width: 100%, body)               = { _tbox("remark",      name, color, body, width: width) }
+#let remark(name: none, color: luma(90), width: 100%, body) = { _tbox("remark", name, color, body, width: width) }
 
 /// Generic custom box -- any kind label and color.
 /// #fs-box("warning", name: "Watch out", color: red)[...]
@@ -560,7 +594,7 @@
       fill: color,
       inset: (x: 5pt, y: 3pt),
       text(font: _sans, fill: white, weight: "bold", size: 0.80em, label),
-    )
+    ),
   )
   v(5pt)
 }
@@ -576,12 +610,13 @@
 /// Proof environment with QED box.
 #let proof(width: 100%, body) = {
   block(
-    width: width, inset: (x: 6pt, y: 5pt), above: _visual-y-margin, below: _visual-y-margin,
-    stroke: (left: luma(80) + 2pt), spacing: 0.4em,
-    align(left,
-      text(style: "italic", [_Proof._ ]) + body + h(1fr) +
-      box(width: 6pt, height: 6pt, fill: luma(80))
-    )
+    width: width,
+    inset: (x: 6pt, y: 5pt),
+    above: _visual-y-margin,
+    below: _visual-y-margin,
+    stroke: (left: luma(80) + 2pt),
+    spacing: 0.4em,
+    align(left, text(style: "italic", [_Proof._ ]) + body + h(1fr) + box(width: 6pt, height: 6pt, fill: luma(80))),
   )
 }
 
@@ -658,12 +693,12 @@
 /// #slide(title: "My Slide")[Content]
 #let slide(title: none, section: auto, show-title-band: auto, body) = {
   context {
-    let tc  = _fs-tc.get()
-    let sc  = _fs-sc.get()
-    let bg  = _fs-bg.get()
-    let w   = _fs-w.get()
-    let h   = _fs-h.get()
-    let ft  = _fs-ft.get()
+    let tc = _fs-tc.get()
+    let sc = _fs-sc.get()
+    let bg = _fs-bg.get()
+    let w = _fs-w.get()
+    let h = _fs-h.get()
+    let ft = _fs-ft.get()
     let auth = _fs-auth.get()
     let inst = _fs-inst.get()
     let hfc1 = _fs-hfc1.get()
@@ -681,15 +716,18 @@
 
     let header-h = if header-title == none { 24.75pt } else { 50.25pt }
     let footer-h = 29.61pt
-    let avail   = h - header-h - footer-h
+    let avail = h - header-h - footer-h
     let slide-loc = here()
     _register-section-target(sec, slide-loc)
     _register-page(section: sec)
 
     page(
-      width: w, height: h, margin: 0pt,
+      width: w,
+      height: h,
+      margin: 0pt,
       background: rect(width: 100%, height: 100%, fill: bg),
-      header: none, footer: none,
+      header: none,
+      footer: none,
       {
         place(
           top + left,
@@ -725,9 +763,9 @@
           top + left,
           dy: header-h,
           float: false,
-          _slide-body-area(w, avail, body)
+          _slide-body-area(w, avail, body),
         )
-      }
+      },
     )
   }
 }
@@ -738,9 +776,9 @@
     let tc = _fs-tc.get()
     let sc = _fs-sc.get()
     let bg = _fs-bg.get()
-    let w  = _fs-w.get()
-    let h  = _fs-h.get()
-    let ft  = _fs-ft.get()
+    let w = _fs-w.get()
+    let h = _fs-h.get()
+    let ft = _fs-ft.get()
     let auth = _fs-auth.get()
     let inst = _fs-inst.get()
     let hfc1 = _fs-hfc1.get()
@@ -755,9 +793,12 @@
     _register-section-target(nav-sec, sec-loc)
 
     page(
-      width: w, height: h, margin: 0pt,
+      width: w,
+      height: h,
+      margin: 0pt,
       background: rect(width: 100%, height: 100%, fill: bg),
-      header: none, footer: none,
+      header: none,
+      footer: none,
       {
         place(
           top + left,
@@ -791,30 +832,30 @@
         block(
           width: w,
           height: h - 24.75pt - 29.61pt,
-          align(center + horizon,
-            block(
-              width: 65%, stroke: tc + 0.8pt, inset: 0pt,
-              {
-                block(
-                  width: 100%, fill: tc, inset: (x: 12pt, y: 4pt),
-                  context {
-                    let n = _sec-ctr.get().first()
-                    text(font: _sans, fill: hfc1h, size: 8pt, [Section #n])
-                  }
-                )
-                block(
-                  width: 100%, height: 38pt, inset: (x: 12pt, y: 0pt),
-                  align(horizon,
-                    move(dy: -3pt,
-                      text(font: _sans, size: 15pt, weight: "bold", fill: tc, sec-title)
-                    )
-                  )
-                )
-              }
-            )
-          )
+          align(center + horizon, block(
+            width: 65%,
+            stroke: tc + 0.8pt,
+            inset: 0pt,
+            {
+              block(
+                width: 100%,
+                fill: tc,
+                inset: (x: 12pt, y: 4pt),
+                context {
+                  let n = _sec-ctr.get().first()
+                  text(font: _sans, fill: hfc1h, size: 8pt, [Section #n])
+                },
+              )
+              block(
+                width: 100%,
+                height: 38pt,
+                inset: (x: 12pt, y: 0pt),
+                align(horizon, move(dy: -3pt, text(font: _sans, size: 15pt, weight: "bold", fill: tc, sec-title))),
+              )
+            },
+          )),
         )
-      }
+      },
     )
   }
 }
@@ -834,8 +875,8 @@
   let tc = _fs-tc.get()
   let sc = _fs-sc.get()
   let bg = _fs-bg.get()
-  let w  = _fs-w.get()
-  let h  = _fs-h.get()
+  let w = _fs-w.get()
+  let h = _fs-h.get()
   let ft = _fs-ft.get()
   let auth = _fs-auth.get()
   let inst = _fs-inst.get()
@@ -846,9 +887,12 @@
   _register-page()
 
   page(
-    width: w, height: h, margin: 0pt,
+    width: w,
+    height: h,
+    margin: 0pt,
     background: rect(width: 100%, height: 100%, fill: bg),
-    header: none, footer: none,
+    header: none,
+    footer: none,
     {
       place(
         top + left,
@@ -880,12 +924,11 @@
         ),
       )
       block(
-        width: w, height: h - 24.75pt - 29.61pt,
-        align(center + horizon,
-          text(font: _serif, size: 24pt, style: "italic", fill: tc, final-message)
-        )
+        width: w,
+        height: h - 24.75pt - 29.61pt,
+        align(center + horizon, text(font: _serif, size: 24pt, style: "italic", fill: tc, final-message)),
       )
-    }
+    },
   )
 }
 
@@ -894,35 +937,35 @@
 //   #show: blackboard-frame.with(config: (title: "...", ...))
 // ============================================================
 #let blackboard-frame(
-  config:          (:),
-  title:           none,
-  subtitle:        none,
-  institution:     none,
-  institute:       none,
-  date:            none,
-  authors:         none,
-  final-message:   none,
-  primary-color:   none,
+  config: (:),
+  title: none,
+  subtitle: none,
+  institution: none,
+  institute: none,
+  date: none,
+  authors: none,
+  final-message: none,
+  primary-color: none,
   secondary-color: none,
   background-color: none,
-  font-color:      none,
+  font-color: none,
   header-font-color-1: none,
   header-font-color-2: none,
   header-font-color-1-highlight: none,
-  content-center:  none,
+  content-center: none,
   content-upper-padding: none,
   content-lower-padding: none,
-  logos:           none,
-  ratio:           16/9,
-  title-color:     none,
-  bg-color:        none,
-  toc:             none,
-  footer-title:    auto,
+  logos: none,
+  ratio: 16 / 9,
+  title-color: none,
+  bg-color: none,
+  toc: none,
+  footer-title: auto,
   footer-subtitle: auto,
-  logo:            none,
-  cover-images:    none,
+  logo: none,
+  cover-images: none,
   cover-image-height: 45pt,
-  body
+  body,
 ) = {
   let cfg-title = config.at("title", default: if title == none { "" } else { title })
   let cfg-subtitle = config.at("subtitle", default: if subtitle == none { "" } else { subtitle })
@@ -938,7 +981,9 @@
   )
   let cfg-primary = config.at(
     "primary-color",
-    default: if primary-color != none { primary-color } else if title-color != none { title-color } else { rgb("#1C1C1C") },
+    default: if primary-color != none { primary-color } else if title-color != none { title-color } else {
+      rgb("#1C1C1C")
+    },
   )
   let cfg-secondary = config.at(
     "secondary-color",
@@ -946,7 +991,9 @@
   )
   let cfg-background = config.at(
     "background-color",
-    default: if background-color != none { background-color } else if bg-color != none { bg-color } else { rgb("#FFFFFF") },
+    default: if background-color != none { background-color } else if bg-color != none { bg-color } else {
+      rgb("#FFFFFF")
+    },
   )
   let cfg-font-color = config.at(
     "font-color",
@@ -978,11 +1025,13 @@
   )
   let cfg-logos = config.at(
     "logos",
-    default: if logos != none { logos } else if cover-images != none { cover-images } else if logo != none { (logo,) } else { () },
+    default: if logos != none { logos } else if cover-images != none { cover-images } else if logo != none {
+      (logo,)
+    } else { () },
   )
   let cfg-toc = config.at("TOC", default: if toc == none { true } else { toc })
 
-  let ft  = if footer-title    == auto { cfg-title }    else { footer-title }
+  let ft = if footer-title == auto { cfg-title } else { footer-title }
   let fst = if footer-subtitle == auto { cfg-subtitle } else { footer-subtitle }
   let inst = if cfg-institution == "" { none } else { cfg-institution }
   let subt = if cfg-subtitle == "" { none } else { cfg-subtitle }
@@ -999,7 +1048,7 @@
     al.join([,  ])
   } else { none }
 
-  let w = if ratio > (16/9 - 0.01) { 254mm } else { 190mm }
+  let w = if ratio > (16 / 9 - 0.01) { 254mm } else { 190mm }
   let h = w / ratio
 
   // Push config into state so slide() can read it contextually
@@ -1032,13 +1081,11 @@
     {
       set figure(gap: _table-caption-gap)
       it
-    }
+    },
   )
   show figure.caption.where(kind: table): it => {
     v(_table-caption-gap)
-    align(center,
-      text(size: 0.72em, style: "italic", [*#it.supplement #it.counter.display().* #it.body])
-    )
+    align(center, text(size: 0.72em, style: "italic", [*#it.supplement #it.counter.display().* #it.body]))
   }
   show table.cell: set text(font: _sans)
   show table: it => figure(kind: table, caption: [Table caption.], gap: _table-caption-gap, it)
@@ -1049,78 +1096,83 @@
 
   // ---- Title slide -----------------------------------------
   page(
-      width: w, height: h, margin: 0pt,
-      background: rect(width: 100%, height: 100%, fill: cfg-background),
-      header: none, footer: none,
-      {
-        _register-page()
-        place(
-          top + left,
-          float: false,
-          _header-band(
-            w,
-            "",
-            cfg-primary,
-            cfg-secondary,
-            header-font-color-1: cfg-hfc1,
-            header-font-color-2: cfg-hfc2,
-            header-font-color-1-highlight: cfg-hfc1h,
-          ),
-        )
-        place(
-          bottom + left,
-          float: false,
-          _footer-band(
-            w,
-            auth,
-            inst,
-            ft,
-            context counter(page).display() + " / " + str(counter(page).final().first()),
-            cfg-primary,
-            cfg-secondary,
-            header-font-color-1: cfg-hfc1,
-            header-font-color-2: cfg-hfc2,
-            header-font-color-1-highlight: cfg-hfc1h,
-          ),
-        )
-        block(
-          width: w, height: h - 24.75pt - 29.61pt,
-          align(center + horizon, {
-            block(
-              width: 84%, fill: cfg-primary,
-              inset: (x: 14pt, y: 10pt),
-              align(center + horizon, {
-                set text(font: _sans, fill: cfg-hfc1h)
-                text(size: 19pt, cfg-title)
-                if subt != none {
-                  linebreak()
-                  v(4pt)
-                  text(size: 11pt, subt)
-                }
-              })
-            )
-            v(12pt)
-            if auth != none {
-              text(font: _sans, size: 11pt, auth)
-              linebreak()
-              v(6pt)
-            }
-            if inst != none {
-              text(font: _sans, size: 9.5pt, inst)
-              linebreak()
-              v(6pt)
-            }
-            if date-text != none {
-              text(font: _sans, size: 10pt, date-text)
-              linebreak()
-            }
-            v(26pt)
-            if cover-imgs != () {
-              _cover-image-row(cover-imgs, height: cover-image-height)
-            }
-          })
-        )
-      }
+    width: w,
+    height: h,
+    margin: 0pt,
+    background: rect(width: 100%, height: 100%, fill: cfg-background),
+    header: none,
+    footer: none,
+    {
+      _register-page()
+      place(
+        top + left,
+        float: false,
+        _header-band(
+          w,
+          "",
+          cfg-primary,
+          cfg-secondary,
+          header-font-color-1: cfg-hfc1,
+          header-font-color-2: cfg-hfc2,
+          header-font-color-1-highlight: cfg-hfc1h,
+        ),
+      )
+      place(
+        bottom + left,
+        float: false,
+        _footer-band(
+          w,
+          auth,
+          inst,
+          ft,
+          context counter(page).display() + " / " + str(counter(page).final().first()),
+          cfg-primary,
+          cfg-secondary,
+          header-font-color-1: cfg-hfc1,
+          header-font-color-2: cfg-hfc2,
+          header-font-color-1-highlight: cfg-hfc1h,
+        ),
+      )
+      block(
+        width: w,
+        height: h - 24.75pt - 29.61pt,
+        align(center + horizon, {
+          block(
+            width: 84%,
+            fill: cfg-primary,
+            inset: (x: 14pt, y: 10pt),
+            align(center + horizon, {
+              set text(font: _sans, fill: cfg-hfc1h)
+              text(size: 19pt, cfg-title)
+              if subt != none {
+                linebreak()
+                v(4pt)
+                text(size: 11pt, subt)
+              }
+            }),
+          )
+          v(12pt)
+          if auth != none {
+            text(font: _sans, size: 11pt, auth)
+            linebreak()
+            v(6pt)
+          }
+          if inst != none {
+            text(font: _sans, size: 9.5pt, inst)
+            linebreak()
+            v(6pt)
+          }
+          if date-text != none {
+            text(font: _sans, size: 10pt, date-text)
+            linebreak()
+          }
+          v(26pt)
+          if cover-imgs != () {
+            _cover-image-row(cover-imgs, height: cover-image-height)
+          }
+        }),
+      )
+    },
   )
 
   // ---- TOC slide -------------------------------------------
@@ -1129,7 +1181,7 @@
       context {
         let entries = _toc-data.final()
         let sec-targets = _fs-sec-targets.final()
-        let sec-n   = 0
+        let sec-n = 0
         text(font: _sans, size: 14pt, weight: "bold", fill: cfg-primary, [Table of Contents])
         v(8pt)
         for e in entries {
@@ -1137,24 +1189,27 @@
             sec-n += 1
             let target = sec-targets.rev().find(entry => entry.title == e.title)
             let number-cell = box(
-              width: 16pt, height: 16pt, fill: cfg-primary,
-              align(center + horizon,
-                text(font: _sans, fill: cfg-hfc1h, size: 8pt, weight: "bold", str(sec-n))
-              )
+              width: 16pt,
+              height: 16pt,
+              fill: cfg-primary,
+              align(center + horizon, text(font: _sans, fill: cfg-hfc1h, size: 8pt, weight: "bold", str(sec-n))),
             )
-            let title-cell = align(left + horizon,
-              text(font: _sans, size: 10pt, weight: "bold", fill: cfg-primary, e.title)
-            )
+            let title-cell = align(left + horizon, text(
+              font: _sans,
+              size: 10pt,
+              weight: "bold",
+              fill: cfg-primary,
+              e.title,
+            ))
             v(3pt)
             grid(
-              columns: (18pt, 1fr), column-gutter: 4pt,
+              columns: (18pt, 1fr),
+              column-gutter: 4pt,
               if target != none { link(target.at("loc"))[#number-cell] } else { number-cell },
               if target != none { link(target.at("loc"))[#title-cell] } else { title-cell },
             )
           } else {
-            pad(left: 22pt,
-              text(font: _sans, size: 9pt, fill: luma(40), "- " + e.title)
-            )
+            pad(left: 22pt, text(font: _sans, size: 9pt, fill: luma(40), "- " + e.title))
           }
         }
       }
