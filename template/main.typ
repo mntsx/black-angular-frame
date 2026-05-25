@@ -41,7 +41,7 @@
 
   #v(3pt)
 
-  #let cell(body, fill: white, pos: left, weight: "regular") = fs-table-cell(
+  #let cell(body, fill: white, pos: left, weight: "regular") = baf-table-cell(
     fill: fill,
     stroke: luma(200) + 0.45pt,
     pos: pos,
@@ -234,7 +234,7 @@
 #slide(title: "Inserting and Referencing Figures")[
   #two-col(
     [
-      Figures use `#fs-figure(caption: [...])`. The counter resets per section; reference figures by their auto-assigned number. Longer surrounding paragraphs make it easier to inspect the vertical rhythm before and after visual material.
+      Figures use `#baf-figure(caption: [...])`. The counter resets per section; reference figures by their auto-assigned number. Longer surrounding paragraphs make it easier to inspect the vertical rhythm before and after visual material.
 
       #v(5pt)
       As shown in *Figure 1*, a colored rectangle acts as a placeholder. In practice pass `image("diagram.svg")` or any Typst content as the figure body. This text intentionally spans multiple lines so the figure margins can be judged against realistic prose.
@@ -245,7 +245,7 @@
     [
       The first placeholder represents a diagram or image inserted into the slide flow. A few lines of prose above it help show how the template separates ordinary text from framed visual content.
 
-      #fs-figure(caption: [Placeholder -- replace with `image("diagram.svg")`.])[
+      #baf-figure(caption: [Placeholder -- replace with `image("diagram.svg")`.])[
         #rect(
           width: 100%,
           height: 62pt,
@@ -254,7 +254,7 @@
           align(center + horizon, text(fill: blue.darken(50%), size: 9pt)[Diagram / Image here]),
         )
       ]
-      #fs-figure(caption: [Second figure -- captions are italic, automatically numbered.])[
+      #baf-figure(caption: [Second figure -- captions are italic, automatically numbered.])[
         #rect(
           width: 100%,
           height: 38pt,
@@ -274,7 +274,7 @@
     [
       A figure can expand to the full width of its column when the content should dominate the layout. This is useful for diagrams, screenshots, or images that need as much horizontal room as possible.
 
-      #fs-figure(caption: [Full-width placeholder figure spanning the whole column.])[
+      #baf-figure(caption: [Full-width placeholder figure spanning the whole column.])[
         #rect(
           width: 100%,
           height: 60pt,
@@ -289,7 +289,7 @@
     [
       Smaller visuals often read better when they keep some white space around them. A fractional-width figure makes that possible while still preserving the same numbering and caption behavior.
 
-      #fs-figure(caption: [Fractional-width placeholder figure centered inside the column.])[
+      #baf-figure(caption: [Fractional-width placeholder figure centered inside the column.])[
         #align(center, rect(
           width: 68%,
           height: 60pt,
@@ -309,7 +309,7 @@
     [
       The same pair can also be shown without captions when the slide is purely illustrative and the surrounding prose already provides enough context for the audience.
 
-      #fs-visual[
+      #baf-visual[
         #rect(
           width: 100%,
           height: 60pt,
@@ -324,7 +324,7 @@
     [
       The fractional-width version below uses the same visual content but keeps the narrower footprint. This lets us compare centered image placement with and without the caption layer.
 
-      #fs-visual[
+      #baf-visual[
         #rect(
           width: 68%,
           height: 60pt,
@@ -362,7 +362,7 @@
 
       Any Typst content fits inside a column, including nested `two-col` calls, theorem boxes, figures, and tables.
 
-      #fs-visual[
+      #baf-visual[
         #rect(
           width: 100%,
           height: 58pt,
@@ -445,7 +445,7 @@ return theta",
         align: pos,
         text(font: "IBM Plex Serif", body),
       )
-      #fs-visual[
+      #baf-visual[
         #block(width: 100%, {
           line(length: 100%, stroke: 0.9pt)
           grid(
@@ -480,13 +480,13 @@ return theta",
 
       The grid version is meant for dense numeric summaries or dashboard-like reporting. A longer lead-in makes it easier to see whether the table feels attached to the explanation or floats too far away.
 
-      #let grid-cell(body, fill: white, stroke: luma(200) + 0.6pt, pos: center) = fs-table-cell(
+      #let grid-cell(body, fill: white, stroke: luma(200) + 0.6pt, pos: center) = baf-table-cell(
         fill: fill,
         stroke: stroke,
         pos: pos,
         body,
       )
-      #fs-visual[
+      #baf-visual[
         #block(width: 100%, grid(
           columns: (28%, 24%, 24%, 24%),
           grid-cell(fill: blue.darken(50%), pos: left)[#text(fill: white)[Method]],
@@ -575,7 +575,7 @@ return theta",
 
       The captioned grid table shows how a more operational table behaves inside the same layout. The text before it is intentionally longer so vertical spacing is visible without relying on empty slide area.
 
-      #let grid-cell(body, fill: white, stroke: luma(200) + 0.6pt, pos: center) = fs-table-cell(
+      #let grid-cell(body, fill: white, stroke: luma(200) + 0.6pt, pos: center) = baf-table-cell(
         fill: fill,
         stroke: stroke,
         pos: pos,
@@ -1350,14 +1350,14 @@ return theta",
     [
       Transformer encoder-decoder stack with attention, feed-forward blocks, residual paths, and layer normalisation.
 
-      #fs-diagram(caption: [Transformer encoder-decoder block diagram (Vaswani et al., 2017).])[
+      #baf-diagram(caption: [Transformer encoder-decoder block diagram (Vaswani et al., 2017).])[
         #transformer-diagram
       ]
     ],
     [
       A closed-loop controller compares the reference signal with the measured output, drives the plant, and routes the response through a feedback transducer.
 
-      #fs-diagram(
+      #baf-diagram(
         caption: [Closed-loop control system with controller, plant, disturbance input, and feedback transducer.],
       )[
         #closed-loop-diagram
@@ -1374,7 +1374,7 @@ return theta",
     [
       For a homomorphism $phi: G -> G'$, the *kernel* determines the quotient $G slash ker phi$, while the *image* is the subgroup of reachable outputs in $G'$.
 
-      #fs-diagram(caption: [Kernel-image decomposition for a homomorphism $phi: G -> G'$.])[
+      #baf-diagram(caption: [Kernel-image decomposition for a homomorphism $phi: G -> G'$.])[
         #kernel-image-diagram
       ]
       The induced map $overline(phi)$ sends cosets modulo $ker phi$ onto $im phi$, and the inclusion embeds that image back into $G'$.
@@ -1382,7 +1382,7 @@ return theta",
     [
       A weighted directed graph encodes reachable states as nodes and transition costs as labels on the arcs. This version keeps the notation compact to match the reference diagram.
 
-      #fs-diagram(caption: [Weighted directed transition graph; edge labels denote transition costs.])[
+      #baf-diagram(caption: [Weighted directed transition graph; edge labels denote transition costs.])[
         #weighted-transition-graph
       ]
       Parallel and long-range transitions are shown with separate arrows, making bidirectional moves and high-cost paths visible at a glance.
@@ -1557,13 +1557,13 @@ return theta",
     [
       The accuracy curves compare Model A, Model B, and a 50% baseline across epochs $x in [0,5]$. Model A stays ahead throughout, while both learned models rise well above the baseline.
 
-      #fs-visual[#accuracy-chart]
+      #baf-visual[#accuracy-chart]
       At epoch 5, *Model A* reaches 92% and *Model B* reaches 83%. Their gap grows up to epoch 3 and then narrows from 12 to 9 percentage points by the final epoch.
     ],
     [
       The grouped bars compare mean test scores for Group A and Group B from 2020 to 2024. Both cohorts improve each year, with *Group A* leading every annual pair.
 
-      #fs-visual[#grouped-bar-chart]
+      #baf-visual[#grouped-bar-chart]
       Scores rise from 62 to 78 for *Group A* and from 55 to 69 for *Group B*. The gap widens from 7 points in 2020 to 9 points in 2024.
     ],
   )
@@ -1575,7 +1575,7 @@ return theta",
     [
       The accuracy curves compare Model A, Model B, and a 50% baseline across epochs $x in [0,5]$. Model A stays ahead throughout, while both learned models rise well above the baseline.
 
-      #fs-figure(caption: [Accuracy vs. epoch for Model A, Model B, and random baseline.])[
+      #baf-figure(caption: [Accuracy vs. epoch for Model A, Model B, and random baseline.])[
         #accuracy-chart
       ]
       At epoch 5, *Model A* reaches 92% and *Model B* reaches 83%. Their gap grows up to epoch 3 and then narrows from 12 to 9 percentage points by the final epoch.
@@ -1583,7 +1583,7 @@ return theta",
     [
       The grouped bars compare mean test scores for Group A and Group B from 2020 to 2024. Both cohorts improve each year, with *Group A* leading every annual pair.
 
-      #fs-figure(caption: [Mean test score by group and year (2020-2024).])[
+      #baf-figure(caption: [Mean test score by group and year (2020-2024).])[
         #grouped-bar-chart
       ]
       Scores rise from 62 to 78 for *Group A* and from 55 to 69 for *Group B*. The gap widens from 7 points in 2020 to 9 points in 2024.
@@ -1639,31 +1639,31 @@ return theta",
       ]
     ],
     [
-      #fs-box("note", name: "Implementation tip", color: green.darken(30%))[
+      #baf-box("note", name: "Implementation tip", color: green.darken(30%))[
         Monitor $norm(x_(k+1)-x_k)$ as a stopping criterion. A-priori error: $norm(x_k - x^*) <= k^m/(1-k) norm(x_1-x_0)$.
       ]
-      #fs-box("warning", name: "Common pitfall", color: red.darken(20%))[
+      #baf-box("warning", name: "Common pitfall", color: red.darken(20%))[
         Contraction ($k<1$) is strictly stronger than nonexpansive ($k=1$). Rotations on $S^1$ are nonexpansive but have no fixed points.
       ]
-      #fs-box("custom", name: "Any label works", color: purple.darken(15%))[
-        Use `#fs-box("kind", name: "...", color: ...)` for any label and color -- observations, facts, algorithms, warnings.
+      #baf-box("custom", name: "Any label works", color: purple.darken(15%))[
+        Use `#baf-box("kind", name: "...", color: ...)` for any label and color -- observations, facts, algorithms, warnings.
       ]
     ],
   )
 ]
 
 #slide(title: "Custom Box Widths")[
-  #fs-box("custom", name: "Default width", color: purple.darken(15%))[
+  #baf-box("custom", name: "Default width", color: purple.darken(15%))[
     This box uses the default width, so it fills the available slide content area. It is the recommended form when the material belongs to the main flow of the slide.
   ]
 
   #align(center)[
-    #fs-box("custom", name: "Narrow custom width", color: purple.darken(15%), width: 62%)[
+    #baf-box("custom", name: "Narrow custom width", color: purple.darken(15%), width: 62%)[
       This box has a smaller explicit width. It is useful for short claims, reminders, or side notes that should not dominate the slide.
     ]
   ]
 
-  #fs-box("custom", name: "Short content, default width", color: purple.darken(15%))[
+  #baf-box("custom", name: "Short content, default width", color: purple.darken(15%))[
     A short phrase.
   ]
 ]
@@ -1671,7 +1671,7 @@ return theta",
 #slide(title: "Full-Width Mathematical Proof")[
   #theorem(name: "Cauchy-Schwarz Inequality")[
     For all vectors $u, v in RR^n$,
-    #fs-equation[$
+    #baf-equation[$
       abs(u dot v) <= norm(u) norm(v).
     $]
   ]
@@ -1679,19 +1679,19 @@ return theta",
   #proof[
     If $v = 0$, the claim is immediate, so assume $v != 0$. For every real $t$, the squared norm of $u - t v$ is non-negative:
 
-    #fs-equation[$
+    #baf-equation[$
       0 <= norm(u - t v)^2 = norm(u)^2 - 2 t (u dot v) + t^2 norm(v)^2.
     $]
 
     Choose the minimising value $t = (u dot v) / norm(v)^2$. Substitution gives
 
-    #fs-equation[$
+    #baf-equation[$
       0 <= norm(u)^2 - (u dot v)^2 / norm(v)^2.
     $]
 
     Multiplying by the positive number $norm(v)^2$, we obtain
 
-    #fs-equation[$
+    #baf-equation[$
       (u dot v)^2 <= norm(u)^2 norm(v)^2.
     $]
 
@@ -1706,19 +1706,19 @@ return theta",
     #proof(width: 68%)[
       We prove Young's inequality in its weighted quadratic form. Let $a, b >= 0$ and fix $epsilon > 0$. Since every square is non-negative,
 
-      #fs-equation[$
+      #baf-equation[$
         0 <= (sqrt(epsilon) a - b / sqrt(epsilon))^2.
       $]
 
       Expanding the square gives
 
-      #fs-equation[$
+      #baf-equation[$
         0 <= epsilon a^2 - 2 a b + b^2 / epsilon.
       $]
 
       Rearranging terms and dividing by $2$ yields
 
-      #fs-equation[$
+      #baf-equation[$
         a b <= epsilon a^2 / 2 + b^2 / (2 epsilon).
       $]
 
@@ -1730,13 +1730,13 @@ return theta",
 #slide(title: "Theorem Box with Internal Proof")[
   #theorem(name: "Cauchy-Schwarz Inequality")[
     For all vectors $u, v in RR^n$,
-    #fs-equation[$
+    #baf-equation[$
       abs(u dot v) <= norm(u) norm(v).
     $]
 
     #proof[
       If $v = 0$, the claim is immediate. Otherwise, the quadratic expression $norm(u - t v)^2$ is non-negative for every $t in RR$. Expanding and choosing $t = (u dot v) / norm(v)^2$ gives
-      #fs-equation[$
+      #baf-equation[$
         0 <= norm(u)^2 - (u dot v)^2 / norm(v)^2.
       $]
       Multiplying by $norm(v)^2$ and taking square roots yields the desired inequality.
@@ -1751,7 +1751,7 @@ return theta",
     #box-separator("Solution", color: orange.darken(20%))
 
     Since $norm(A^k) <= norm(A)^k$, the Neumann series $sum_(k=0)^infinity A^k$ converges absolutely. Multiplying partial sums by $I-A$ gives $I - A^(m+1)$, which tends to $I$. Thus,
-    #fs-equation[$
+    #baf-equation[$
       (I - A)^(-1) = sum_(k=0)^infinity A^k.
     $]
   ]
@@ -1768,7 +1768,7 @@ return theta",
     #box-separator("Solution 2", color: orange.darken(20%))
 
     The function $log$ is concave on $(0, infinity)$. Applying Jensen's inequality to $x$ and $y$ gives
-    #fs-equation[$
+    #baf-equation[$
       log((x + y) / 2) >= (log x + log y) / 2 = log(sqrt(x y)).
     $]
   ]
