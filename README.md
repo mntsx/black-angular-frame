@@ -5,7 +5,7 @@
 
 A Typst presentation template with a square, minimal, academic design language: a solid navigation bar on top, a two-level footer with page number, a tinted title strip for regular content slides, and compact box environments without wasted whitespace.
 
-![black-angular-frame thumbnail](thumbnail.png)
+![First four slides from the black-angular-frame demo](assets/example-preview.png)
 
 For a complete rendered demo, check the full example PDF: [example.pdf](https://github.com/mntsx/black-angular-frame/blob/master/example.pdf).
 
@@ -17,25 +17,78 @@ For a complete rendered demo, check the full example PDF: [example.pdf](https://
 #import "@preview/black-angular-frame:0.1.0": *
 
 #let presentation-config = (
-  title: "My Presentation",
-  subtitle: "An optional subtitle",
-  authors: "Alice, Bob",
-  institution: "Institution Name",
+  title: "Robust Optimization for Small Data",
+  subtitle: "A compact academic presentation",
+  authors: "Alice Rivera, Bob Chen",
+  institution: "Department of Applied Mathematics",
   date: "May 2026",
-  final-message: "Thank you for your attention",
+  final-message: "Thank you for your attention.",
+  primary-color: rgb("#1C1C1C"),
+  secondary-color: rgb("#D9D9D9"),
+  background-color: rgb("#FFFFFF"),
+  font-color: luma(20),
+  content-center: 0.32,
+  content-upper-padding: 0.05,
+  content-lower-padding: 0.05,
   TOC: true,
 )
 
 #show: black-angular-frame.with(config: presentation-config)
 
-#new-section("Introduction")
+#new-section("Motivation", slide-title: "Why Robustness Matters")
 
-#slide(title: "First slide")[
-  - Bullet one
-  - Bullet two
+#slide(title: "Problem Setting")[
+  #two-col(
+    [
+      - Few labels are available.
+      - Measurements contain structured noise.
+      - Models must report uncertainty clearly.
+    ],
+    [
+      #baf-figure(caption: [A placeholder system diagram.])[
+        #baf-visual[
+          #rect(width: 100%, height: 54pt, fill: luma(242), stroke: luma(180))
+        ]
+      ]
+    ],
+    left-width: 52%,
+  )
 ]
 
-#thank-you-slide
+#new-subsection("Guarantees")
+
+#slide(title: "Main Claim")[
+  #theorem(name: "Stability Bound")[
+    If the empirical risk is Lipschitz in the perturbation radius, then the robust objective changes continuously with the data budget.
+  ]
+
+  #proof[
+    Combine uniform convergence with the triangle inequality and absorb the perturbation term into the radius-dependent constant.
+  ]
+]
+
+#new-section("Implementation")
+
+#slide(title: "Training Sketch")[
+  #two-col(
+    [
+      #code-box(
+        "def train(batch):\n  loss = robust_loss(model, batch)\n  loss.backward()\n  optimizer.step()",
+        type: "Source Code",
+        title: "Python",
+        lang: "python",
+      )
+    ],
+    [
+      #pseudo-code(
+        "for epoch <- 1 to E\n  sample mini-batch\n  update robust objective\nend",
+        title: "Mini-batch loop",
+      )
+    ],
+  )
+]
+
+#final-slide
 ```
 
 Initialize from the template after publication with:
@@ -68,6 +121,9 @@ Pass configuration through `#show: black-angular-frame.with(config: presentation
 | `institution` | String | `""` | Institution shown on the cover and footer. |
 | `date` | String | `""` | Date shown on the cover. |
 | `final-message` | String | `""` | Message shown on the last slide. |
+| `footer-content-1` | String | `authors` | Left text in the upper footer band. Long strings are truncated with ellipses. |
+| `footer-content-2` | String | `institution` | Right text in the upper footer band. Long strings are truncated with ellipses. |
+| `footer-content-3` | String | `title` | Left text in the lower footer band. Long strings are truncated with ellipses. |
 | `primary-color` | Color | `rgb("#1C1C1C")` | Main bars, highlights, numbering, and accents. |
 | `secondary-color` | Color | `rgb("#D9D9D9")` | Secondary header and footer bands. |
 | `background-color` | Color | `rgb("#FFFFFF")` | Slide background color. |
@@ -127,7 +183,7 @@ Renders an extra full-page section divider manually. This is no longer needed fo
 
 Registers a subsection in the TOC without rendering a divider slide.
 
-### `#thank-you-slide`
+### `#final-slide`
 
 A centered italic final-message slide. Configure the displayed text with `final-message`. No parentheses — this is a content value, not a function call.
 
@@ -135,7 +191,7 @@ A centered italic final-message slide. Configure the displayed text with `final-
 
 ## Layout helpers
 
-### `#two-col(left, right, left-width: 48%, gutter: 4%)`
+### `#two-col(left, right, gutter: 22.4pt, left-width: 48%)`
 
 Splits the slide into two columns.
 
@@ -158,6 +214,16 @@ Numbered figure. The counter resets at each `#new-section`. Reference by number 
 ```typst
 #baf-figure(caption: [A diagram showing the architecture.])[
   #image("diagram.svg", width: 80%)
+]
+```
+
+### `#baf-visual(body)`
+
+A centered, full-width visual wrapper with the same vertical spacing used by figures. It is useful for diagrams, plots, and placeholders.
+
+```typst
+#baf-visual[
+  #rect(width: 100%, height: 54pt, fill: luma(242), stroke: luma(180))
 ]
 ```
 
@@ -294,17 +360,18 @@ black-angular-frame/
 │   ├── typst-logo.png         # Local demo logo asset
 │   ├── github-logo.png        # Local demo logo asset
 │   ├── fonts/                 # IBM Plex Serif / Sans / Mono TTF files
+│   ├── example-preview.png    # README preview of the first four demo slides
 │   └── curves.csv             # Sample data for the line chart slide
 └── README.md
 ```
 
-The Typst Universe bundle is controlled by `exclude` in `typst.toml`. The local demo, generated PDFs, local fonts, Tinymist lockfile, and temporary files stay in the repository but are excluded from the published package archive.
+The Typst Universe bundle is controlled by `exclude` in `typst.toml`. The local demo, generated PDFs, README preview image, local fonts, Tinymist lockfile, and temporary files stay in the repository but are excluded from the published package archive.
 
 ---
 
 ## Acknowledgements
 
-This template was visually inspired by academic Beamer themes, especially UChicago-style slide layouts. It is not affiliated with or endorsed by the University of Chicago. No University of Chicago logos or brand assets are included.
+This template was visually inspired by the [Ritsumeikan University Theme Beamer Template](https://www.overleaf.com/latex/templates/ritsumeikan-university-theme-beamer-template/jmfcqqptxjxk) by Ming-Hao Xu (Xu Minghao), published on Overleaf under the LaTeX Project Public License 1.3c and described as altered from the THU template. This Typst template is independently implemented and is not affiliated with or endorsed by Ritsumeikan University, Tsinghua University, or Overleaf. No university logos or brand assets are included.
 
 ---
 

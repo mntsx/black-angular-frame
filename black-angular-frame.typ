@@ -403,40 +403,41 @@
 ) = {
   let hfc1 = if header-font-color-1 == auto { _muted-nav(primary) } else { header-font-color-1 }
   let hfc2 = if header-font-color-2 == auto { primary } else { header-font-color-2 }
+  let footer-side-width = w * 0.3 - _slide-x-margin
   stack(
     dir: ttb,
     spacing: 0pt,
     block(width: w, height: 14.1pt, fill: secondary, inset: (left: 22.4pt, right: 22.4pt, top: 0pt, bottom: 0pt), {
       grid(
-        columns: (1fr, 36%),
-        column-gutter: 10pt,
+        columns: (w * 0.3 - _slide-x-margin, w * 0.4, w * 0.3 - _slide-x-margin),
         block(
           width: 100%,
           height: 100%,
           align(horizon, align(left, if _single-line(left-top) != none {
-            text(font: _sans, fill: hfc2, size: 7pt, _single-line(left-top))
+            _ellipsis-text(left-top, footer-side-width, font: _sans, fill: hfc2, size: 7pt, reserve: 0pt)
           } else { [] })),
         ),
+        block(width: 100%, height: 100%),
         block(
           width: 100%,
           height: 100%,
           align(horizon, align(right, if _single-line(right-top) != none {
-            text(font: _sans, fill: hfc2, size: 7pt, _single-line(right-top))
+            _ellipsis-text(right-top, footer-side-width, font: _sans, fill: hfc2, size: 7pt, reserve: 0pt)
           } else { [] })),
         ),
       )
     }),
     block(width: w, height: 15.51pt, fill: primary, inset: (left: 22.4pt, right: 22.4pt, top: 0pt, bottom: 0pt), {
       grid(
-        columns: (1fr, 36%),
-        column-gutter: 10pt,
+        columns: (w * 0.3 - _slide-x-margin, w * 0.4, w * 0.3 - _slide-x-margin),
         block(
           width: 100%,
           height: 100%,
           align(horizon, align(left, if _single-line(left-bottom) != none {
-            move(dy: 0pt, text(font: _sans, fill: hfc1, size: 7pt, _single-line(left-bottom)))
+            move(dy: 0pt, _ellipsis-text(left-bottom, footer-side-width, font: _sans, fill: hfc1, size: 7pt, reserve: 0pt))
           } else { [] })),
         ),
+        block(width: 100%, height: 100%),
         block(
           width: 100%,
           height: 100%,
@@ -1084,6 +1085,9 @@
     } else { () },
   )
   let cfg-toc = config.at("TOC", default: if toc == none { true } else { toc })
+  let cfg-footer-content-1 = config.at("footer-content-1", default: auto)
+  let cfg-footer-content-2 = config.at("footer-content-2", default: auto)
+  let cfg-footer-content-3 = config.at("footer-content-3", default: auto)
 
   let ft = if footer-title == auto { cfg-title } else { footer-title }
   let fst = if footer-subtitle == auto { cfg-subtitle } else { footer-subtitle }
@@ -1101,6 +1105,9 @@
     let al = if type(cfg-authors) == array { cfg-authors } else { (cfg-authors,) }
     al.join([,  ])
   } else { none }
+  let footer-content-1 = if cfg-footer-content-1 == auto { auth } else { cfg-footer-content-1 }
+  let footer-content-2 = if cfg-footer-content-2 == auto { inst } else { cfg-footer-content-2 }
+  let footer-content-3 = if cfg-footer-content-3 == auto { ft } else { cfg-footer-content-3 }
 
   let w = if ratio > (16 / 9 - 0.01) { 254mm } else { 190mm }
   let h = w / ratio
@@ -1111,12 +1118,12 @@
   _baf-bg.update(cfg-background)
   _baf-w.update(w)
   _baf-h.update(h)
-  _baf-ft.update(ft)
+  _baf-ft.update(footer-content-3)
   _baf-fst.update(fst)
   _baf-title.update(cfg-title)
   _baf-subt.update(cfg-subtitle)
-  _baf-inst.update(inst)
-  _baf-auth.update(auth)
+  _baf-inst.update(footer-content-2)
+  _baf-auth.update(footer-content-1)
   _baf-fc.update(cfg-font-color)
   _baf-hfc1.update(cfg-hfc1)
   _baf-hfc2.update(cfg-hfc2)
@@ -1176,9 +1183,9 @@
         float: false,
         _footer-band(
           w,
-          auth,
-          inst,
-          ft,
+          footer-content-1,
+          footer-content-2,
+          footer-content-3,
           context counter(page).display() + " / " + str(counter(page).final().first()),
           cfg-primary,
           cfg-secondary,
