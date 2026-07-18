@@ -1,6 +1,6 @@
 [package]
 name = "black-angular-frame"
-version = "0.1.0"
+version = "0.1.1"
 entrypoint = "black-angular-frame.typ"
 authors = ["Miguel Montes <@miguelm7654>"]
 license = "MIT"

@@ -14,7 +14,7 @@ For a complete rendered demo, check the full example PDF: [example.pdf](https://
 ## Quick start
 
 ```typst
-#import "@preview/black-angular-frame:0.1.0": *
+#import "@preview/black-angular-frame:0.1.1": *
 
 #let presentation-config = (
   title: "Robust Optimization for Small Data",
@@ -94,7 +94,7 @@ For a complete rendered demo, check the full example PDF: [example.pdf](https://
 Initialize from the template after publication with:
 
 ```bash
-typst init @preview/black-angular-frame:0.1.0
+typst init @preview/black-angular-frame:0.1.1
 ```
 
 For local development in this repository, compile the demo with:
